@@ -1,0 +1,15 @@
+language: python
+python:
+  - "3.5"
+
+notifications:
+  email: false
+
+services:
+  - docker
+
+install:
+  - docker pull araffin/stable-baselines-cpu
+
+script:
+  - docker run --rm --network host --ipc=host --mount src=$(pwd),target=/root/code/stable-baselines,type=bind araffin/stable-baselines-cpu bash -c "cd /root/code/stable-baselines/ && pytest --cov-report term --cov=. -v tests/"
