@@ -1,6 +1,7 @@
 import os
 import glob
 import subprocess
+import shutil
 
 import pytest
 
@@ -24,7 +25,7 @@ experiments['ppo2-MountainCarContinuous-v0'] = ('ppo2', 'MountainCarContinuous-v
 
 # Clean up
 if os.path.isdir(LOG_FOLDER):
-    os.remove(LOG_FOLDER)
+    shutil.rmtree(LOG_FOLDER)
 
 @pytest.mark.parametrize("experiment", experiments.keys())
 def test_enjoy(experiment):

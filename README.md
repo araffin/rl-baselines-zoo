@@ -1,6 +1,8 @@
+[![Build Status](https://travis-ci.com/araffin/rl-baselines-zoo.svg?branch=master)](https://travis-ci.com/araffin/rl-baselines-zoo)
+
 # RL Baselines Zoo: a Collection of Trained RL Agents
 
-A collection of trained RL agents using [Stable Baselines](https://github.com/hill-a/stable-baselines).
+A collection of trained RL agents, with tuned hyperparameters, using [Stable Baselines](https://github.com/hill-a/stable-baselines).
 
 We are **looking for contributors** to complete the collection!
 
@@ -39,10 +41,20 @@ You can train agents online using [colab notebook](https://colab.research.google
 
 ```
 apt-get install swig cmake libopenmpi-dev zlib1g-dev
-pip install stable-baselines==2.1.1 box2d box2d-kengz
+pip install stable-baselines==2.1.1 box2d box2d-kengz pyyaml
 ```
 
 Please see [Stable Baselines README](https://github.com/hill-a/stable-baselines) for alternatives.
+
+Build docker image (CPU):
+```
+docker build . -f docker/Dockerfile.cpu -t rl-baselines-zoo-cpu
+```
+
+Pull built docker image:
+```
+docker pull araffin/rl-baselines-zoo-cpu
+```
 
 ## Contributing
 
