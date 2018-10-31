@@ -28,7 +28,7 @@ if os.path.isdir(LOG_FOLDER):
     shutil.rmtree(LOG_FOLDER)
 
 @pytest.mark.parametrize("experiment", experiments.keys())
-def test_enjoy(experiment):
+def test_train(experiment):
     algo, env_id = experiments[experiment]
     args = [
         '-n', str(N_STEPS),
