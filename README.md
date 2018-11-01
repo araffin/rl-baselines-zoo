@@ -71,7 +71,7 @@ python train.py --algo a2c --env MountainCar-v0 CartPole-v1 --tensorboard-log /t
 | ACER     | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | ACKTR    | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | missing | missing  |
-| DQN     |  |  | N/A | N/A | N/A  |
+| DQN     | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
 
 
 ## Colab Notebooks

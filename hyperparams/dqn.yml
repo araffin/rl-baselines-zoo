@@ -28,3 +28,12 @@ MountainCar-v0:
   exploration_fraction: 0.1
   exploration_final_eps: 0.1
   param_noise: True
+
+LunarLander-v2:
+  n_timesteps: !!float 2e5
+  policy: 'CustomDQNPolicy'
+  learning_rate: !!float 1e-3
+  buffer_size: 100000
+  exploration_fraction: 0.1
+  exploration_final_eps: 0.05
+  prioritized_replay: True
