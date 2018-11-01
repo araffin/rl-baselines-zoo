@@ -28,7 +28,7 @@ def make_env(env_id, rank=0, seed=0):
         env = gym.make(env_id)
         env.seed(seed + rank)
         env = Monitor(env, os.path.join(log_dir, str(rank)), allow_early_resets=True)
-    return env
+        return env
 
     return _init
 
