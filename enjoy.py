@@ -16,7 +16,8 @@ ALGOS = {
 }
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--env', help='environment ID', type=str, default='CartPole-v1')
+parser.add_argument('--env', help='environment ID', type=str, default='CartPole-v1',
+					choices=list(gym.envs.registry.env_specs.keys()))
 parser.add_argument('-f', '--folder', help='Log folder', type=str, default='trained_agents')
 parser.add_argument('--algo', help='RL Algorithm', default='ppo2',
 					type=str, required=False, choices=list(ALGOS.keys()))
@@ -32,9 +33,11 @@ algo = args.algo
 folder = args.folder
 model_path = "{}/{}/{}.pkl".format(folder, algo, env_id)
 
+# Sanity checks
 assert os.path.isdir(folder + '/' + algo), "The {}/{}/ folder was not found".format(folder, algo)
 assert os.path.isfile(model_path), "No model found for {} on {}, path: {}".format(algo, env_id, model_path)
 
+# Create the environment and wrap it if necessary
 is_atari = False
 if 'NoFrameskip' in env_id:
 	is_atari = True
@@ -47,7 +50,10 @@ else:
 
 stats_path = "{}/{}/{}/".format(folder, algo, env_id)
 
+# Load saved stats for normalizing input and rewards
+using_vec_normalize = False
 if os.path.isdir(stats_path):
+	using_vec_normalize = True
 	print("Loading running average")
 	env = VecNormalize(env, training=False)
 	env.load_running_average(stats_path)
@@ -62,7 +68,7 @@ for _ in range(args.n_timesteps):
 	action, _ = model.predict(obs, deterministic=False)
 	# Random Agent
 	# action = [env.action_space.sample()]
-	# Clip Action
+	# Clip Action to avoid out of bound errors
 	if isinstance(env.action_space, gym.spaces.Box):
 		action = np.clip(action, env.action_space.low, env.action_space.high)
 	obs, reward, done, infos = env.step(action)
@@ -86,3 +92,10 @@ for _ in range(args.n_timesteps):
 		print("Episode Length", ep_len)
 		running_reward = 0.0
 		ep_len = 0
+
+# Workaround for https://github.com/openai/gym/issues/893
+if not args.no_render:
+	if using_vec_normalize:
+		env.venv.envs[0].env.close()
+	else:
+		env.envs[0].env.close()

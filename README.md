@@ -30,8 +30,14 @@ python train.py --algo algo_name --env env_id
 
 For example:
 ```
-python train.py --algo ppo2 --env CartPole-v1
+python train.py --algo ppo2 --env CartPole-v1 --tensorboard-log /tmp/stable-baselines/
 ```
+
+Train for multiple environments (with one call) and with tensorboard logging:
+```
+python train.py --algo a2c --env MountainCar-v0 CartPole-v1 --tensorboard-log /tmp/stable-baselines/
+```
+
 
 ## Colab Notebooks
 

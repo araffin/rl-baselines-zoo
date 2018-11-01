@@ -39,7 +39,7 @@ MountainCar-v0:
   lam: 0.94
   gamma: 0.99
   noptepochs: 4
-  ent_coef: .0
+  ent_coef: 0.0
 
 MountainCarContinuous-v0:
   normalize: true
@@ -51,7 +51,7 @@ MountainCarContinuous-v0:
   lam: 0.94
   gamma: 0.99
   noptepochs: 4
-  ent_coef: .0
+  ent_coef: 0.0
 
 Acrobot-v1:
   normalize: true
@@ -63,7 +63,7 @@ Acrobot-v1:
   lam: 0.94
   gamma: 0.99
   noptepochs: 4
-  ent_coef: .0
+  ent_coef: 0.0
 
 Bipedal-Walker-v2:
   normalize: true
@@ -75,7 +75,7 @@ Bipedal-Walker-v2:
   lam: 0.98
   gamma: 0.99
   noptepochs: 10
-  ent_coef: .0
+  ent_coef: 0.0
   learning_rate: !!float 3e-4
   cliprange: 0.2
 
@@ -88,7 +88,7 @@ LunarLander-v2:
   lam: 0.98
   gamma: 0.999
   noptepochs: 4
-  ent_coef: .01
+  ent_coef: 0.01
 
 LunarLanderContinuous-v2:
   n_envs: 16
@@ -99,4 +99,4 @@ LunarLanderContinuous-v2:
   lam: 0.98
   gamma: 0.999
   noptepochs: 4
-  ent_coef: .01
+  ent_coef: 0.01
