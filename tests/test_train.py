@@ -1,12 +1,13 @@
 import os
-import glob
-import subprocess
 import shutil
+import subprocess
 
 import pytest
 
+
 def _assert_eq(left, right):
     assert left == right, '{} != {}'.format(left, right)
+
 
 N_STEPS = 100
 
@@ -26,6 +27,7 @@ experiments['ppo2-MountainCarContinuous-v0'] = ('ppo2', 'MountainCarContinuous-v
 # Clean up
 if os.path.isdir(LOG_FOLDER):
     shutil.rmtree(LOG_FOLDER)
+
 
 @pytest.mark.parametrize("experiment", experiments.keys())
 def test_train(experiment):

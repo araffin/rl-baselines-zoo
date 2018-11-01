@@ -1,13 +1,12 @@
 import argparse
-import os
 import difflib
+import os
 
 import gym
 import yaml
-import numpy as np
-from stable_baselines.common.cmd_util import make_atari_env
-from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
 from stable_baselines.common import set_global_seeds
+from stable_baselines.common.cmd_util import make_atari_env
+from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize
 
 from utils import make_env, ALGOS
 
@@ -15,9 +14,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--env', type=str, nargs='+', default=["CartPole-v1"], help='environment ID(s)')
 parser.add_argument('-tb', '--tensorboard-log', help='Tensorboard log dir', default='', type=str)
 parser.add_argument('--algo', help='RL Algorithm', default='ppo2',
-					type=str, required=False, choices=list(ALGOS.keys()))
+                    type=str, required=False, choices=list(ALGOS.keys()))
 parser.add_argument('-n', '--n-timesteps', help='Overwrite the number of timesteps', default=-1,
-					type=int)
+                    type=int)
 parser.add_argument('-f', '--log-folder', help='Log folder', type=str, default='logs')
 parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
 args = parser.parse_args()
@@ -41,7 +40,7 @@ for env_id in env_ids:
     if 'NoFrameskip' in env_id:
         is_atari = True
 
-    print("="*10, env_id, "="*10)
+    print("=" * 10, env_id, "=" * 10)
 
     # Load hyperparameters from yaml file
     with open('hyperparams/{}.yml'.format(args.algo), 'r') as f:
@@ -66,7 +65,6 @@ for env_id in env_ids:
     if 'n_envs' in hyperparams.keys():
         del hyperparams['n_envs']
     del hyperparams['n_timesteps']
-
 
     # Create the environment and wrap it if necessary
     if is_atari:

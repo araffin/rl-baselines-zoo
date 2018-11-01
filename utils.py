@@ -7,23 +7,23 @@ from stable_baselines.common.policies import register_policy
 from stable_baselines.bench import Monitor
 from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN
 
-
 ALGOS = {
-	'a2c': A2C,
-	'acer': ACER,
-	'acktr': ACKTR,
-	'dqn': DQN,
-	'ppo2': PPO2
+    'a2c': A2C,
+    'acer': ACER,
+    'acktr': ACKTR,
+    'dqn': DQN,
+    'ppo2': PPO2
 }
+
 
 # ================== Custom Policies =================
 
 class CustomDQNPolicy(FeedForwardPolicy):
     def __init__(self, *args, **kwargs):
         super(CustomDQNPolicy, self).__init__(*args, **kwargs,
-                                           layers=[64],
-                                           layer_norm=True,
-                                           feature_extraction="mlp")
+                                              layers=[64],
+                                              layer_norm=True,
+                                              feature_extraction="mlp")
 
 
 register_policy('CustomDQNPolicy', CustomDQNPolicy)

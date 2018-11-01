@@ -4,8 +4,10 @@ import subprocess
 
 import pytest
 
+
 def _assert_eq(left, right):
     assert left == right, '{} != {}'.format(left, right)
+
 
 FOLDER = 'trained_agents/'
 N_STEPS = 100
