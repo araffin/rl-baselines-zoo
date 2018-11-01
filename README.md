@@ -47,9 +47,10 @@ python train.py --algo a2c --env MountainCar-v0 CartPole-v1 --tensorboard-log /t
 |  RL Algo |  BeamRider         | Breakout           | Enduro             |  Pong | Qbert | Seaquest           | SpaceInvaders      |
 |----------|--------------------|--------------------|--------------------|-------|-------|--------------------|--------------------|
 | A2C      |                    | :heavy_check_mark: |                    |       |       | :heavy_check_mark: |                    |
-| ACER     | :heavy_check_mark: |                    |                    |       |       |                    | :heavy_check_mark: |
+| ACER     | :heavy_check_mark: |                    |                    |:heavy_check_mark: |       |                    | :heavy_check_mark: |
 | ACKTR    |                    |                    |                    |       |       |                    |                    |
 | PPO2     |                    |                    | :heavy_check_mark: |       |       |                    |                    |
+| DQN     |                    |                    |   |       |       |                    |                    |
 
 ### Classic Control Environments
 
@@ -59,6 +60,7 @@ python train.py --algo a2c --env MountainCar-v0 CartPole-v1 --tensorboard-log /t
 | ACER     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | ACKTR    | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:  |
+| DQN     | :heavy_check_mark: | :heavy_check_mark:  |  | N/A | N/A  |
 
 
 ### Box2D Environments
@@ -69,6 +71,7 @@ python train.py --algo a2c --env MountainCar-v0 CartPole-v1 --tensorboard-log /t
 | ACER     | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | ACKTR    | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | missing | missing  |
+| DQN     |  |  | N/A | N/A | N/A  |
 
 
 ## Colab Notebooks

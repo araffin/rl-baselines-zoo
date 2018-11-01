@@ -10,7 +10,7 @@ def _assert_eq(left, right):
 
 N_STEPS = 100
 
-ALGOS = ('ppo2', 'a2c', 'acer', 'acktr')
+ALGOS = ('ppo2', 'a2c', 'acer', 'acktr', 'dqn')
 ENV_IDS = ('CartPole-v1', 'BreakoutNoFrameskip-v4')
 LOG_FOLDER = 'logs/tests/'
 

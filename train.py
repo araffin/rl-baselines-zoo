@@ -1,44 +1,15 @@
 import argparse
 import os
-import time
 import difflib
 
 import gym
 import yaml
 import numpy as np
-
 from stable_baselines.common.cmd_util import make_atari_env
-from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize
-from stable_baselines.bench import Monitor
-from stable_baselines import PPO2, A2C, ACER, ACKTR
+from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
+from stable_baselines.common import set_global_seeds
 
-def make_env(env_id, rank=0, seed=0):
-    """
-    Helper function to multiprocess training
-    and log the progress.
-
-    :param env_id: (str)
-    :param rank: (int)
-    :param seed: (int)
-    """
-    log_dir = "/tmp/gym/{}/".format(int(time.time()))
-    os.makedirs(log_dir, exist_ok=True)
-
-    def _init():
-        env = gym.make(env_id)
-        env.seed(seed + rank)
-        env = Monitor(env, os.path.join(log_dir, str(rank)), allow_early_resets=True)
-        return env
-
-    return _init
-
-
-ALGOS = {
-	'a2c': A2C,
-	'acer': ACER,
-	'acktr': ACKTR,
-	'ppo2': PPO2
-}
+from utils import make_env, ALGOS
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', type=str, nargs='+', default=["CartPole-v1"], help='environment ID(s)')
@@ -48,7 +19,7 @@ parser.add_argument('--algo', help='RL Algorithm', default='ppo2',
 parser.add_argument('-n', '--n-timesteps', help='Overwrite the number of timesteps', default=-1,
 					type=int)
 parser.add_argument('-f', '--log-folder', help='Log folder', type=str, default='logs')
-
+parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
 args = parser.parse_args()
 
 env_ids = args.env
@@ -60,6 +31,8 @@ for env_id in env_ids:
     if env_id not in registered_envs:
         closest_match = difflib.get_close_matches(env_id, registered_envs, n=1)[0]
         raise ValueError('{} not found in gym registry, you maybe meant {}?'.format(env_id, closest_match))
+
+set_global_seeds(args.seed)
 
 for env_id in env_ids:
     tensorboard_log = None if args.tensorboard_log == '' else args.tensorboard_log + '/' + env_id
@@ -77,7 +50,7 @@ for env_id in env_ids:
         else:
             hyperparams = yaml.load(f)[env_id]
 
-    n_envs = hyperparams['n_envs']
+    n_envs = hyperparams.get('n_envs', 1)
     # Should we overwrite the number of timesteps?
     if args.n_timesteps > 0:
         n_timesteps = args.n_timesteps
@@ -90,7 +63,8 @@ for env_id in env_ids:
         del hyperparams['normalize']
 
     # Delete keys so the dict can be pass to the model constructor
-    del hyperparams['n_envs']
+    if 'n_envs' in hyperparams.keys():
+        del hyperparams['n_envs']
     del hyperparams['n_timesteps']
 
 
@@ -100,6 +74,8 @@ for env_id in env_ids:
         env = make_atari_env(env_id, num_env=n_envs, seed=0)
         # Frame-stacking with 4 frames
         env = VecFrameStack(env, n_stack=4)
+    elif args.algo in ['dqn', 'ddpg']:
+        env = gym.make(env_id)
     else:
         env = SubprocVecEnv([make_env(env_id, i) for i in range(n_envs)])
         if normalize:

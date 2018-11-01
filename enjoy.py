@@ -3,21 +3,14 @@ import os
 
 import gym
 import numpy as np
-
-from stable_baselines import PPO2, A2C, ACER, ACKTR
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize, VecFrameStack
 from stable_baselines.common.cmd_util import make_atari_env
+from stable_baselines.common import set_global_seeds
 
-ALGOS = {
-	'a2c': A2C,
-	'acer': ACER,
-	'acktr': ACKTR,
-	'ppo2': PPO2
-}
+from utils import ALGOS
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--env', help='environment ID', type=str, default='CartPole-v1',
-					choices=list(gym.envs.registry.env_specs.keys()))
+parser.add_argument('--env', help='environment ID', type=str, default='CartPole-v1')
 parser.add_argument('-f', '--folder', help='Log folder', type=str, default='trained_agents')
 parser.add_argument('--algo', help='RL Algorithm', default='ppo2',
 					type=str, required=False, choices=list(ALGOS.keys()))
@@ -25,6 +18,10 @@ parser.add_argument('-n', '--n-timesteps', help='number of timesteps', default=1
 					type=int)
 parser.add_argument('--no-render', action='store_true', default=False,
                     help='Do not render the environment (useful for tests)')
+parser.add_argument('--deterministic', action='store_true', default=False,
+                    help='Use deterministic actions')
+parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
+
 args = parser.parse_args()
 
 
@@ -36,6 +33,8 @@ model_path = "{}/{}/{}.pkl".format(folder, algo, env_id)
 # Sanity checks
 assert os.path.isdir(folder + '/' + algo), "The {}/{}/ folder was not found".format(folder, algo)
 assert os.path.isfile(model_path), "No model found for {} on {}, path: {}".format(algo, env_id, model_path)
+
+set_global_seeds(args.seed)
 
 # Create the environment and wrap it if necessary
 is_atari = False
@@ -62,10 +61,13 @@ model = ALGOS[algo].load(model_path)
 
 obs = env.reset()
 
+# Force deterministic for DQN and DDPG
+deterministic = args.deterministic or algo in ['dqn', 'ddpg']
+
 running_reward = 0.0
 ep_len = 0
 for _ in range(args.n_timesteps):
-	action, _ = model.predict(obs, deterministic=False)
+	action, _ = model.predict(obs, deterministic=deterministic)
 	# Random Agent
 	# action = [env.action_space.sample()]
 	# Clip Action to avoid out of bound errors
@@ -95,7 +97,9 @@ for _ in range(args.n_timesteps):
 
 # Workaround for https://github.com/openai/gym/issues/893
 if not args.no_render:
-	if using_vec_normalize:
+	if is_atari:
+		env.close()
+	elif using_vec_normalize:
 		env.venv.envs[0].env.close()
 	else:
 		env.envs[0].env.close()
