@@ -38,6 +38,38 @@ Train for multiple environments (with one call) and with tensorboard logging:
 python train.py --algo a2c --env MountainCar-v0 CartPole-v1 --tensorboard-log /tmp/stable-baselines/
 ```
 
+## Current Collection
+
+### Atari Games
+
+7 atari games from OpenAI benchmark (NoFrameskip-v4 versions).
+
+|  RL Algo |  BeamRider         | Breakout           | Enduro             |  Pong | Qbert | Seaquest           | SpaceInvaders      |
+|----------|--------------------|--------------------|--------------------|-------|-------|--------------------|--------------------|
+| A2C      |                    | :heavy_check_mark: |                    |       |       | :heavy_check_mark: |                    |
+| ACER     | :heavy_check_mark: |                    |                    |       |       |                    | :heavy_check_mark: |
+| ACKTR    |                    |                    |                    |       |       |                    |                    |
+| PPO2     |                    |                    | :heavy_check_mark: |       |       |                    |                    |
+
+### Classic Control Environments
+
+|  RL Algo |  CartPole-v1 | MountainCar-v0 | Acrobot-v1 |  Pendulum-v0 | MountainCarContinuous-v0 |
+|----------|--------------|----------------|------------|--------------|--------------------------|
+| A2C      | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | missing      | missing                  |
+| ACER     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
+| ACKTR    | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
+| PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:  |
+
+
+### Box2D Environments
+
+|  RL Algo |  BipedalWalker-v2 | LunarLander-v2 | LunarLanderContinuous-v2 |  BipedalWalkerHardcore-v2 | CarRacing-v0 |
+|----------|--------------|----------------|------------|--------------|--------------------------|
+| A2C      | missing | :heavy_check_mark:  | missing | missing      | missing                  |
+| ACER     | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
+| ACKTR    | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
+| PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | missing | missing  |
+
 
 ## Colab Notebooks
 
