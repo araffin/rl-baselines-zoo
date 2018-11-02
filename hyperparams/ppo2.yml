@@ -65,7 +65,7 @@ Acrobot-v1:
   noptepochs: 4
   ent_coef: 0.0
 
-Bipedal-Walker-v2:
+BipedalWalker-v2:
   normalize: true
   n_envs: 8
   n_timesteps: !!float 2e6

@@ -44,13 +44,13 @@ def test_train(experiment):
 
 
 def test_continue_training():
-    algo, env_id = 'ppo2', 'MountainCar-v0'
+    algo, env_id = 'a2c', 'MountainCar-v0'
     args = [
         '-n', str(N_STEPS),
         '--algo', algo,
         '--env', env_id,
         '--log-folder', LOG_FOLDER,
-        '-i', 'trained_agents/ppo2/MountainCar-v0.pkl'
+        '-i', 'trained_agents/a2c/MountainCar-v0.pkl'
     ]
 
     return_code = subprocess.call(['python', 'train.py'] + args)

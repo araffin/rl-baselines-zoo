@@ -87,6 +87,11 @@ for env_id in env_ids:
         print("Loading pretrained agent")
         # Policy should not be changed
         del hyperparams['policy']
+        # TODO: fix ppo2 in stable-baselines
+        # if args.algo == "ppo2":
+        #     del hyperparams['learning_rate']
+        #     del hyperparams['cliprange']
+
         model = ALGOS[args.algo].load(args.trained_agent, env=env,
                                       tensorboard_log=tensorboard_log, verbose=1, **hyperparams)
 
@@ -97,7 +102,7 @@ for env_id in env_ids:
     else:
         # Train an agent from scratch
         model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=1, **hyperparams)
-    
+
     model.learn(n_timesteps)
 
     # Save trained model
