@@ -41,3 +41,17 @@ def test_train(experiment):
 
     return_code = subprocess.call(['python', 'train.py'] + args)
     _assert_eq(return_code, 0)
+
+
+def test_continue_training():
+    algo, env_id = 'ppo2', 'MountainCar-v0'
+    args = [
+        '-n', str(N_STEPS),
+        '--algo', algo,
+        '--env', env_id,
+        '--log-folder', LOG_FOLDER,
+        '-i', 'trained_agents/ppo2/MountainCar-v0.pkl'
+    ]
+
+    return_code = subprocess.call(['python', 'train.py'] + args)
+    _assert_eq(return_code, 0)

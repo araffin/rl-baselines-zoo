@@ -13,6 +13,8 @@ from utils import make_env, ALGOS
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', type=str, nargs='+', default=["CartPole-v1"], help='environment ID(s)')
 parser.add_argument('-tb', '--tensorboard-log', help='Tensorboard log dir', default='', type=str)
+parser.add_argument('-i', '--trained-agent', help='Path to a pretrained agent to continue training',
+                    default='', type=str)
 parser.add_argument('--algo', help='RL Algorithm', default='ppo2',
                     type=str, required=False, choices=list(ALGOS.keys()))
 parser.add_argument('-n', '--n-timesteps', help='Overwrite the number of timesteps', default=-1,
@@ -80,8 +82,22 @@ for env_id in env_ids:
             print("Normalizing input and return")
             env = VecNormalize(env)
 
-    # Train the agent
-    model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=1, **hyperparams)
+    if args.trained_agent.endswith('.pkl') and os.path.isfile(args.trained_agent):
+        # Continue training
+        print("Loading pretrained agent")
+        # Policy should not be changed
+        del hyperparams['policy']
+        model = ALGOS[args.algo].load(args.trained_agent, env=env,
+                                      tensorboard_log=tensorboard_log, verbose=1, **hyperparams)
+
+        exp_folder = args.trained_agent.split('.pkl')[0]
+        if os.path.isdir(exp_folder):
+            print("Loading saved running average")
+            env.load_running_average(exp_folder)
+    else:
+        # Train an agent from scratch
+        model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=1, **hyperparams)
+    
     model.learn(n_timesteps)
 
     # Save trained model
