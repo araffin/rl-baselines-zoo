@@ -20,6 +20,8 @@ parser.add_argument('--no-render', action='store_true', default=False,
                     help='Do not render the environment (useful for tests)')
 parser.add_argument('--deterministic', action='store_true', default=False,
                     help='Use deterministic actions')
+parser.add_argument('--norm-reward', action='store_true', default=False,
+                    help='Normalize reward if applicable (trained with VecNormalize)')
 parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
 
 args = parser.parse_args()
@@ -53,7 +55,7 @@ using_vec_normalize = False
 if os.path.isdir(stats_path):
     using_vec_normalize = True
     print("Loading running average")
-    env = VecNormalize(env, training=False)
+    env = VecNormalize(env, training=False, norm_reward=args.norm_reward)
     env.load_running_average(stats_path)
 
 model = ALGOS[algo].load(model_path)
@@ -88,7 +90,7 @@ for _ in range(args.n_timesteps):
 
     if done and not is_atari:
         # NOTE: for env using VecNormalize, the mean reward
-        # is a normalized reward
+        # is a normalized reward when `--norm_reward` flag is passed
         print("Episode Reward: {:.2f}".format(running_reward))
         print("Episode Length", ep_len)
         running_reward = 0.0
