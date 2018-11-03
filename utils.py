@@ -9,6 +9,7 @@ from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, DDPG
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize,\
     VecFrameStack, SubprocVecEnv
 from stable_baselines.common.cmd_util import make_atari_env
+from stable_baselines.common import set_global_seeds
 
 ALGOS = {
     'a2c': A2C,
@@ -48,6 +49,7 @@ def make_env(env_id, rank=0, seed=0, log_dir=None):
     os.makedirs(log_dir, exist_ok=True)
 
     def _init():
+        set_global_seeds(seed + rank)
         env = gym.make(env_id)
         env.seed(seed + rank)
         env = Monitor(env, os.path.join(log_dir, str(rank)), allow_early_resets=True)
@@ -78,6 +80,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         env = SubprocVecEnv([make_env(env_id, i, seed) for i in range(n_envs)])
     else:
         env = DummyVecEnv([lambda: gym.make(env_id)])
+        env.envs[0].seed(seed)
 
     # Load saved stats for normalizing input and rewards
     if stats_path is not None:

@@ -79,7 +79,7 @@ python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/Br
 | ACKTR    | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | missing | missing  |
 | DQN     | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
-| DDPG     |  | N/A |  |  |   |
+| DDPG     |  | N/A | :heavy_check_mark: |  |   |
 
 
 ## Colab Notebooks

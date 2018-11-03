@@ -7,7 +7,7 @@ import yaml
 import numpy as np
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.cmd_util import make_atari_env
-from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize
+from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 
 from utils import make_env, ALGOS
@@ -87,8 +87,12 @@ for env_id in env_ids:
         if hyperparams.get('normalize', False):
             print("WARNING: normalization not supported yet for DDPG/DQN")
         env = gym.make(env_id)
+        env.seed(args.seed)
     else:
-        env = SubprocVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
+        if n_envs == 1:
+            env = DummyVecEnv([make_env(env_id, 0, args.seed)])
+        else:
+            env = SubprocVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
         if normalize:
             print("Normalizing input and return")
             env = VecNormalize(env)

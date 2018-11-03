@@ -1,5 +1,13 @@
 MountainCarContinuous-v0:
-  n_timesteps: 400000
+  n_timesteps: 300000
   policy: 'MlpPolicy'
   noise_type: 'ornstein-uhlenbeck'
   noise_std: 0.5
+  memory_limit: 5000
+
+LunarLanderContinuous-v2:
+  n_timesteps: !!float 6e5
+  policy: 'MlpPolicy'
+  noise_type: 'ornstein-uhlenbeck'
+  noise_std: 0.1
+  memory_limit: 50000
