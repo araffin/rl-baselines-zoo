@@ -23,6 +23,8 @@ for algo in ALGOS:
 
 # Test for vecnormalize
 experiments['ppo2-MountainCarContinuous-v0'] = ('ppo2', 'MountainCarContinuous-v0')
+# Test for DDPG
+experiments['ddpg-MountainCarContinuous-v0'] = ('ddpg', 'MountainCarContinuous-v0')
 
 # Clean up
 if os.path.isdir(LOG_FOLDER):

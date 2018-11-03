@@ -57,6 +57,7 @@ python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/Br
 | PPO2     |                    |                    | :heavy_check_mark: |       |       |                    |                    |
 | DQN     |                    |                    |   |       |       |                    |                    |
 
+
 ### Classic Control Environments
 
 |  RL Algo |  CartPole-v1 | MountainCar-v0 | Acrobot-v1 |  Pendulum-v0 | MountainCarContinuous-v0 |
@@ -66,6 +67,7 @@ python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/Br
 | ACKTR    | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:  |
 | DQN     | :heavy_check_mark: | :heavy_check_mark:  |  | N/A | N/A  |
+| DDPG     |  N/A |  N/A  |  | N/A | :heavy_check_mark:  |
 
 
 ### Box2D Environments
@@ -77,6 +79,7 @@ python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/Br
 | ACKTR    | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | missing | missing  |
 | DQN     | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
+| DDPG     |  | N/A |  |  |   |
 
 
 ## Colab Notebooks

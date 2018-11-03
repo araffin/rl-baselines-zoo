@@ -5,7 +5,7 @@ import os
 from stable_baselines.deepq.policies import FeedForwardPolicy
 from stable_baselines.common.policies import register_policy
 from stable_baselines.bench import Monitor
-from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN
+from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, DDPG
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize,\
     VecFrameStack, SubprocVecEnv
 from stable_baselines.common.cmd_util import make_atari_env
@@ -15,6 +15,7 @@ ALGOS = {
     'acer': ACER,
     'acktr': ACKTR,
     'dqn': DQN,
+    'ddpg': DDPG,
     'ppo2': PPO2
 }
 

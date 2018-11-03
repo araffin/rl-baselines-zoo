@@ -1,0 +1,5 @@
+MountainCarContinuous-v0:
+  n_timesteps: 400000
+  policy: 'MlpPolicy'
+  noise_type: 'ornstein-uhlenbeck'
+  noise_std: 0.5

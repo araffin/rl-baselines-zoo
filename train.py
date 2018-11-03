@@ -4,9 +4,11 @@ import os
 
 import gym
 import yaml
+import numpy as np
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.cmd_util import make_atari_env
 from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize
+from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 
 from utils import make_env, ALGOS
 
@@ -82,12 +84,32 @@ for env_id in env_ids:
         # Frame-stacking with 4 frames
         env = VecFrameStack(env, n_stack=4)
     elif args.algo in ['dqn', 'ddpg']:
+        if hyperparams.get('normalize', False):
+            print("WARNING: normalization not supported yet for DDPG/DQN")
         env = gym.make(env_id)
     else:
         env = SubprocVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
         if normalize:
             print("Normalizing input and return")
             env = VecNormalize(env)
+
+    # Parse noise string for DDPG
+    if args.algo == 'ddpg' and hyperparams.get('noise_type') is not None:
+        noise_type = hyperparams['noise_type'].strip()
+        noise_std = hyperparams['noise_std']
+        n_actions = env.action_space.shape[0]
+        if 'adaptive-param' in noise_type:
+            hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std, desired_action_stddev=noise_std)
+        elif 'normal' in noise_type:
+            hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(n_actions), sigma=noise_std * np.ones(n_actions))
+        elif 'ornstein-uhlenbeck' in noise_type:
+            hyperparams['action_noise'] = OrnsteinUhlenbeckActionNoise(mean=np.zeros(n_actions),
+                                                        sigma=noise_std * np.ones(n_actions))
+        else:
+            raise RuntimeError('Unknown noise type "{}"'.format(noise_type))
+        print("Applying {} noise with std {}".format(noise_type, noise_std))
+        del hyperparams['noise_type']
+        del hyperparams['noise_std']
 
     if args.trained_agent.endswith('.pkl') and os.path.isfile(args.trained_agent):
         # Continue training
