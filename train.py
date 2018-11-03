@@ -36,7 +36,8 @@ for env_id in env_ids:
 set_global_seeds(args.seed)
 
 if args.trained_agent != "":
-    assert args.trained_agent.endswith('.pkl') and os.path.isfile(args.trained_agent), "The trained_agent must be a valid path to a .pkl file"
+    assert args.trained_agent.endswith('.pkl') and os.path.isfile(args.trained_agent),\
+        "The trained_agent must be a valid path to a .pkl file"
 
 for env_id in env_ids:
     tensorboard_log = None if args.tensorboard_log == '' else args.tensorboard_log + '/' + env_id
@@ -77,13 +78,13 @@ for env_id in env_ids:
     # Create the environment and wrap it if necessary
     if is_atari:
         print("Using Atari wrapper")
-        env = make_atari_env(env_id, num_env=n_envs, seed=0)
+        env = make_atari_env(env_id, num_env=n_envs, seed=args.seed)
         # Frame-stacking with 4 frames
         env = VecFrameStack(env, n_stack=4)
     elif args.algo in ['dqn', 'ddpg']:
         env = gym.make(env_id)
     else:
-        env = SubprocVecEnv([make_env(env_id, i) for i in range(n_envs)])
+        env = SubprocVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
         if normalize:
             print("Normalizing input and return")
             env = VecNormalize(env)

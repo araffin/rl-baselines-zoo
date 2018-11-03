@@ -3,11 +3,9 @@ import os
 
 import gym
 import numpy as np
-from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize, VecFrameStack
-from stable_baselines.common.cmd_util import make_atari_env
 from stable_baselines.common import set_global_seeds
 
-from utils import ALGOS
+from utils import ALGOS, create_test_env
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', help='environment ID', type=str, default='CartPole-v1')
@@ -15,6 +13,8 @@ parser.add_argument('-f', '--folder', help='Log folder', type=str, default='trai
 parser.add_argument('--algo', help='RL Algorithm', default='ppo2',
                     type=str, required=False, choices=list(ALGOS.keys()))
 parser.add_argument('-n', '--n-timesteps', help='number of timesteps', default=1000,
+                    type=int)
+parser.add_argument('--n-envs', help='number of environments', default=1,
                     type=int)
 parser.add_argument('--no-render', action='store_true', default=False,
                     help='Do not render the environment (useful for tests)')
@@ -35,28 +35,21 @@ model_path = "{}/{}/{}.pkl".format(folder, algo, env_id)
 assert os.path.isdir(folder + '/' + algo), "The {}/{}/ folder was not found".format(folder, algo)
 assert os.path.isfile(model_path), "No model found for {} on {}, path: {}".format(algo, env_id, model_path)
 
+if algo in ['dqn', 'ddpg']:
+    args.n_envs = 1
+
 set_global_seeds(args.seed)
 
-# Create the environment and wrap it if necessary
-is_atari = False
-if 'NoFrameskip' in env_id:
-    is_atari = True
-    print("Using Atari wrapper")
-    env = make_atari_env(env_id, num_env=1, seed=0)
-    # Frame-stacking with 4 frames
-    env = VecFrameStack(env, n_stack=4)
-else:
-    env = DummyVecEnv([lambda: gym.make(env_id)])
+is_atari = 'NoFrameskip' in env_id
 
 stats_path = "{}/{}/{}/".format(folder, algo, env_id)
+if not os.path.isdir(stats_path):
+    stats_path = None
+using_vec_normalize = stats_path is not None
 
-# Load saved stats for normalizing input and rewards
-using_vec_normalize = False
-if os.path.isdir(stats_path):
-    using_vec_normalize = True
-    print("Loading running average")
-    env = VecNormalize(env, training=False, norm_reward=args.norm_reward)
-    env.load_running_average(stats_path)
+env = create_test_env(env_id, n_envs=args.n_envs, is_atari=is_atari,
+                      stats_path=stats_path, norm_reward=args.norm_reward,
+                      seed=args.seed)
 
 model = ALGOS[algo].load(model_path)
 
@@ -80,21 +73,22 @@ for _ in range(args.n_timesteps):
     running_reward += reward[0]
     ep_len += 1
 
-    # For atari the return reward is not the atari score
-    # so we have to get it from the infos dict
-    if infos is not None:
-        episode_infos = infos[0].get('episode')
-        if episode_infos is not None:
-            print("Atari Episode Score: {:.2f}".format(episode_infos['r']))
-            print("Atari Episode Length", episode_infos['l'])
+    if args.n_envs == 1:
+        # For atari the return reward is not the atari score
+        # so we have to get it from the infos dict
+        if infos is not None:
+            episode_infos = infos[0].get('episode')
+            if episode_infos is not None:
+                print("Atari Episode Score: {:.2f}".format(episode_infos['r']))
+                print("Atari Episode Length", episode_infos['l'])
 
-    if done and not is_atari:
-        # NOTE: for env using VecNormalize, the mean reward
-        # is a normalized reward when `--norm_reward` flag is passed
-        print("Episode Reward: {:.2f}".format(running_reward))
-        print("Episode Length", ep_len)
-        running_reward = 0.0
-        ep_len = 0
+        if done and not is_atari:
+            # NOTE: for env using VecNormalize, the mean reward
+            # is a normalized reward when `--norm_reward` flag is passed
+            print("Episode Reward: {:.2f}".format(running_reward))
+            print("Episode Length", ep_len)
+            running_reward = 0.0
+            ep_len = 0
 
 # Workaround for https://github.com/openai/gym/issues/893
 if not args.no_render:
