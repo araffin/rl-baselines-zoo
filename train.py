@@ -35,6 +35,9 @@ for env_id in env_ids:
 
 set_global_seeds(args.seed)
 
+if args.trained_agent != "":
+    assert args.trained_agent.endswith('.pkl') and os.path.isfile(args.trained_agent), "The trained_agent must be a valid path to a .pkl file"
+
 for env_id in env_ids:
     tensorboard_log = None if args.tensorboard_log == '' else args.tensorboard_log + '/' + env_id
 
@@ -52,6 +55,9 @@ for env_id in env_ids:
             hyperparams = yaml.load(f)[env_id]
 
     n_envs = hyperparams.get('n_envs', 1)
+
+    print("Using {} environments".format(n_envs))
+
     # Should we overwrite the number of timesteps?
     if args.n_timesteps > 0:
         n_timesteps = args.n_timesteps
