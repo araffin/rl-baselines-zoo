@@ -38,6 +38,11 @@ Train for multiple environments (with one call) and with tensorboard logging:
 python train.py --algo a2c --env MountainCar-v0 CartPole-v1 --tensorboard-log /tmp/stable-baselines/
 ```
 
+Continue training (here, load pretrained agent for Breakout and continue training for 5000 steps):
+```
+python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/BreakoutNoFrameskip-v4.pkl -n 5000
+```
+
 ## Current Collection
 
 ### Atari Games
