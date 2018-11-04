@@ -11,3 +11,10 @@ LunarLanderContinuous-v2:
   noise_type: 'ornstein-uhlenbeck'
   noise_std: 0.1
   memory_limit: 50000
+
+Pendulum-v0:
+  n_timesteps: !!float 2e5
+  policy: 'MlpPolicy'
+  noise_type: 'ornstein-uhlenbeck'
+  noise_std: 0.1
+  memory_limit: 50000
