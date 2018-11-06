@@ -3,7 +3,7 @@ atari:
   n_envs: 32
   n_timesteps: !!float 1e7
   lr_schedule: 'constant'
-  # async_eigen_decomp: True
+  async_eigen_decomp: True
 
 CartPole-v1:
   n_envs: 8

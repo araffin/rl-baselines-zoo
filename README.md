@@ -28,7 +28,7 @@ If the environment exists in this file, then you can train an agent using:
 python train.py --algo algo_name --env env_id
 ```
 
-For example:
+For example (with tensorboard support):
 ```
 python train.py --algo ppo2 --env CartPole-v1 --tensorboard-log /tmp/stable-baselines/
 ```
@@ -88,21 +88,40 @@ You can train agents online using [colab notebook](https://colab.research.google
 
 ## Installation
 
+### Stable-Baselines PyPi Package
 ```
 apt-get install swig cmake libopenmpi-dev zlib1g-dev
-pip install stable-baselines==2.1.1 box2d box2d-kengz pyyaml
+pip install stable-baselines==2.1.2 box2d box2d-kengz pyyaml
 ```
 
 Please see [Stable Baselines README](https://github.com/hill-a/stable-baselines) for alternatives.
+
+### Docker Images
 
 Build docker image (CPU):
 ```
 docker build . -f docker/Dockerfile.cpu -t rl-baselines-zoo-cpu
 ```
 
-Pull built docker image:
+GPU:
+```
+docker build . -f docker/Dockerfile.gpu -t rl-baselines-zoo
+```
+
+Pull built docker image (CPU):
 ```
 docker pull araffin/rl-baselines-zoo-cpu
+```
+
+GPU image:
+```
+docker pull araffin/rl-baselines-zoo
+```
+
+Run script in the docker image:
+
+```
+./run_docker_cpu.sh python train.py --algo ppo2 --env CartPole-v1
 ```
 
 ## Contributing

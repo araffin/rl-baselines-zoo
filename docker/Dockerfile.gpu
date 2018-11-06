@@ -21,7 +21,7 @@ RUN \
     pip install pytest-cov && \
     pip install pyyaml && \
     pip install box2d-py==2.3.5 && \
-    pip install stable-baselines==2.1.1
+    pip install stable-baselines==2.1.2
 
 ENV PATH=$VENV/bin:$PATH
 
