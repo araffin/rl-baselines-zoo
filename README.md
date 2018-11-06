@@ -55,7 +55,7 @@ python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/Br
 | ACER     | :heavy_check_mark: |                    |                    |:heavy_check_mark: |       |                    | :heavy_check_mark: |
 | ACKTR    |                    |                    |                    |       |       |                    |                    |
 | PPO2     |                    |                    | :heavy_check_mark: |       |       |                    |                    |
-| DQN     |                    | :heavy_check_mark: |   | :heavy_check_mark:|       |                    |                    |
+| DQN     |                    | :heavy_check_mark: |   | :heavy_check_mark:|       |                    |:heavy_check_mark:|
 
 
 ### Classic Control Environments

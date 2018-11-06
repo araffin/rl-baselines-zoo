@@ -4,3 +4,4 @@ logs/
 .coverage
 .coverage.*
 .idea/
+cluster_sbatch.sh
