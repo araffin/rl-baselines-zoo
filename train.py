@@ -61,6 +61,16 @@ for env_id in env_ids:
 
     print("Using {} environments".format(n_envs))
 
+    # Create lambdas for ppo2
+    if args.algo == "ppo2":
+        for key in ['learning_rate', 'cliprange']:
+            if key not in hyperparams:
+                continue
+            if isinstance(hyperparams[key], str):
+                schedule, initial_value = hyperparams[key].split('_')
+                initial_value = float(initial_value)
+                hyperparams[key] = lambda f: f * float(initial_value)
+
     # Should we overwrite the number of timesteps?
     if args.n_timesteps > 0:
         n_timesteps = args.n_timesteps

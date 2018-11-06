@@ -51,11 +51,11 @@ python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/Br
 
 |  RL Algo |  BeamRider         | Breakout           | Enduro             |  Pong | Qbert | Seaquest           | SpaceInvaders      |
 |----------|--------------------|--------------------|--------------------|-------|-------|--------------------|--------------------|
-| A2C      |                    | :heavy_check_mark: |                    |       | :heavy_check_mark: | :heavy_check_mark: |                    |
-| ACER     | :heavy_check_mark: |                    |                    |:heavy_check_mark: |       |                    | :heavy_check_mark: |
+| A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:|
+| ACER     | :heavy_check_mark: |                    |                    |:heavy_check_mark: |:heavy_check_mark:|                    | :heavy_check_mark: |
 | ACKTR    |                    |                    |                    |       |       |                    |                    |
 | PPO2     |                    |                    | :heavy_check_mark: |       |       |                    |                    |
-| DQN     |                    |                    |   |       |       |                    |                    |
+| DQN     |                    | :heavy_check_mark: |   | :heavy_check_mark:|       |                    |:heavy_check_mark:|
 
 
 ### Classic Control Environments
