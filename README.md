@@ -82,16 +82,16 @@ python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/Br
 | DDPG     |  | N/A | :heavy_check_mark: |  |   |
 
 
-## Colab Notebooks
+## Colab Notebook: Try it Online!
 
-You can train agents online using [colab notebook](https://colab.research.google.com/drive/1wUgHJJLvZDBEVYm99pMXkBuNxROxAtGS).
+You can train agents online using [colab notebook](https://colab.research.google.com/drive/1cPGK3XrCqEs3QLqiijsfib9OFht3kObX).
 
 ## Installation
 
 ### Stable-Baselines PyPi Package
 ```
 apt-get install swig cmake libopenmpi-dev zlib1g-dev
-pip install stable-baselines==2.1.2 box2d box2d-kengz pyyaml
+pip install stable-baselines==2.2.0 box2d box2d-kengz pyyaml
 ```
 
 Please see [Stable Baselines README](https://github.com/hill-a/stable-baselines) for alternatives.
