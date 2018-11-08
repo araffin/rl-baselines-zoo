@@ -7,7 +7,7 @@ from stable_baselines.common import set_global_seeds
 
 try:
     import pybullet_envs
-except importError:
+except ImportError:
     pybullet_envs = None
 
 from utils import ALGOS, create_test_env

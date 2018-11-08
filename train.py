@@ -13,7 +13,7 @@ from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, Orn
 
 try:
     import pybullet_envs
-except importError:
+except ImportError:
     pybullet_envs = None
 
 from utils import make_env, ALGOS, linear_schedule
