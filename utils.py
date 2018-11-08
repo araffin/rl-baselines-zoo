@@ -2,6 +2,8 @@ import gym
 import time
 import os
 
+import gym
+from gym.envs.registration import load
 from stable_baselines.deepq.policies import FeedForwardPolicy
 from stable_baselines.common.policies import register_policy
 from stable_baselines.bench import Monitor
@@ -76,6 +78,13 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         env = make_atari_env(env_id, num_env=n_envs, seed=seed)
         # Frame-stacking with 4 frames
         env = VecFrameStack(env, n_stack=4)
+    # Pybullet envs does not follow gym.render() interface
+    elif "Bullet" in env_id:
+        spec = gym.envs.registry.env_specs[env_id]
+        class_ = load(spec._entry_point)
+        # Create the env, with the original kwargs, and the new ones overriding them if needed
+        env = DummyVecEnv([lambda: class_(**{**spec._kwargs}, renders=True)])
+        env.envs[0].seed(seed)
     elif n_envs > 1:
         env = SubprocVecEnv([make_env(env_id, i, seed) for i in range(n_envs)])
     else:

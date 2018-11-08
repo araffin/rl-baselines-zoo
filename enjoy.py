@@ -5,6 +5,11 @@ import gym
 import numpy as np
 from stable_baselines.common import set_global_seeds
 
+try:
+    import pybullet_envs
+except importError:
+    pybullet_envs = None
+
 from utils import ALGOS, create_test_env
 
 parser = argparse.ArgumentParser()

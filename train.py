@@ -11,6 +11,11 @@ from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNor
 from stable_baselines.ppo2.ppo2 import constfn
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 
+try:
+    import pybullet_envs
+except importError:
+    pybullet_envs = None
+
 from utils import make_env, ALGOS, linear_schedule
 
 parser = argparse.ArgumentParser()

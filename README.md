@@ -91,7 +91,7 @@ You can train agents online using [colab notebook](https://colab.research.google
 ### Stable-Baselines PyPi Package
 ```
 apt-get install swig cmake libopenmpi-dev zlib1g-dev
-pip install stable-baselines==2.2.0 box2d box2d-kengz pyyaml
+pip install stable-baselines==2.2.0 box2d box2d-kengz pyyaml pybullet==2.1.0
 ```
 
 Please see [Stable Baselines README](https://github.com/hill-a/stable-baselines) for alternatives.
