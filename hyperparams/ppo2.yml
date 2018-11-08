@@ -7,7 +7,7 @@ atari:
   n_timesteps: !!float 1e7
   learning_rate: lin_2.5e-4
   cliprange: lin_0.1
-  vf_coef: 1
+  vf_coef: 0.5
   ent_coef: 0.01
 
 Pendulum-v0:

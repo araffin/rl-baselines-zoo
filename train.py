@@ -8,9 +8,10 @@ import numpy as np
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.cmd_util import make_atari_env
 from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
+from stable_baselines.ppo2.ppo2 import constfn
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 
-from utils import make_env, ALGOS
+from utils import make_env, ALGOS, linear_schedule
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', type=str, nargs='+', default=["CartPole-v1"], help='environment ID(s)')
@@ -61,7 +62,7 @@ for env_id in env_ids:
 
     print("Using {} environments".format(n_envs))
 
-    # Create lambdas for ppo2
+    # Create learning rate schedules for ppo2
     if args.algo == "ppo2":
         for key in ['learning_rate', 'cliprange']:
             if key not in hyperparams:
@@ -69,7 +70,11 @@ for env_id in env_ids:
             if isinstance(hyperparams[key], str):
                 schedule, initial_value = hyperparams[key].split('_')
                 initial_value = float(initial_value)
-                hyperparams[key] = lambda f: f * float(initial_value)
+                hyperparams[key] = linear_schedule(initial_value)
+            elif isinstance(hyperparams[key], float):
+                hyperparams[key] = constfn(hyperparams[key])
+            else:
+                raise ValueError('Invalid valid for {}: {}'.format(key, hyperparams[key]))
 
     # Should we overwrite the number of timesteps?
     if args.n_timesteps > 0:
@@ -130,7 +135,7 @@ for env_id in env_ids:
         print("Loading pretrained agent")
         # Policy should not be changed
         del hyperparams['policy']
-        # TODO: fix ppo2 in stable-baselines
+        # TODO: fix ppo2 in stable-baselines when loading
         # if args.algo == "ppo2":
         #     del hyperparams['learning_rate']
         #     del hyperparams['cliprange']
