@@ -7,8 +7,9 @@ from gym.envs.registration import load
 from stable_baselines.deepq.policies import FeedForwardPolicy
 from stable_baselines.common.policies import register_policy
 from stable_baselines.bench import Monitor
+from stable_baselines import logger
 from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, DDPG
-from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize,\
+from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize, \
     VecFrameStack, SubprocVecEnv
 from stable_baselines.common.cmd_util import make_atari_env
 from stable_baselines.common import set_global_seeds
@@ -46,7 +47,7 @@ def make_env(env_id, rank=0, seed=0, log_dir=None):
     :param seed: (int)
     :param log_dir: (str)
     """
-    if log_dir is None:
+    if log_dir is None and log_dir != '':
         log_dir = "/tmp/gym/{}/".format(int(time.time()))
     os.makedirs(log_dir, exist_ok=True)
 
@@ -61,7 +62,7 @@ def make_env(env_id, rank=0, seed=0, log_dir=None):
 
 
 def create_test_env(env_id, n_envs=1, is_atari=False,
-                    stats_path=None, norm_reward=False, seed=0):
+                    stats_path=None, norm_reward=False, seed=0, log_dir=''):
     """
     Create environment for testing a trained agent
 
@@ -71,25 +72,40 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
     :param stats_path: (str) path to folder containing saved running averaged
     :param norm_reward: (bool) Whether to normalize rewards or not when using Vecnormalize
     :param seed: (int) Seed for random number generator
+    :param log_dir: (str) Where to log rewards
+    :return: (gym.Env)
     """
+    # HACK to save logs
+    if log_dir != '':
+        os.environ["OPENAI_LOG_FORMAT"] = 'csv'
+        os.environ["OPENAI_LOGDIR"] = os.path.abspath(log_dir)
+        os.makedirs(log_dir, exist_ok=True)
+        logger.configure()
+
     # Create the environment and wrap it if necessary
     if is_atari:
         print("Using Atari wrapper")
         env = make_atari_env(env_id, num_env=n_envs, seed=seed)
         # Frame-stacking with 4 frames
         env = VecFrameStack(env, n_stack=4)
+    elif n_envs > 1:
+        env = SubprocVecEnv([make_env(env_id, i, seed, log_dir) for i in range(n_envs)])
     # Pybullet envs does not follow gym.render() interface
     elif "Bullet" in env_id:
         spec = gym.envs.registry.env_specs[env_id]
         class_ = load(spec._entry_point)
+
         # Create the env, with the original kwargs, and the new ones overriding them if needed
-        env = DummyVecEnv([lambda: class_(**{**spec._kwargs}, renders=True)])
-        env.envs[0].seed(seed)
-    elif n_envs > 1:
-        env = SubprocVecEnv([make_env(env_id, i, seed) for i in range(n_envs)])
+        def _init():
+            env = class_(**{**spec._kwargs}, renders=True)
+            env.seed(0)
+            if log_dir != '':
+                env = Monitor(env, os.path.join(log_dir, "0"), allow_early_resets=True)
+            return env
+
+        env = DummyVecEnv([_init])
     else:
-        env = DummyVecEnv([lambda: gym.make(env_id)])
-        env.envs[0].seed(seed)
+        env = DummyVecEnv([make_env(env_id, 0, seed, log_dir)])
 
     # Load saved stats for normalizing input and rewards
     if stats_path is not None:
@@ -108,6 +124,7 @@ def linear_schedule(initial_value):
     """
     if isinstance(initial_value, str):
         initial_value = float(initial_value)
+
     def func(progress):
         """
         Progress will decrease from 1 (beginning) to 0
@@ -115,4 +132,5 @@ def linear_schedule(initial_value):
         :return: (float)
         """
         return progress * initial_value
+
     return func

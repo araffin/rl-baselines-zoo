@@ -2,13 +2,10 @@ import argparse
 import os
 
 import gym
+import pybullet_envs
 import numpy as np
 from stable_baselines.common import set_global_seeds
 
-try:
-    import pybullet_envs
-except ImportError:
-    pybullet_envs = None
 
 from utils import ALGOS, create_test_env
 
@@ -21,6 +18,8 @@ parser.add_argument('-n', '--n-timesteps', help='number of timesteps', default=1
                     type=int)
 parser.add_argument('--n-envs', help='number of environments', default=1,
                     type=int)
+parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
+                    type=int)
 parser.add_argument('--no-render', action='store_true', default=False,
                     help='Do not render the environment (useful for tests)')
 parser.add_argument('--deterministic', action='store_true', default=False,
@@ -28,6 +27,7 @@ parser.add_argument('--deterministic', action='store_true', default=False,
 parser.add_argument('--norm-reward', action='store_true', default=False,
                     help='Normalize reward if applicable (trained with VecNormalize)')
 parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
+parser.add_argument('--reward-log', help='Where to log reward', default='', type=str)
 
 args = parser.parse_args()
 
@@ -54,7 +54,7 @@ using_vec_normalize = stats_path is not None
 
 env = create_test_env(env_id, n_envs=args.n_envs, is_atari=is_atari,
                       stats_path=stats_path, norm_reward=args.norm_reward,
-                      seed=args.seed)
+                      seed=args.seed, log_dir=args.reward_log)
 
 model = ALGOS[algo].load(model_path)
 
@@ -81,13 +81,13 @@ for _ in range(args.n_timesteps):
     if args.n_envs == 1:
         # For atari the return reward is not the atari score
         # so we have to get it from the infos dict
-        if infos is not None:
+        if infos is not None and args.verbose >= 1:
             episode_infos = infos[0].get('episode')
             if episode_infos is not None:
                 print("Atari Episode Score: {:.2f}".format(episode_infos['r']))
                 print("Atari Episode Length", episode_infos['l'])
 
-        if done and not is_atari:
+        if done and not is_atari and args.verbose >= 1:
             # NOTE: for env using VecNormalize, the mean reward
             # is a normalized reward when `--norm_reward` flag is passed
             print("Episode Reward: {:.2f}".format(running_reward))

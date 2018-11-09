@@ -18,3 +18,11 @@ Pendulum-v0:
   noise_type: 'ornstein-uhlenbeck'
   noise_std: 0.1
   memory_limit: 50000
+
+BipedalWalker-v2:
+  n_timesteps: !!float 5e6
+  policy: 'LnMlpPolicy'
+  normalize_observations: True
+  noise_type: 'adaptive-param'
+  noise_std: 0.2
+  memory_limit: 50000
