@@ -1,6 +1,7 @@
 import gym
 import time
 import os
+import glob
 
 import gym
 from gym.envs.registration import load
@@ -76,7 +77,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
     :return: (gym.Env)
     """
     # HACK to save logs
-    if log_dir != '':
+    if log_dir is not None:
         os.environ["OPENAI_LOG_FORMAT"] = 'csv'
         os.environ["OPENAI_LOGDIR"] = os.path.abspath(log_dir)
         os.makedirs(log_dir, exist_ok=True)
@@ -99,7 +100,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         def _init():
             env = class_(**{**spec._kwargs}, renders=True)
             env.seed(0)
-            if log_dir != '':
+            if log_dir is not None:
                 env = Monitor(env, os.path.join(log_dir, "0"), allow_early_resets=True)
             return env
 
@@ -134,3 +135,18 @@ def linear_schedule(initial_value):
         return progress * initial_value
 
     return func
+
+
+def get_trained_models(log_folder):
+    """
+    :param log_folder: (str) Root log folder
+    :return: (dict) Dict representing the trained agent
+    """
+    algos = os.listdir(log_folder)
+    trained_models = {}
+    for algo in algos:
+        for env_id in glob.glob('{}/{}/*.pkl'.format(log_folder, algo)):
+            # Retrieve env name
+            env_id = env_id.split('/')[-1].split('.pkl')[0]
+            trained_models['{}-{}'.format(algo, env_id)] = (algo, env_id)
+    return trained_models

@@ -51,10 +51,11 @@ stats_path = "{}/{}/{}/".format(folder, algo, env_id)
 if not os.path.isdir(stats_path):
     stats_path = None
 using_vec_normalize = stats_path is not None
+log_dir = args.reward_log if args.reward_log != '' else None
 
 env = create_test_env(env_id, n_envs=args.n_envs, is_atari=is_atari,
                       stats_path=stats_path, norm_reward=args.norm_reward,
-                      seed=args.seed, log_dir=args.reward_log)
+                      seed=args.seed, log_dir=log_dir)
 
 model = ALGOS[algo].load(model_path)
 
@@ -81,7 +82,7 @@ for _ in range(args.n_timesteps):
     if args.n_envs == 1:
         # For atari the return reward is not the atari score
         # so we have to get it from the infos dict
-        if infos is not None and args.verbose >= 1:
+        if is_atari and infos is not None and args.verbose >= 1:
             episode_infos = infos[0].get('episode')
             if episode_infos is not None:
                 print("Atari Episode Score: {:.2f}".format(episode_infos['r']))
