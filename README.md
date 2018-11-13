@@ -83,6 +83,15 @@ Scores can be found in `benchmark.md`.
 | DQN     | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
 | DDPG     |  | N/A | :heavy_check_mark: |  |   | |
 
+### PyBullet Environments
+
+See https://github.com/bulletphysics/bullet3/tree/master/examples/pybullet/gym/pybullet_envs.
+Similar to [MuJoCo Envs](https://gym.openai.com/envs/#mujoco) but with a free simulator: pybullet. We are using `BulletEnv-v0` version.
+
+|  RL Algo |  Walker2D | HalfCheetah | Ant | Reacher |  Hopper | Humanoid |
+|----------|-----------|-------------|-----|---------|---------|----------|
+| PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:|
+| DDPG     |  | | |  | | | |
 
 ## Colab Notebook: Try it Online!
 

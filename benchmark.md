@@ -40,12 +40,16 @@
 |dqn  |SeaquestNoFrameskip-v4     |    1948.57|   234.328|     148547|        70|
 |dqn  |SpaceInvadersNoFrameskip-v4|     636.62|   146.066|     150041|       136|
 |ppo2 |Acrobot-v1                 |     -85.14|    26.272|     149963|      1741|
+|ppo2 |AntBulletEnv-v0            |    1667.83|    51.465|     150000|       150|
 |ppo2 |BeamRiderNoFrameskip-v4    |    1691.07|   904.484|     149975|        69|
 |ppo2 |BipedalWalker-v2           |     265.94|    80.994|     149968|       159|
 |ppo2 |BipedalWalkerHardcore-v2   |     166.48|   119.300|     149509|       154|
 |ppo2 |BreakoutNoFrameskip-v4     |     228.59|   141.964|     150921|       101|
 |ppo2 |CartPole-v1                |     500.00|     0.000|     150000|       300|
 |ppo2 |EnduroNoFrameskip-v4       |     643.82|   205.988|     149683|        17|
+|ppo2 |HalfCheetahBulletEnv-v0    |    1886.58|    93.474|     150000|       150|
+|ppo2 |HopperBulletEnv-v0         |     813.21|    95.912|     149575|       152|
+|ppo2 |HumanoidBulletEnv-v0       |    1285.81|   918.715|     149544|       244|
 |ppo2 |LunarLander-v2             |      99.68|    62.033|     149512|       174|
 |ppo2 |LunarLanderContinuous-v2   |      10.88|    68.366|     149354|       155|
 |ppo2 |MountainCar-v0             |    -143.50|    22.928|     149959|      1045|
@@ -53,5 +57,7 @@
 |ppo2 |Pendulum-v0                |    -168.28|   107.164|     150000|       750|
 |ppo2 |PongNoFrameskip-v4         |      20.51|     0.694|     149402|        69|
 |ppo2 |QbertNoFrameskip-v4        |   14510.00|  2847.445|     150251|        90|
+|ppo2 |ReacherBulletEnv-v0        |      17.88|     9.780|     150000|      1000|
 |ppo2 |SeaquestNoFrameskip-v4     |    1782.69|    80.883|     150535|        67|
 |ppo2 |SpaceInvadersNoFrameskip-v4|     689.63|   202.143|     150081|       176|
+|ppo2 |Walker2DBulletEnv-v0       |    1276.85|   504.586|     149959|       179|

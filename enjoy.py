@@ -55,7 +55,7 @@ log_dir = args.reward_log if args.reward_log != '' else None
 
 env = create_test_env(env_id, n_envs=args.n_envs, is_atari=is_atari,
                       stats_path=stats_path, norm_reward=args.norm_reward,
-                      seed=args.seed, log_dir=log_dir)
+                      seed=args.seed, log_dir=log_dir, should_render=not args.no_render)
 
 model = ALGOS[algo].load(model_path)
 
@@ -75,7 +75,7 @@ for _ in range(args.n_timesteps):
         action = np.clip(action, env.action_space.low, env.action_space.high)
     obs, reward, done, infos = env.step(action)
     if not args.no_render:
-        env.render()
+        env.render('human')
     running_reward += reward[0]
     ep_len += 1
 
@@ -98,9 +98,12 @@ for _ in range(args.n_timesteps):
 
 # Workaround for https://github.com/openai/gym/issues/893
 if not args.no_render:
-    if is_atari:
-        env.close()
-    elif using_vec_normalize:
-        env.venv.envs[0].env.close()
+    if args.n_envs == 1 and not 'Bullet' in env_id:
+        # DummyVecEnv
+        if using_vec_normalize:
+            env.venv.envs[0].env.close()
+        else:
+            env.envs[0].env.close()
     else:
-        env.envs[0].env.close()
+        # SubprocVecEnv
+        env.close()

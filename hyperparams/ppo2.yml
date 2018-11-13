@@ -10,20 +10,6 @@ atari:
   vf_coef: 0.5
   ent_coef: 0.01
 
-RacecarBulletEnv-v0:
-  normalize: true
-  n_envs: 8
-  n_timesteps: !!float 1e6
-  policy: 'MlpPolicy'
-  n_steps: 2048
-  nminibatches: 32
-  lam: 0.95
-  gamma: 0.99
-  noptepochs: 10
-  ent_coef: 0.0
-  learning_rate: !!float 3e-4
-  cliprange: 0.2
-
 Pendulum-v0:
   n_envs: 8
   n_timesteps: !!float 2e6
@@ -135,3 +121,87 @@ LunarLanderContinuous-v2:
   gamma: 0.999
   noptepochs: 4
   ent_coef: 0.01
+
+Walker2DBulletEnv-v0:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: 2.5e-4
+  cliprange: 0.2
+
+HalfCheetahBulletEnv-v0:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: 2.5e-4
+  cliprange: 0.2
+
+AntBulletEnv-v0:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: 2.5e-4
+  cliprange: 0.2
+
+HopperBulletEnv-v0:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: 2.5e-4
+  cliprange: 0.2
+
+ReacherBulletEnv-v0:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: 2.5e-4
+  cliprange: 0.2
+
+HumanoidBulletEnv-v0:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 1e7
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: 2.5e-4
+  cliprange: 0.2

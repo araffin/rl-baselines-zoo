@@ -2,8 +2,10 @@ import gym
 import time
 import os
 import glob
+import inspect
 
 import gym
+import pybullet_envs
 from gym.envs.registration import load
 from stable_baselines.deepq.policies import FeedForwardPolicy
 from stable_baselines.common.policies import register_policy
@@ -63,7 +65,8 @@ def make_env(env_id, rank=0, seed=0, log_dir=None):
 
 
 def create_test_env(env_id, n_envs=1, is_atari=False,
-                    stats_path=None, norm_reward=False, seed=0, log_dir=''):
+                    stats_path=None, norm_reward=False, seed=0,
+                    log_dir='', should_render=True):
     """
     Create environment for testing a trained agent
 
@@ -74,6 +77,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
     :param norm_reward: (bool) Whether to normalize rewards or not when using Vecnormalize
     :param seed: (int) Seed for random number generator
     :param log_dir: (str) Where to log rewards
+    :param should_render: (bool) For Pybullet env, display the GUI
     :return: (gym.Env)
     """
     # HACK to save logs
@@ -95,16 +99,23 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
     elif "Bullet" in env_id:
         spec = gym.envs.registry.env_specs[env_id]
         class_ = load(spec._entry_point)
+        # HACK: force SubprocVecEnv for Bullet env that does not
+        # have a render argument
+        use_subproc = 'renders' not in inspect.getfullargspec(class_.__init__).args
 
         # Create the env, with the original kwargs, and the new ones overriding them if needed
         def _init():
-            env = class_(**{**spec._kwargs}, renders=True)
+            # TODO: fix for pybullet locomotion envs
+            env = class_(**{**spec._kwargs}, renders=should_render)
             env.seed(0)
             if log_dir is not None:
                 env = Monitor(env, os.path.join(log_dir, "0"), allow_early_resets=True)
             return env
 
-        env = DummyVecEnv([_init])
+        if use_subproc:
+            env = SubprocVecEnv([make_env(env_id, 0, seed, log_dir)])
+        else:
+            env = DummyVecEnv([_init])
     else:
         env = DummyVecEnv([make_env(env_id, 0, seed, log_dir)])
 
