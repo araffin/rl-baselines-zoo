@@ -1,7 +1,7 @@
 [run]
 branch = False
 omit =
-    tests/
+    tests/*
     utils/record_video.py
 
 [report]
