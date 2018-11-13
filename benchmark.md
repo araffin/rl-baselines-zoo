@@ -42,7 +42,7 @@
 |ppo2 |Acrobot-v1                 |     -85.14|    26.272|     149963|      1741|
 |ppo2 |BeamRiderNoFrameskip-v4    |    1691.07|   904.484|     149975|        69|
 |ppo2 |BipedalWalker-v2           |     265.94|    80.994|     149968|       159|
-|ppo2 |BipedalWalkerHardcore-v2   |      79.98|   123.053|     149643|       114|
+|ppo2 |BipedalWalkerHardcore-v2   |     166.48|   119.300|     149509|       154|
 |ppo2 |BreakoutNoFrameskip-v4     |     228.59|   141.964|     150921|       101|
 |ppo2 |CartPole-v1                |     500.00|     0.000|     150000|       300|
 |ppo2 |EnduroNoFrameskip-v4       |     643.82|   205.988|     149683|        17|

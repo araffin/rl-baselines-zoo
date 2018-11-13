@@ -79,7 +79,7 @@ Scores can be found in `benchmark.md`.
 | A2C      |  | :heavy_check_mark:  |  |       |                   |
 | ACER     | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | ACKTR    | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
-| PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: |  |   |
+| PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: |:heavy_check_mark:|   |
 | DQN     | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
 | DDPG     |  | N/A | :heavy_check_mark: |  |   | |
 
