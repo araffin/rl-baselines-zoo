@@ -2,6 +2,8 @@
 
 # RL Baselines Zoo: a Collection of Trained RL Agents
 
+<img src="images/BipedalWalkerHardcorePPO2.gif" align="right" width="35%"/>
+
 A collection of trained RL agents, with tuned hyperparameters, using [Stable Baselines](https://github.com/hill-a/stable-baselines).
 
 We are **looking for contributors** to complete the collection!

@@ -36,5 +36,5 @@ def test_benchmark():
         '--test-mode'
     ]
 
-    return_code = subprocess.call(['python', 'benchmark.py'] + args)
+    return_code = subprocess.call(['python', '-m', 'utils.benchmark'] + args)
     _assert_eq(return_code, 0)
