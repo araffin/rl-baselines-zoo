@@ -2,6 +2,7 @@
 branch = False
 omit =
     tests/
+    utils/record_video.py
 
 [report]
 exclude_lines =

@@ -1,12 +1,19 @@
 [![Build Status](https://travis-ci.com/araffin/rl-baselines-zoo.svg?branch=master)](https://travis-ci.com/araffin/rl-baselines-zoo)
 
-# RL Baselines Zoo: a Collection of Trained RL Agents
+# RL Baselines Zoo: a Collection of Trained Reinforcement Learning Agents
 
 <img src="images/BipedalWalkerHardcorePPO2.gif" align="right" width="35%"/>
 
-A collection of trained RL agents, with tuned hyperparameters, using [Stable Baselines](https://github.com/hill-a/stable-baselines).
+A collection of trained Reinforcement Learning (RL) agents, with tuned hyperparameters, using [Stable Baselines](https://github.com/hill-a/stable-baselines).
 
 We are **looking for contributors** to complete the collection!
+
+Goals of this repository:
+
+1. Provide a simple interface to train and enjoy RL agents
+2. Benchmark the different Reinforcement Learning algorithms
+3. Provide tuned hyperparameters for each environment and RL algorithm
+4. Have fun with the trained agents!
 
 ## Enjoy a Trained Agent
 
@@ -47,7 +54,7 @@ python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/Br
 
 ## Current Collection
 
-Scores can be found in `benchmark.md`.
+Scores can be found in `benchmark.md`. To compute them, simply run `python -m utils.benchmark`.
 
 ### Atari Games
 
@@ -135,6 +142,13 @@ Run script in the docker image:
 
 ```
 ./run_docker_cpu.sh python train.py --algo ppo2 --env CartPole-v1
+```
+
+## Tests
+
+To run tests, first install pytest, then:
+```
+python -m pytest -v tests/
 ```
 
 ## Contributing

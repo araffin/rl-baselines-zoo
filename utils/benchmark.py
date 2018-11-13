@@ -2,14 +2,10 @@ import argparse
 import os
 import subprocess
 
+import pytablewriter
 import numpy as np
 import pandas as pd
 from stable_baselines.results_plotter import load_results, ts2xy
-
-try:
-    import pytablewriter
-except ImportError:
-    pytablewriter = None
 
 from utils import get_trained_models
 
@@ -100,14 +96,14 @@ results_df = pd.DataFrame(results)
 # Sort results
 results_df = results_df.sort_values(by=['algo', 'env_id'])
 
-if pytablewriter is not None:
-    writer = pytablewriter.MarkdownTableWriter()
-    writer.from_dataframe(results_df)
-    # change the output stream to a file
-    with open("{}/benchmark.md".format(args.benchmark_dir), "w") as f:
-        writer.stream = f
-        writer.write_table()
-    print("Results written to:", "{}/benchmark.md".format(args.benchmark_dir))
-else:
-    results_df.to_csv('{}/benchmark.csv'.format(args.benchmark_dir), sep=",", index=False)
-    print("Saved results to {}/benchmark.csv".format(args.benchmark_dir))
+writer = pytablewriter.MarkdownTableWriter()
+writer.from_dataframe(results_df)
+# change the output stream to a file
+with open("{}/benchmark.md".format(args.benchmark_dir), "w") as f:
+    writer.stream = f
+    writer.write_table()
+print("Results written to:", "{}/benchmark.md".format(args.benchmark_dir))
+
+# Alternatively, to dump as csv file:
+# results_df.to_csv('{}/benchmark.csv'.format(args.benchmark_dir), sep=",", index=False)
+# print("Saved results to {}/benchmark.csv".format(args.benchmark_dir))
