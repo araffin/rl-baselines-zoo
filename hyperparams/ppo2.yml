@@ -83,7 +83,7 @@ BipedalWalker-v2:
   gamma: 0.99
   noptepochs: 10
   ent_coef: 0.001
-  learning_rate: 2.5e-4
+  learning_rate: !!float 2.5e-4
   cliprange: 0.2
 
 BipedalWalkerHardcore-v2:
