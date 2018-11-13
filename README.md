@@ -1,10 +1,19 @@
 [![Build Status](https://travis-ci.com/araffin/rl-baselines-zoo.svg?branch=master)](https://travis-ci.com/araffin/rl-baselines-zoo)
 
-# RL Baselines Zoo: a Collection of Trained RL Agents
+# RL Baselines Zoo: a Collection of Trained Reinforcement Learning Agents
 
-A collection of trained RL agents, with tuned hyperparameters, using [Stable Baselines](https://github.com/hill-a/stable-baselines).
+<img src="images/BipedalWalkerHardcorePPO2.gif" align="right" width="35%"/>
+
+A collection of trained Reinforcement Learning (RL) agents, with tuned hyperparameters, using [Stable Baselines](https://github.com/hill-a/stable-baselines).
 
 We are **looking for contributors** to complete the collection!
+
+Goals of this repository:
+
+1. Provide a simple interface to train and enjoy RL agents
+2. Benchmark the different Reinforcement Learning algorithms
+3. Provide tuned hyperparameters for each environment and RL algorithm
+4. Have fun with the trained agents!
 
 ## Enjoy a Trained Agent
 
@@ -45,6 +54,8 @@ python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/Br
 
 ## Current Collection
 
+Scores can be found in `benchmark.md`. To compute them, simply run `python -m utils.benchmark`.
+
 ### Atari Games
 
 7 atari games from OpenAI benchmark (NoFrameskip-v4 versions).
@@ -55,18 +66,18 @@ python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/Br
 | ACER     | :heavy_check_mark: |                    |:heavy_check_mark:|:heavy_check_mark: |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: |
 | ACKTR    |                    |                    |                    |       |       |                    |                    |
 | PPO2     |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark: |:heavy_check_mark:|:heavy_check_mark:|  :heavy_check_mark: |
-| DQN     |                    | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+| DQN     |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
 
 
 ### Classic Control Environments
 
 |  RL Algo |  CartPole-v1 | MountainCar-v0 | Acrobot-v1 |  Pendulum-v0 | MountainCarContinuous-v0 |
 |----------|--------------|----------------|------------|--------------|--------------------------|
-| A2C      | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | missing      | missing                  |
+| A2C      | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: |       |                   |
 | ACER     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | ACKTR    | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:  |
-| DQN     | :heavy_check_mark: | :heavy_check_mark:  |  | N/A | N/A  |
+| DQN     | :heavy_check_mark: | :heavy_check_mark:  |:heavy_check_mark:| N/A | N/A  |
 | DDPG     |  N/A |  N/A  | N/A| :heavy_check_mark: | :heavy_check_mark:  |
 
 
@@ -74,13 +85,22 @@ python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/Br
 
 |  RL Algo |  BipedalWalker-v2 | LunarLander-v2 | LunarLanderContinuous-v2 |  BipedalWalkerHardcore-v2 | CarRacing-v0 |
 |----------|--------------|----------------|------------|--------------|--------------------------|
-| A2C      | missing | :heavy_check_mark:  | missing | missing      | missing                  |
+| A2C      |  | :heavy_check_mark:  |  |       |                   |
 | ACER     | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | ACKTR    | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
-| PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | missing | missing  |
+| PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: |:heavy_check_mark:|   |
 | DQN     | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
-| DDPG     |  | N/A | :heavy_check_mark: |  |   |
+| DDPG     |  | N/A | :heavy_check_mark: |  |   | |
 
+### PyBullet Environments
+
+See https://github.com/bulletphysics/bullet3/tree/master/examples/pybullet/gym/pybullet_envs.
+Similar to [MuJoCo Envs](https://gym.openai.com/envs/#mujoco) but with a free simulator: pybullet. We are using `BulletEnv-v0` version.
+
+|  RL Algo |  Walker2D | HalfCheetah | Ant | Reacher |  Hopper | Humanoid |
+|----------|-----------|-------------|-----|---------|---------|----------|
+| PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:|
+| DDPG     |  | | |  | | | |
 
 ## Colab Notebook: Try it Online!
 
@@ -91,7 +111,7 @@ You can train agents online using [colab notebook](https://colab.research.google
 ### Stable-Baselines PyPi Package
 ```
 apt-get install swig cmake libopenmpi-dev zlib1g-dev
-pip install stable-baselines==2.2.0 box2d box2d-kengz pyyaml pybullet==2.1.0
+pip install stable-baselines==2.2.0 box2d box2d-kengz pyyaml pybullet==2.1.0 pytablewriter
 ```
 
 Please see [Stable Baselines README](https://github.com/hill-a/stable-baselines) for alternatives.
@@ -122,6 +142,13 @@ Run script in the docker image:
 
 ```
 ./run_docker_cpu.sh python train.py --algo ppo2 --env CartPole-v1
+```
+
+## Tests
+
+To run tests, first install pytest, then:
+```
+python -m pytest -v tests/
 ```
 
 ## Contributing

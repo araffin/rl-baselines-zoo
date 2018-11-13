@@ -3,18 +3,14 @@ import difflib
 import os
 
 import gym
-import yaml
+import pybullet_envs
 import numpy as np
+import yaml
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.cmd_util import make_atari_env
 from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
-from stable_baselines.ppo2.ppo2 import constfn
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
-
-try:
-    import pybullet_envs
-except ImportError:
-    pybullet_envs = None
+from stable_baselines.ppo2.ppo2 import constfn
 
 from utils import make_env, ALGOS, linear_schedule
 
@@ -44,7 +40,7 @@ for env_id in env_ids:
 set_global_seeds(args.seed)
 
 if args.trained_agent != "":
-    assert args.trained_agent.endswith('.pkl') and os.path.isfile(args.trained_agent),\
+    assert args.trained_agent.endswith('.pkl') and os.path.isfile(args.trained_agent), \
         "The trained_agent must be a valid path to a .pkl file"
 
 for env_id in env_ids:
@@ -123,12 +119,14 @@ for env_id in env_ids:
         noise_std = hyperparams['noise_std']
         n_actions = env.action_space.shape[0]
         if 'adaptive-param' in noise_type:
-            hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std, desired_action_stddev=noise_std)
+            hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std,
+                                                                desired_action_stddev=noise_std)
         elif 'normal' in noise_type:
-            hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(n_actions), sigma=noise_std * np.ones(n_actions))
+            hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(n_actions),
+                                                            sigma=noise_std * np.ones(n_actions))
         elif 'ornstein-uhlenbeck' in noise_type:
             hyperparams['action_noise'] = OrnsteinUhlenbeckActionNoise(mean=np.zeros(n_actions),
-                                                        sigma=noise_std * np.ones(n_actions))
+                                                                       sigma=noise_std * np.ones(n_actions))
         else:
             raise RuntimeError('Unknown noise type "{}"'.format(noise_type))
         print("Applying {} noise with std {}".format(noise_type, noise_std))
