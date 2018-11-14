@@ -102,6 +102,13 @@ Similar to [MuJoCo Envs](https://gym.openai.com/envs/#mujoco) but with a free si
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:|
 | DDPG     |  | | |  | | | |
 
+PyBullet Envs (Continued)
+
+|  RL Algo |  Minitaur | MinitaurDuck | InvertedDoublePendulum | InvertedPendulumSwingup |
+|----------|-----------|-------------|-----|---------|
+| PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
+| DDPG     | | | | | |
+
 ## Colab Notebook: Try it Online!
 
 You can train agents online using [colab notebook](https://colab.research.google.com/drive/1cPGK3XrCqEs3QLqiijsfib9OFht3kObX).

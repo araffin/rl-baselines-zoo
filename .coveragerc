@@ -3,6 +3,7 @@ branch = False
 omit =
     tests/*
     utils/record_video.py
+    utils/plot.py
 
 [report]
 exclude_lines =

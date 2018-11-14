@@ -5,6 +5,7 @@ import gym
 import pybullet_envs
 import numpy as np
 from stable_baselines.common import set_global_seeds
+from stable_baselines.common.vec_env import VecNormalize, VecFrameStack
 
 
 from utils import ALGOS, create_test_env
@@ -100,10 +101,10 @@ for _ in range(args.n_timesteps):
 if not args.no_render:
     if args.n_envs == 1 and not 'Bullet' in env_id:
         # DummyVecEnv
-        if using_vec_normalize:
-            env.venv.envs[0].env.close()
-        else:
-            env.envs[0].env.close()
+        # Unwrap env
+        while isinstance(env, VecNormalize) or isinstance(env, VecFrameStack):
+            env = env.venv
+        env.envs[0].env.close()
     else:
         # SubprocVecEnv
         env.close()
