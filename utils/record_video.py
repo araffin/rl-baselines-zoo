@@ -10,12 +10,13 @@ from .utils import ALGOS, create_test_env
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', help='environment ID', type=str, default='CartPole-v1')
 parser.add_argument('-f', '--folder', help='Log folder', type=str, default='trained_agents')
+parser.add_argument('-o', '--output-folder', help='Output folder', type=str, default='logs/videos/')
 parser.add_argument('--algo', help='RL Algorithm', default='ppo2',
                     type=str, required=False, choices=list(ALGOS.keys()))
 parser.add_argument('-n', '--n-timesteps', help='number of timesteps', default=1000,
                     type=int)
-# parser.add_argument('--n-envs', help='number of environments', default=1,
-#                     type=int)
+parser.add_argument('--n-envs', help='number of environments', default=1,
+                    type=int)
 parser.add_argument('--deterministic', action='store_true', default=False,
                     help='Use deterministic actions')
 parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
@@ -27,11 +28,11 @@ args = parser.parse_args()
 env_id = args.env
 algo = args.algo
 folder = args.folder
-video_folder = 'logs/videos/'
+video_folder = args.output_folder
 seed = args.seed
 deterministic = args.deterministic
 video_length = args.n_timesteps
-n_envs = 1
+n_envs = args.n_envs
 
 model_path = "{}/{}/{}.pkl".format(folder, algo, env_id)
 
