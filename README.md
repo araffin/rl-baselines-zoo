@@ -64,7 +64,7 @@ Scores can be found in `benchmark.md`. To compute them, simply run `python -m ut
 |----------|--------------------|--------------------|--------------------|-------|-------|--------------------|--------------------|
 | A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:|
 | ACER     | :heavy_check_mark: |                    |:heavy_check_mark:|:heavy_check_mark: |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: |
-| ACKTR    |                    |                    |                    |       |       |                    |                    |
+| ACKTR    |:heavy_check_mark:| :heavy_check_mark:|                    |       | :heavy_check_mark:| :heavy_check_mark:|  :heavy_check_mark: |
 | PPO2     |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark: |:heavy_check_mark:|:heavy_check_mark:|  :heavy_check_mark: |
 | DQN     |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
 

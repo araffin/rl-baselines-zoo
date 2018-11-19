@@ -22,9 +22,14 @@
 |acer |SeaquestNoFrameskip-v4             |    872.121|    25.555|     149650|        66|
 |acer |SpaceInvadersNoFrameskip-v4        |    542.556|   172.332|     150374|       133|
 |acktr|Acrobot-v1                         |    -91.284|    32.515|     149959|      1625|
+|acktr|BeamRiderNoFrameskip-v4            |   3760.976|  1826.059|     147414|        41|
+|acktr|BreakoutNoFrameskip-v4             |    448.514|    88.882|     143118|        37|
 |acktr|CartPole-v1                        |    487.573|    63.866|     149685|       307|
 |acktr|LunarLander-v2                     |     96.822|    64.020|     149905|       176|
 |acktr|MountainCar-v0                     |   -111.917|    21.422|     149969|      1340|
+|acktr|QbertNoFrameskip-v4                |   9569.575|  3980.468|     150896|       106|
+|acktr|SeaquestNoFrameskip-v4             |   1672.239|   105.092|     149148|        67|
+|acktr|SpaceInvadersNoFrameskip-v4        |    738.045|   306.756|     149714|       156|
 |ddpg |LunarLanderContinuous-v2           |    244.566|    75.617|     149531|       660|
 |ddpg |MountainCarContinuous-v0           |     91.858|     1.350|     149945|      1818|
 |ddpg |Pendulum-v0                        |   -169.829|    93.303|     150000|       750|
