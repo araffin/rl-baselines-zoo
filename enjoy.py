@@ -99,7 +99,7 @@ for _ in range(args.n_timesteps):
 
 # Workaround for https://github.com/openai/gym/issues/893
 if not args.no_render:
-    if args.n_envs == 1 and not 'Bullet' in env_id:
+    if args.n_envs == 1 and not 'Bullet' in env_id and not is_atari:
         # DummyVecEnv
         # Unwrap env
         while isinstance(env, VecNormalize) or isinstance(env, VecFrameStack):
