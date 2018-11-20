@@ -5,6 +5,13 @@ import subprocess
 import pytablewriter
 import numpy as np
 import pandas as pd
+import matplotlib
+# Fix when running tests
+try:
+    import tkinter as Tk
+except ImportError:
+    matplotlib.use('agg')
+
 from stable_baselines.results_plotter import load_results, ts2xy
 
 from utils import get_trained_models
