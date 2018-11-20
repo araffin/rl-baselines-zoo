@@ -4,7 +4,8 @@ RUN apt-get -y update && \
     apt-get -y install git wget python-dev python3-dev libopenmpi-dev \
                        python-pip libglib2.0-0 \
                        libsm6 libxext6 libfontconfig1 libxrender1 \
-                       swig cmake libopenmpi-dev zlib1g-dev
+                       swig cmake libopenmpi-dev zlib1g-dev ffmpeg \
+                       freeglut3-dev xvfb
 
 ENV CODE_DIR /root/code
 ENV VENV /root/venv
@@ -21,10 +22,13 @@ RUN \
     pip install pytest-cov && \
     pip install pyyaml && \
     pip install box2d-py==2.3.5 && \
-    pip install stable-baselines==2.2.0 && \
+    pip install stable-baselines==2.2.1 && \
     pip install pybullet==2.1.0 && \
     pip install pytablewriter==0.36.0
 
 ENV PATH=$VENV/bin:$PATH
+
+COPY docker/entrypoint.sh /tmp/
+ENTRYPOINT ["/tmp/entrypoint.sh"]
 
 CMD /bin/bash

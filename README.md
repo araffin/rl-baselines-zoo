@@ -64,7 +64,7 @@ Scores can be found in `benchmark.md`. To compute them, simply run `python -m ut
 |----------|--------------------|--------------------|--------------------|-------|-------|--------------------|--------------------|
 | A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:|
 | ACER     | :heavy_check_mark: |                    |:heavy_check_mark:|:heavy_check_mark: |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: |
-| ACKTR    |                    |                    |                    |       |       |                    |                    |
+| ACKTR    |:heavy_check_mark:| :heavy_check_mark:|                    |       | :heavy_check_mark:| :heavy_check_mark:|  :heavy_check_mark: |
 | PPO2     |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark: |:heavy_check_mark:|:heavy_check_mark:|  :heavy_check_mark: |
 | DQN     |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
 
@@ -102,6 +102,13 @@ Similar to [MuJoCo Envs](https://gym.openai.com/envs/#mujoco) but with a free si
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:|
 | DDPG     |  | | |  | | | |
 
+PyBullet Envs (Continued)
+
+|  RL Algo |  Minitaur | MinitaurDuck | InvertedDoublePendulum | InvertedPendulumSwingup |
+|----------|-----------|-------------|-----|---------|
+| PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
+| DDPG     | | | | | |
+
 ## Colab Notebook: Try it Online!
 
 You can train agents online using [colab notebook](https://colab.research.google.com/drive/1cPGK3XrCqEs3QLqiijsfib9OFht3kObX).
@@ -110,8 +117,8 @@ You can train agents online using [colab notebook](https://colab.research.google
 
 ### Stable-Baselines PyPi Package
 ```
-apt-get install swig cmake libopenmpi-dev zlib1g-dev
-pip install stable-baselines==2.2.0 box2d box2d-kengz pyyaml pybullet==2.1.0 pytablewriter
+apt-get install swig cmake libopenmpi-dev zlib1g-dev ffmpeg
+pip install stable-baselines==2.2.1 box2d box2d-kengz pyyaml pybullet==2.1.0 pytablewriter
 ```
 
 Please see [Stable Baselines README](https://github.com/hill-a/stable-baselines) for alternatives.

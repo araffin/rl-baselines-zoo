@@ -26,3 +26,48 @@ BipedalWalker-v2:
   noise_type: 'adaptive-param'
   noise_std: 0.2
   memory_limit: 50000
+
+Walker2DBulletEnv-v0:
+  n_timesteps: !!float 2e6
+  policy: 'LnMlpPolicy'
+  noise_type: 'adaptive-param'
+  noise_std: 0.2
+  memory_limit: 1000000
+  batch_size: 64
+  normalize_observations: True
+
+HalfCheetahBulletEnv-v0:
+  n_timesteps: !!float 2e6
+  policy: 'LnMlpPolicy'
+  noise_type: 'adaptive-param'
+  noise_std: 0.2
+  memory_limit: 1000000
+  batch_size: 64
+  normalize_observations: True
+
+AntBulletEnv-v0:
+  n_timesteps: !!float 2e6
+  policy: 'LnMlpPolicy'
+  noise_type: 'adaptive-param'
+  noise_std: 0.2
+  memory_limit: 1000000
+  batch_size: 64
+  normalize_observations: True
+
+HopperBulletEnv-v0:
+  n_timesteps: !!float 2e6
+  policy: 'LnMlpPolicy'
+  noise_type: 'adaptive-param'
+  noise_std: 0.2
+  memory_limit: 1000000
+  batch_size: 64
+  normalize_observations: True
+
+ReacherBulletEnv-v0:
+  n_timesteps: !!float 2e6
+  policy: 'LnMlpPolicy'
+  noise_type: 'adaptive-param'
+  noise_std: 0.2
+  memory_limit: 1000000
+  batch_size: 64
+  normalize_observations: True

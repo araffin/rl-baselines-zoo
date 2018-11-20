@@ -192,10 +192,66 @@ ReacherBulletEnv-v0:
   learning_rate: 2.5e-4
   cliprange: 0.2
 
+MinitaurBulletEnv-v0:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: 2.5e-4
+  cliprange: 0.2
+
+MinitaurBulletDuckEnv-v0:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: 2.5e-4
+  cliprange: 0.2
+
 HumanoidBulletEnv-v0:
   normalize: true
   n_envs: 8
   n_timesteps: !!float 1e7
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: 2.5e-4
+  cliprange: 0.2
+
+InvertedDoublePendulumBulletEnv-v0:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: 2.5e-4
+  cliprange: 0.2
+
+InvertedPendulumSwingupBulletEnv-v0:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
   n_steps: 2048
   nminibatches: 32
