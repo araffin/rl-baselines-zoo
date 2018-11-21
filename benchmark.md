@@ -18,6 +18,7 @@
 |acer |EnduroNoFrameskip-v4               |      0.000|     0.000|     149574|        45|
 |acer |LunarLander-v2                     |    185.210|    64.829|     149415|       248|
 |acer |MountainCar-v0                     |   -131.213|    32.541|     149976|      1143|
+|acer |MsPacmanNoFrameskip-v4             |   3908.105|   585.407|     148924|        95|
 |acer |PongNoFrameskip-v4                 |     20.667|     0.507|     148275|        57|
 |acer |QbertNoFrameskip-v4                |  18880.469|  1648.937|     148617|        64|
 |acer |SeaquestNoFrameskip-v4             |    872.121|    25.555|     149650|        66|
@@ -26,6 +27,7 @@
 |acktr|BeamRiderNoFrameskip-v4            |   3760.976|  1826.059|     147414|        41|
 |acktr|BreakoutNoFrameskip-v4             |    448.514|    88.882|     143118|        37|
 |acktr|CartPole-v1                        |    487.573|    63.866|     149685|       307|
+|acktr|EnduroNoFrameskip-v4               |      0.000|     0.000|     149574|        45|
 |acktr|LunarLander-v2                     |     96.822|    64.020|     149905|       176|
 |acktr|MountainCar-v0                     |   -111.917|    21.422|     149969|      1340|
 |acktr|PongNoFrameskip-v4                 |     19.224|     3.697|     147753|        67|

@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/araffin/rl-baselines-zoo.svg?branch=master)](https://travis-ci.com/araffin/rl-baselines-zoo)
 
-# RL Baselines Zoo: a Collection of Trained Reinforcement Learning Agents
+# RL Baselines Zoo: a Collection of Pre-Trained Reinforcement Learning Agents
 
 <img src="images/BipedalWalkerHardcorePPO2.gif" align="right" width="35%"/>
 
@@ -52,6 +52,15 @@ Continue training (here, load pretrained agent for Breakout and continue trainin
 python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/BreakoutNoFrameskip-v4.pkl -n 5000
 ```
 
+## Record a Video of a Trained Agent
+
+Record 1000 steps:
+
+```
+python -m utils.record_video --algo ppo2 --env BipedalWalkerHardcore-v2 -n 1000
+```
+
+
 ## Current Collection: 70+ Trained Agents!
 
 Scores can be found in `benchmark.md`. To compute them, simply run `python -m utils.benchmark`.
@@ -64,7 +73,7 @@ Scores can be found in `benchmark.md`. To compute them, simply run `python -m ut
 |----------|--------------------|--------------------|--------------------|-------|-------|--------------------|--------------------|
 | A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:|
 | ACER     | :heavy_check_mark: |                    |:heavy_check_mark:|:heavy_check_mark: |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: |
-| ACKTR    |:heavy_check_mark:| :heavy_check_mark:|                    |:heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|  :heavy_check_mark: |
+| ACKTR    |:heavy_check_mark:| :heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|  :heavy_check_mark: |
 | PPO2     |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark: |:heavy_check_mark:|:heavy_check_mark:|  :heavy_check_mark: |
 | DQN     |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
 
@@ -73,7 +82,7 @@ Additional Atari Games (to be completed):
 |  RL Algo |  MsPacman   |
 |----------|-------------|
 | A2C      |:heavy_check_mark:|
-| ACER     | |
+| ACER     |:heavy_check_mark:|
 | ACKTR    | |
 | PPO2     |:heavy_check_mark: |
 | DQN      | |
