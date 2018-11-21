@@ -7,6 +7,7 @@
 |a2c  |EnduroNoFrameskip-v4               |      0.000|     0.000|     149574|        45|
 |a2c  |LunarLander-v2                     |     36.321|   135.294|     149696|       463|
 |a2c  |MountainCar-v0                     |   -130.921|    32.188|     149904|      1145|
+|a2c  |MsPacmanNoFrameskip-v4             |   1581.111|   499.757|     150229|       189|
 |a2c  |PongNoFrameskip-v4                 |     18.973|     2.135|     148288|        75|
 |a2c  |QbertNoFrameskip-v4                |   5742.333|  2033.074|     151311|       150|
 |a2c  |SeaquestNoFrameskip-v4             |    746.420|   111.370|     149749|        81|
@@ -27,6 +28,7 @@
 |acktr|CartPole-v1                        |    487.573|    63.866|     149685|       307|
 |acktr|LunarLander-v2                     |     96.822|    64.020|     149905|       176|
 |acktr|MountainCar-v0                     |   -111.917|    21.422|     149969|      1340|
+|acktr|PongNoFrameskip-v4                 |     19.224|     3.697|     147753|        67|
 |acktr|QbertNoFrameskip-v4                |   9569.575|  3980.468|     150896|       106|
 |acktr|SeaquestNoFrameskip-v4             |   1672.239|   105.092|     149148|        67|
 |acktr|SpaceInvadersNoFrameskip-v4        |    738.045|   306.756|     149714|       156|
@@ -63,6 +65,7 @@
 |ppo2 |MinitaurBulletEnv-v0               |     11.334|     3.562|     150000|       252|
 |ppo2 |MountainCar-v0                     |   -143.501|    22.928|     149959|      1045|
 |ppo2 |MountainCarContinuous-v0           |     91.705|     1.706|     149985|      1082|
+|ppo2 |MsPacmanNoFrameskip-v4             |   2255.090|   706.412|     150040|       167|
 |ppo2 |Pendulum-v0                        |   -168.285|   107.164|     150000|       750|
 |ppo2 |PongNoFrameskip-v4                 |     20.507|     0.694|     149402|        69|
 |ppo2 |QbertNoFrameskip-v4                |  14510.000|  2847.445|     150251|        90|

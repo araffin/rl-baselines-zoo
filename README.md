@@ -52,7 +52,7 @@ Continue training (here, load pretrained agent for Breakout and continue trainin
 python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/BreakoutNoFrameskip-v4.pkl -n 5000
 ```
 
-## Current Collection
+## Current Collection: 70+ Trained Agents!
 
 Scores can be found in `benchmark.md`. To compute them, simply run `python -m utils.benchmark`.
 
@@ -64,10 +64,19 @@ Scores can be found in `benchmark.md`. To compute them, simply run `python -m ut
 |----------|--------------------|--------------------|--------------------|-------|-------|--------------------|--------------------|
 | A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:| :heavy_check_mark:|
 | ACER     | :heavy_check_mark: |                    |:heavy_check_mark:|:heavy_check_mark: |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: |
-| ACKTR    |:heavy_check_mark:| :heavy_check_mark:|                    |       | :heavy_check_mark:| :heavy_check_mark:|  :heavy_check_mark: |
+| ACKTR    |:heavy_check_mark:| :heavy_check_mark:|                    |:heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|  :heavy_check_mark: |
 | PPO2     |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark: |:heavy_check_mark:|:heavy_check_mark:|  :heavy_check_mark: |
 | DQN     |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
 
+Additional Atari Games (to be completed):
+
+|  RL Algo |  MsPacman   |
+|----------|-------------|
+| A2C      |:heavy_check_mark:|
+| ACER     | |
+| ACKTR    | |
+| PPO2     |:heavy_check_mark: |
+| DQN      | |
 
 ### Classic Control Environments
 
