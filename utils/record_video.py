@@ -24,7 +24,6 @@ parser.add_argument('--no-render', action='store_true', default=False,
                     help='Do not render the environment (useful for tests)')
 args = parser.parse_args()
 
-
 env_id = args.env
 algo = args.algo
 folder = args.folder
@@ -64,7 +63,7 @@ for _ in range(video_length + 1):
     obs, _, _, _ = env.step(action)
 
 # Workaround for https://github.com/openai/gym/issues/893
-if n_envs == 1 and not 'Bullet' in env_id and not is_atari:
+if n_envs == 1 and 'Bullet' not in env_id and not is_atari:
     env = env.venv
     # DummyVecEnv
     while isinstance(env, VecNormalize) or isinstance(env, VecFrameStack):

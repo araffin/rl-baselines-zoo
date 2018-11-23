@@ -1,4 +1,3 @@
-import gym
 import time
 import os
 import glob
