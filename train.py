@@ -113,6 +113,14 @@ for env_id in env_ids:
             print("Normalizing input and return")
             env = VecNormalize(env)
 
+    # Optional Frame-stacking
+    n_stack = 1
+    if hyperparams.get('frame_stack', False):
+        n_stack = hyperparams['frame_stack']
+        env = VecFrameStack(env, n_stack)
+        print("Stacking {} frames".format(n_stack))
+        del hyperparams['frame_stack']
+
     # Parse noise string for DDPG
     if args.algo == 'ddpg' and hyperparams.get('noise_type') is not None:
         noise_type = hyperparams['noise_type'].strip()
@@ -159,8 +167,15 @@ for env_id in env_ids:
     # Save trained model
     os.makedirs("{}/{}/".format(args.log_folder, args.algo), exist_ok=True)
     model.save("{}/{}/{}".format(args.log_folder, args.algo, env_id))
-    if normalize:
+    if normalize or n_stack > 1:
         path = "{}/{}/{}".format(args.log_folder, args.algo, env_id)
         os.makedirs(path, exist_ok=True)
-        # Important: save the running average, for testing the agent we need that normalization
-        env.save_running_average(path)
+        if normalize:
+            # Unwrap
+            if isinstance(env, VecFrameStack):
+                env = env.venv
+            # Important: save the running average, for testing the agent we need that normalization
+            env.save_running_average(path)
+        if n_stack > 1:
+            with open(os.path.join(path, 'n_stack'), 'w') as f:
+                f.write(str(n_stack))

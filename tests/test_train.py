@@ -21,8 +21,8 @@ for algo in ALGOS:
     for env_id in ENV_IDS:
         experiments['{}-{}'.format(algo, env_id)] = (algo, env_id)
 
-# Test for vecnormalize
-experiments['ppo2-MountainCarContinuous-v0'] = ('ppo2', 'MountainCarContinuous-v0')
+# Test for vecnormalize and frame-stack
+experiments['ppo2-BipedalWalkerHardcore-v2'] = ('ppo2', 'BipedalWalkerHardcore-v2')
 # Test for DDPG
 experiments['ddpg-MountainCarContinuous-v0'] = ('ddpg', 'MountainCarContinuous-v0')
 
