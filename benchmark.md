@@ -62,7 +62,7 @@
 |ppo2 |InvertedDoublePendulumBulletEnv-v0 |   7702.750|  2888.815|     149089|       181|
 |ppo2 |InvertedPendulumSwingupBulletEnv-v0|    866.989|    27.134|     150000|       150|
 |ppo2 |LunarLander-v2                     |     99.676|    62.033|     149512|       174|
-|ppo2 |LunarLanderContinuous-v2           |     10.883|    68.366|     149354|       155|
+|ppo2 |LunarLanderContinuous-v2           |    128.124|    44.384|     149971|       164|
 |ppo2 |MinitaurBulletDuckEnv-v0           |      5.780|     3.372|     149873|       416|
 |ppo2 |MinitaurBulletEnv-v0               |     11.334|     3.562|     150000|       252|
 |ppo2 |MountainCar-v0                     |   -143.501|    22.928|     149959|      1045|
