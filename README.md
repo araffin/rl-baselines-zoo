@@ -84,8 +84,8 @@ Additional Atari Games (to be completed):
 | A2C      |:heavy_check_mark:|
 | ACER     |:heavy_check_mark:|
 | ACKTR    | |
-| PPO2     |:heavy_check_mark: |
-| DQN      | |
+| PPO2     |:heavy_check_mark:|
+| DQN      |:heavy_check_mark:|
 
 ### Classic Control Environments
 

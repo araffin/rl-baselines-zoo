@@ -44,6 +44,7 @@
 |dqn  |EnduroNoFrameskip-v4               |    699.800|   214.231|     146363|        15|
 |dqn  |LunarLander-v2                     |    269.048|    41.056|     149827|       624|
 |dqn  |MountainCar-v0                     |   -134.507|    24.748|     149975|      1115|
+|dqn  |MsPacmanNoFrameskip-v4             |   1781.818|   605.289|     149783|       176|
 |dqn  |PongNoFrameskip-v4                 |     21.000|     0.000|     148764|        93|
 |dqn  |QbertNoFrameskip-v4                |    644.345|    66.854|     152286|       252|
 |dqn  |SeaquestNoFrameskip-v4             |   1948.571|   234.328|     148547|        70|
