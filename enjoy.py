@@ -51,7 +51,7 @@ is_atari = 'NoFrameskip' in env_id
 stats_path = "{}/{}/{}/".format(folder, algo, env_id)
 if not os.path.isdir(stats_path):
     stats_path = None
-using_vec_normalize = stats_path is not None
+
 log_dir = args.reward_log if args.reward_log != '' else None
 
 env = create_test_env(env_id, n_envs=args.n_envs, is_atari=is_atari,

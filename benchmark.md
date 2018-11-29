@@ -30,6 +30,7 @@
 |acktr|EnduroNoFrameskip-v4               |      0.000|     0.000|     149574|        45|
 |acktr|LunarLander-v2                     |     96.822|    64.020|     149905|       176|
 |acktr|MountainCar-v0                     |   -111.917|    21.422|     149969|      1340|
+|acktr|MsPacmanNoFrameskip-v4             |   1598.776|   264.338|     149588|       147|
 |acktr|PongNoFrameskip-v4                 |     19.224|     3.697|     147753|        67|
 |acktr|QbertNoFrameskip-v4                |   9569.575|  3980.468|     150896|       106|
 |acktr|SeaquestNoFrameskip-v4             |   1672.239|   105.092|     149148|        67|
@@ -44,6 +45,7 @@
 |dqn  |EnduroNoFrameskip-v4               |    699.800|   214.231|     146363|        15|
 |dqn  |LunarLander-v2                     |    269.048|    41.056|     149827|       624|
 |dqn  |MountainCar-v0                     |   -134.507|    24.748|     149975|      1115|
+|dqn  |MsPacmanNoFrameskip-v4             |   1781.818|   605.289|     149783|       176|
 |dqn  |PongNoFrameskip-v4                 |     21.000|     0.000|     148764|        93|
 |dqn  |QbertNoFrameskip-v4                |    644.345|    66.854|     152286|       252|
 |dqn  |SeaquestNoFrameskip-v4             |   1948.571|   234.328|     148547|        70|
@@ -62,7 +64,7 @@
 |ppo2 |InvertedDoublePendulumBulletEnv-v0 |   7702.750|  2888.815|     149089|       181|
 |ppo2 |InvertedPendulumSwingupBulletEnv-v0|    866.989|    27.134|     150000|       150|
 |ppo2 |LunarLander-v2                     |     99.676|    62.033|     149512|       174|
-|ppo2 |LunarLanderContinuous-v2           |     10.883|    68.366|     149354|       155|
+|ppo2 |LunarLanderContinuous-v2           |    128.124|    44.384|     149971|       164|
 |ppo2 |MinitaurBulletDuckEnv-v0           |      5.780|     3.372|     149873|       416|
 |ppo2 |MinitaurBulletEnv-v0               |     11.334|     3.562|     150000|       252|
 |ppo2 |MountainCar-v0                     |   -143.501|    22.928|     149959|      1045|

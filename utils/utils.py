@@ -1,4 +1,3 @@
-import gym
 import time
 import os
 import glob
@@ -120,10 +119,19 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         env = DummyVecEnv([make_env(env_id, 0, seed, log_dir)])
 
     # Load saved stats for normalizing input and rewards
+    # And optionally stack frames
     if stats_path is not None:
-        print("Loading running average")
-        env = VecNormalize(env, training=False, norm_reward=norm_reward)
-        env.load_running_average(stats_path)
+        if os.path.join(stats_path, 'obs_rms.pkl'):
+            print("Loading running average")
+            env = VecNormalize(env, training=False, norm_reward=norm_reward)
+            env.load_running_average(stats_path)
+
+        n_stack_file = os.path.join(stats_path, 'n_stack')
+        if os.path.isfile(n_stack_file):
+            with open(n_stack_file, 'r') as f:
+                n_stack = int(f.read())
+            print("Stacking {} frames".format(n_stack))
+            env = VecFrameStack(env, n_stack)
     return env
 
 
