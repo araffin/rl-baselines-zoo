@@ -30,6 +30,7 @@
 |acktr|EnduroNoFrameskip-v4               |      0.000|     0.000|     149574|        45|
 |acktr|LunarLander-v2                     |     96.822|    64.020|     149905|       176|
 |acktr|MountainCar-v0                     |   -111.917|    21.422|     149969|      1340|
+|acktr|MsPacmanNoFrameskip-v4             |   1598.776|   264.338|     149588|       147|
 |acktr|PongNoFrameskip-v4                 |     19.224|     3.697|     147753|        67|
 |acktr|QbertNoFrameskip-v4                |   9569.575|  3980.468|     150896|       106|
 |acktr|SeaquestNoFrameskip-v4             |   1672.239|   105.092|     149148|        67|
