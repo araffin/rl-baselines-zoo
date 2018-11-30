@@ -7,6 +7,7 @@ import gym
 import pybullet_envs
 from gym.envs.registration import load
 from stable_baselines.deepq.policies import FeedForwardPolicy
+from stable_baselines.common.policies import FeedForwardPolicy as BasePolicy
 from stable_baselines.common.policies import register_policy
 from stable_baselines.bench import Monitor
 from stable_baselines import logger
@@ -35,8 +36,15 @@ class CustomDQNPolicy(FeedForwardPolicy):
                                               layer_norm=True,
                                               feature_extraction="mlp")
 
+class CustomMlpPolicy(BasePolicy):
+    def __init__(self, *args, **kwargs):
+        super(CustomMlpPolicy, self).__init__(*args, **kwargs,
+                                              layers=[16],
+                                              feature_extraction="mlp")
+
 
 register_policy('CustomDQNPolicy', CustomDQNPolicy)
+register_policy('CustomMlpPolicy', CustomMlpPolicy)
 
 
 def make_env(env_id, rank=0, seed=0, log_dir=None):
