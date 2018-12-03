@@ -51,14 +51,14 @@
 |dqn  |SeaquestNoFrameskip-v4             |   1948.571|   234.328|     148547|        70|
 |dqn  |SpaceInvadersNoFrameskip-v4        |    636.618|   146.066|     150041|       136|
 |ppo2 |Acrobot-v1                         |    -85.137|    26.272|     149963|      1741|
-|ppo2 |AntBulletEnv-v0                    |   1667.833|    51.465|     150000|       150|
+|ppo2 |AntBulletEnv-v0                    |   2170.104|   250.575|     150000|       150|
 |ppo2 |BeamRiderNoFrameskip-v4            |   1691.072|   904.484|     149975|        69|
 |ppo2 |BipedalWalker-v2                   |    265.939|    80.994|     149968|       159|
 |ppo2 |BipedalWalkerHardcore-v2           |    166.481|   119.300|     149509|       154|
 |ppo2 |BreakoutNoFrameskip-v4             |    228.594|   141.964|     150921|       101|
 |ppo2 |CartPole-v1                        |    500.000|     0.000|     150000|       300|
 |ppo2 |EnduroNoFrameskip-v4               |    643.824|   205.988|     149683|        17|
-|ppo2 |HalfCheetahBulletEnv-v0            |   1886.579|    93.474|     150000|       150|
+|ppo2 |HalfCheetahBulletEnv-v0            |   2151.440|    36.866|     150000|       150|
 |ppo2 |HopperBulletEnv-v0                 |    813.209|    95.912|     149575|       152|
 |ppo2 |HumanoidBulletEnv-v0               |   1285.814|   918.715|     149544|       244|
 |ppo2 |InvertedDoublePendulumBulletEnv-v0 |   7702.750|  2888.815|     149089|       181|
