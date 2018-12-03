@@ -58,8 +58,8 @@
 |ppo2 |BreakoutNoFrameskip-v4             |    228.594|   141.964|     150921|       101|
 |ppo2 |CartPole-v1                        |    500.000|     0.000|     150000|       300|
 |ppo2 |EnduroNoFrameskip-v4               |    643.824|   205.988|     149683|        17|
-|ppo2 |HalfCheetahBulletEnv-v0            |   2151.440|    36.866|     150000|       150|
-|ppo2 |HopperBulletEnv-v0                 |    813.209|    95.912|     149575|       152|
+|ppo2 |HalfCheetahBulletEnv-v0            |   2037.586|    59.480|     150000|       150|
+|ppo2 |HopperBulletEnv-v0                 |   1944.588|   612.994|     149157|       176|
 |ppo2 |HumanoidBulletEnv-v0               |   1285.814|   918.715|     149544|       244|
 |ppo2 |InvertedDoublePendulumBulletEnv-v0 |   7702.750|  2888.815|     149089|       181|
 |ppo2 |InvertedPendulumSwingupBulletEnv-v0|    866.989|    27.134|     150000|       150|

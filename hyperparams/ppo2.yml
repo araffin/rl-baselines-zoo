@@ -140,8 +140,8 @@ HalfCheetahBulletEnv-v0:
   normalize: true
   n_envs: 8
   n_timesteps: !!float 2e6
-  policy: 'MlpPolicy'
-  n_steps: 2048
+  policy: 'CustomMlpPolicy'
+  n_steps: 256
   nminibatches: 32
   lam: 0.95
   gamma: 0.99
@@ -154,8 +154,8 @@ AntBulletEnv-v0:
   normalize: true
   n_envs: 8
   n_timesteps: !!float 2e6
-  policy: 'MlpPolicy'
-  n_steps: 2048
+  policy: 'CustomMlpPolicy'
+  n_steps: 256
   nminibatches: 32
   lam: 0.95
   gamma: 0.99
@@ -170,7 +170,7 @@ HopperBulletEnv-v0:
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
   n_steps: 2048
-  nminibatches: 32
+  nminibatches: 128
   lam: 0.95
   gamma: 0.99
   noptepochs: 10
