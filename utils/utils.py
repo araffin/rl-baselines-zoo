@@ -12,7 +12,12 @@ from stable_baselines.common.policies import FeedForwardPolicy as BasePolicy
 from stable_baselines.common.policies import register_policy
 from stable_baselines.bench import Monitor
 from stable_baselines import logger
-from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, DDPG, SAC
+from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, DDPG
+# Temp fix until SAC is integrated into stable_baselines
+try:
+    from stable_baselines import SAC
+except ImportError:
+    SAC = None
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize, \
     VecFrameStack, SubprocVecEnv
 from stable_baselines.common.cmd_util import make_atari_env
