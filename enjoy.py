@@ -1,5 +1,6 @@
 import argparse
 import os
+import yaml
 
 import gym
 import pybullet_envs
@@ -8,7 +9,7 @@ from stable_baselines.common import set_global_seeds
 from stable_baselines.common.vec_env import VecNormalize, VecFrameStack
 
 
-from utils import ALGOS, create_test_env
+from utils import ALGOS, create_test_env, get_latest_run_id
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', help='environment ID', type=str, default='CartPole-v1')
@@ -18,6 +19,8 @@ parser.add_argument('--algo', help='RL Algorithm', default='ppo2',
 parser.add_argument('-n', '--n-timesteps', help='number of timesteps', default=1000,
                     type=int)
 parser.add_argument('--n-envs', help='number of environments', default=1,
+                    type=int)
+parser.add_argument('--exp-id', help='Experiment ID (default: -1, no exp folder, 0: latest)', default=-1,
                     type=int)
 parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                     type=int)
@@ -35,35 +38,68 @@ args = parser.parse_args()
 env_id = args.env
 algo = args.algo
 folder = args.folder
-model_path = "{}/{}/{}.pkl".format(folder, algo, env_id)
+
+if args.exp_id == 0:
+    args.exp_id = get_latest_run_id(os.path.join(folder, algo), env_id)
+    print('Loading latest experiment, id={}'.format(args.exp_id))
 
 # Sanity checks
-assert os.path.isdir(folder + '/' + algo), "The {}/{}/ folder was not found".format(folder, algo)
+if args.exp_id > 0:
+    log_path = os.path.join(folder, algo, '{}_{}'.format(env_id, args.exp_id))
+else:
+    log_path = os.path.join(folder, algo)
+
+model_path = "{}/{}.pkl".format(log_path, env_id)
+
+
+assert os.path.isdir(log_path), "The {} folder was not found".format(log_path)
 assert os.path.isfile(model_path), "No model found for {} on {}, path: {}".format(algo, env_id, model_path)
 
-if algo in ['dqn', 'ddpg']:
+if algo in ['dqn', 'ddpg', 'sac']:
     args.n_envs = 1
 
 set_global_seeds(args.seed)
 
 is_atari = 'NoFrameskip' in env_id
 
-stats_path = "{}/{}/{}/".format(folder, algo, env_id)
+stats_path = os.path.join(log_path, env_id)
+hyperparams = {}
 if not os.path.isdir(stats_path):
     stats_path = None
+else:
+    config_file = os.path.join(stats_path, 'config.yml')
+    if os.path.isfile(config_file):
+        # Load saved hyperparameters
+        with open(os.path.join(stats_path, 'config.yml'), 'r') as f:
+            hyperparams = yaml.load(f)
+        hyperparams['normalize'] = hyperparams.get('normalize', False)
+    else:
+        obs_rms_path = os.path.join(stats_path, 'obs_rms.pkl')
+        hyperparams['normalize'] = os.path.isfile(obs_rms_path)
+
+    # Load normalization params
+    normalize_kwargs = {}
+    if hyperparams['normalize']:
+        if isinstance(hyperparams['normalize'], str):
+            normalize_kwargs = eval(hyperparams['normalize'])
+        else:
+            normalize_kwargs = {'norm_obs': hyperparams['normalize'], 'norm_reward': args.norm_reward}
+        hyperparams['normalize_kwargs'] = normalize_kwargs
+
 
 log_dir = args.reward_log if args.reward_log != '' else None
 
 env = create_test_env(env_id, n_envs=args.n_envs, is_atari=is_atari,
-                      stats_path=stats_path, norm_reward=args.norm_reward,
-                      seed=args.seed, log_dir=log_dir, should_render=not args.no_render)
+                      stats_path=stats_path, seed=args.seed, log_dir=log_dir,
+                      should_render=not args.no_render,
+                      hyperparams=hyperparams)
 
 model = ALGOS[algo].load(model_path)
 
 obs = env.reset()
 
 # Force deterministic for DQN and DDPG
-deterministic = args.deterministic or algo in ['dqn', 'ddpg']
+deterministic = args.deterministic or algo in ['dqn', 'ddpg', 'sac']
 
 running_reward = 0.0
 ep_len = 0

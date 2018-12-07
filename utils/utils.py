@@ -2,6 +2,7 @@ import time
 import os
 import glob
 import inspect
+import glob
 
 import gym
 import pybullet_envs
@@ -11,7 +12,7 @@ from stable_baselines.common.policies import FeedForwardPolicy as BasePolicy
 from stable_baselines.common.policies import register_policy
 from stable_baselines.bench import Monitor
 from stable_baselines import logger
-from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, DDPG
+from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, DDPG, SAC
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize, \
     VecFrameStack, SubprocVecEnv
 from stable_baselines.common.cmd_util import make_atari_env
@@ -23,6 +24,7 @@ ALGOS = {
     'acktr': ACKTR,
     'dqn': DQN,
     'ddpg': DDPG,
+    'sac': SAC,
     'ppo2': PPO2
 }
 
@@ -72,8 +74,8 @@ def make_env(env_id, rank=0, seed=0, log_dir=None):
 
 
 def create_test_env(env_id, n_envs=1, is_atari=False,
-                    stats_path=None, norm_reward=False, seed=0,
-                    log_dir='', should_render=True):
+                    stats_path=None, seed=0,
+                    log_dir='', should_render=True, hyperparams=None):
     """
     Create environment for testing a trained agent
 
@@ -81,10 +83,10 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
     :param n_envs: (int) number of processes
     :param is_atari: (bool)
     :param stats_path: (str) path to folder containing saved running averaged
-    :param norm_reward: (bool) Whether to normalize rewards or not when using Vecnormalize
     :param seed: (int) Seed for random number generator
     :param log_dir: (str) Where to log rewards
     :param should_render: (bool) For Pybullet env, display the GUI
+    :parma hyperparams: (dict) Additional hyperparams (ex: n_stack)
     :return: (gym.Env)
     """
     # HACK to save logs
@@ -129,15 +131,14 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
     # Load saved stats for normalizing input and rewards
     # And optionally stack frames
     if stats_path is not None:
-        if os.path.join(stats_path, 'obs_rms.pkl'):
+        if hyperparams['normalize']:
             print("Loading running average")
-            env = VecNormalize(env, training=False, norm_reward=norm_reward)
+            print("with params: {}".format(hyperparams['normalize_kwargs']))
+            env = VecNormalize(env, training=False, **hyperparams['normalize_kwargs'])
             env.load_running_average(stats_path)
 
-        n_stack_file = os.path.join(stats_path, 'n_stack')
-        if os.path.isfile(n_stack_file):
-            with open(n_stack_file, 'r') as f:
-                n_stack = int(f.read())
+        n_stack = hyperparams.get('n_stack', 0)
+        if n_stack > 0:
             print("Stacking {} frames".format(n_stack))
             env = VecFrameStack(env, n_stack)
     return env
@@ -177,3 +178,21 @@ def get_trained_models(log_folder):
             env_id = env_id.split('/')[-1].split('.pkl')[0]
             trained_models['{}-{}'.format(algo, env_id)] = (algo, env_id)
     return trained_models
+
+
+def get_latest_run_id(log_path, env_id):
+    """
+    Returns the latest run number for the given log name and log path,
+    by finding the greatest number in the directories.
+
+    :param log_path: (str) path to log folder
+    :param env_id: (str)
+    :return: (int) latest run number
+    """
+    max_run_id = 0
+    for path in glob.glob(log_path + "/{}_[0-9]*".format(env_id)):
+        file_name = path.split("/")[-1]
+        ext = file_name.split("_")[-1]
+        if env_id == "_".join(file_name.split("_")[:-1]) and ext.isdigit() and int(ext) > max_run_id:
+            max_run_id = int(ext)
+    return max_run_id
