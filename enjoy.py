@@ -1,6 +1,5 @@
 import argparse
 import os
-import yaml
 
 import gym
 import pybullet_envs

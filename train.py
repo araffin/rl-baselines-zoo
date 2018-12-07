@@ -2,6 +2,7 @@ import argparse
 import difflib
 import os
 from collections import OrderedDict
+from pprint import pprint
 
 import gym
 import pybullet_envs
@@ -64,6 +65,7 @@ for env_id in env_ids:
 
     # Sort hyperparams that will be saved
     saved_hyperparams = OrderedDict([(key, hyperparams[key]) for key in sorted(hyperparams.keys())])
+    pprint(saved_hyperparams)
 
     n_envs = hyperparams.get('n_envs', 1)
 

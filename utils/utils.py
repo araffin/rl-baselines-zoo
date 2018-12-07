@@ -3,6 +3,7 @@ import os
 import glob
 import inspect
 import glob
+import yaml
 
 import gym
 import pybullet_envs
