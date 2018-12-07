@@ -49,6 +49,15 @@ class CustomMlpPolicy(BasePolicy):
                                               layers=[16],
                                               feature_extraction="mlp")
 
+if SAC is not None:
+    from stable_baselines.sac.policies import FeedForwardPolicy as SACPolicy
+
+    class CustomSACPolicy(SACPolicy):
+        def __init__(self, *args, **kwargs):
+            super(CustomSACPolicy, self).__init__(*args, **kwargs,
+                                                  layers=[256, 256],
+                                                  feature_extraction="mlp")
+    register_policy('CustomSACPolicy', CustomSACPolicy)
 
 register_policy('CustomDQNPolicy', CustomDQNPolicy)
 register_policy('CustomMlpPolicy', CustomMlpPolicy)
@@ -201,3 +210,33 @@ def get_latest_run_id(log_path, env_id):
         if env_id == "_".join(file_name.split("_")[:-1]) and ext.isdigit() and int(ext) > max_run_id:
             max_run_id = int(ext)
     return max_run_id
+
+def get_saved_hyperparams(stats_path, norm_reward=False):
+    """
+    :param stats_path: (str)
+    :param norm_reward: (bool)
+    :return: (dict, str)
+    """
+    hyperparams = {}
+    if not os.path.isdir(stats_path):
+        stats_path = None
+    else:
+        config_file = os.path.join(stats_path, 'config.yml')
+        if os.path.isfile(config_file):
+            # Load saved hyperparameters
+            with open(os.path.join(stats_path, 'config.yml'), 'r') as f:
+                hyperparams = yaml.load(f)
+            hyperparams['normalize'] = hyperparams.get('normalize', False)
+        else:
+            obs_rms_path = os.path.join(stats_path, 'obs_rms.pkl')
+            hyperparams['normalize'] = os.path.isfile(obs_rms_path)
+
+        # Load normalization params
+        normalize_kwargs = {}
+        if hyperparams['normalize']:
+            if isinstance(hyperparams['normalize'], str):
+                normalize_kwargs = eval(hyperparams['normalize'])
+            else:
+                normalize_kwargs = {'norm_obs': hyperparams['normalize'], 'norm_reward': norm_reward}
+            hyperparams['normalize_kwargs'] = normalize_kwargs
+    return hyperparams, stats_path

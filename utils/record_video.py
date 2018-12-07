@@ -5,7 +5,7 @@ import gym
 import numpy as np
 from stable_baselines.common.vec_env import VecVideoRecorder, VecFrameStack, VecNormalize
 
-from .utils import ALGOS, create_test_env
+from .utils import ALGOS, create_test_env, get_saved_hyperparams
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', help='environment ID', type=str, default='CartPole-v1')
@@ -33,17 +33,18 @@ deterministic = args.deterministic
 video_length = args.n_timesteps
 n_envs = args.n_envs
 
-model_path = "{}/{}/{}.pkl".format(folder, algo, env_id)
+log_path = os.path.join(folder, algo)
+model_path = "{}/{}.pkl".format(log_path, env_id)
 
-stats_path = "{}/{}/{}/".format(folder, algo, env_id)
-if not os.path.isdir(stats_path):
-    stats_path = None
+stats_path = os.path.join(log_path, env_id)
+hyperparams, stats_path = get_saved_hyperparams(stats_path)
+
 
 is_atari = 'NoFrameskip' in env_id
 
 env = create_test_env(env_id, n_envs=n_envs, is_atari=is_atari,
-                      stats_path=stats_path, norm_reward=False,
-                      seed=seed, log_dir=None, should_render=not args.no_render)
+                      stats_path=stats_path, seed=seed, log_dir=None,
+                      should_render=not args.no_render, hyperparams=hyperparams)
 
 model = ALGOS[algo].load(model_path)
 

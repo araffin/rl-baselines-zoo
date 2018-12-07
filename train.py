@@ -24,6 +24,8 @@ parser.add_argument('--algo', help='RL Algorithm', default='ppo2',
                     type=str, required=False, choices=list(ALGOS.keys()))
 parser.add_argument('-n', '--n-timesteps', help='Overwrite the number of timesteps', default=-1,
                     type=int)
+parser.add_argument('--log-interval', help='Override log interval (default: -1, no change)', default=-1,
+                    type=int)
 parser.add_argument('-f', '--log-folder', help='Log folder', type=str, default='logs')
 parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
 args = parser.parse_args()
@@ -170,7 +172,7 @@ for env_id in env_ids:
         # Train an agent from scratch
         model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=1, **hyperparams)
 
-    model.learn(n_timesteps, log_interval=4)
+    model.learn(n_timesteps, log_interval=args.log_interval)
 
     # Save trained model
     log_path = "{}/{}/".format(args.log_folder, args.algo)

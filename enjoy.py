@@ -9,7 +9,7 @@ from stable_baselines.common import set_global_seeds
 from stable_baselines.common.vec_env import VecNormalize, VecFrameStack
 
 
-from utils import ALGOS, create_test_env, get_latest_run_id
+from utils import ALGOS, create_test_env, get_latest_run_id, get_saved_hyperparams
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', help='environment ID', type=str, default='CartPole-v1')
@@ -63,29 +63,7 @@ set_global_seeds(args.seed)
 is_atari = 'NoFrameskip' in env_id
 
 stats_path = os.path.join(log_path, env_id)
-hyperparams = {}
-if not os.path.isdir(stats_path):
-    stats_path = None
-else:
-    config_file = os.path.join(stats_path, 'config.yml')
-    if os.path.isfile(config_file):
-        # Load saved hyperparameters
-        with open(os.path.join(stats_path, 'config.yml'), 'r') as f:
-            hyperparams = yaml.load(f)
-        hyperparams['normalize'] = hyperparams.get('normalize', False)
-    else:
-        obs_rms_path = os.path.join(stats_path, 'obs_rms.pkl')
-        hyperparams['normalize'] = os.path.isfile(obs_rms_path)
-
-    # Load normalization params
-    normalize_kwargs = {}
-    if hyperparams['normalize']:
-        if isinstance(hyperparams['normalize'], str):
-            normalize_kwargs = eval(hyperparams['normalize'])
-        else:
-            normalize_kwargs = {'norm_obs': hyperparams['normalize'], 'norm_reward': args.norm_reward}
-        hyperparams['normalize_kwargs'] = normalize_kwargs
-
+hyperparams, stats_path = get_saved_hyperparams(stats_path, norm_reward=args.norm_reward)
 
 log_dir = args.reward_log if args.reward_log != '' else None
 
