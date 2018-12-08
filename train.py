@@ -174,11 +174,15 @@ for env_id in env_ids:
         # Train an agent from scratch
         model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=1, **hyperparams)
 
-    model.learn(n_timesteps, log_interval=args.log_interval)
+    kwargs = {}
+    if args.log_interval > -1:
+        kwargs = {'log_interval': args.log_interval}
+
+    model.learn(n_timesteps, **kwargs)
 
     # Save trained model
     log_path = "{}/{}/".format(args.log_folder, args.algo)
-    save_path = os.path.join(log_path,"{}_{}".format(env_id, get_latest_run_id(log_path, env_id) + 1))
+    save_path = os.path.join(log_path, "{}_{}".format(env_id, get_latest_run_id(log_path, env_id) + 1))
     params_path = "{}/{}".format(save_path, env_id)
     os.makedirs(params_path, exist_ok=True)
 

@@ -15,13 +15,11 @@ Pendulum-v0:
   policy: 'MlpPolicy'
   learning_rate: !!float 3e-3
   buffer_size: 50000
-  batch_size: 32
-  train_freq: 1
+  batch_size: 64
+  train_freq: 300
   ent_coef: 0.2
-  gradient_steps: 1
+  gradient_steps: 100
   learning_starts: 1000
-  prioritized_replay: True
-  prioritized_replay_alpha: 0.2
 
 LunarLanderContinuous-v2:
   n_timesteps: !!float 1e5
@@ -57,7 +55,8 @@ HalfCheetahBulletEnv-v0:
   batch_size: 64
   train_freq: 1
   ent_coef: 0.01
-  gradient_steps: 1
+  train_freq: 300
+  gradient_steps: 100
   learning_starts: 10000
 
 AntBulletEnv-v0:

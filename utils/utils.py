@@ -1,6 +1,5 @@
 import time
 import os
-import glob
 import inspect
 import glob
 import yaml
@@ -14,6 +13,7 @@ from stable_baselines.common.policies import register_policy
 from stable_baselines.bench import Monitor
 from stable_baselines import logger
 from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, DDPG
+
 # Temp fix until SAC is integrated into stable_baselines
 try:
     from stable_baselines import SAC
@@ -44,20 +44,25 @@ class CustomDQNPolicy(FeedForwardPolicy):
                                               layer_norm=True,
                                               feature_extraction="mlp")
 
+
 class CustomMlpPolicy(BasePolicy):
     def __init__(self, *args, **kwargs):
         super(CustomMlpPolicy, self).__init__(*args, **kwargs,
                                               layers=[16],
                                               feature_extraction="mlp")
 
+
 if SAC is not None:
     from stable_baselines.sac.policies import FeedForwardPolicy as SACPolicy
+
 
     class CustomSACPolicy(SACPolicy):
         def __init__(self, *args, **kwargs):
             super(CustomSACPolicy, self).__init__(*args, **kwargs,
                                                   layers=[256, 256],
                                                   feature_extraction="mlp")
+
+
     register_policy('CustomSACPolicy', CustomSACPolicy)
 
 register_policy('CustomDQNPolicy', CustomDQNPolicy)
@@ -101,7 +106,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
     :param seed: (int) Seed for random number generator
     :param log_dir: (str) Where to log rewards
     :param should_render: (bool) For Pybullet env, display the GUI
-    :parma hyperparams: (dict) Additional hyperparams (ex: n_stack)
+    :param hyperparams: (dict) Additional hyperparams (ex: n_stack)
     :return: (gym.Env)
     """
     # HACK to save logs
@@ -212,6 +217,7 @@ def get_latest_run_id(log_path, env_id):
             max_run_id = int(ext)
     return max_run_id
 
+
 def get_saved_hyperparams(stats_path, norm_reward=False):
     """
     :param stats_path: (str)
@@ -233,7 +239,6 @@ def get_saved_hyperparams(stats_path, norm_reward=False):
             hyperparams['normalize'] = os.path.isfile(obs_rms_path)
 
         # Load normalization params
-        normalize_kwargs = {}
         if hyperparams['normalize']:
             if isinstance(hyperparams['normalize'], str):
                 normalize_kwargs = eval(hyperparams['normalize'])
