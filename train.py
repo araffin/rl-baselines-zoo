@@ -71,8 +71,8 @@ for env_id in env_ids:
 
     print("Using {} environments".format(n_envs))
 
-    # Create learning rate schedules for ppo2
-    if args.algo == "ppo2":
+    # Create learning rate schedules for ppo2 and sac
+    if args.algo in ["ppo2", "sac"]:
         for key in ['learning_rate', 'cliprange']:
             if key not in hyperparams:
                 continue

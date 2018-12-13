@@ -62,7 +62,7 @@ set_global_seeds(args.seed)
 is_atari = 'NoFrameskip' in env_id
 
 stats_path = os.path.join(log_path, env_id)
-hyperparams, stats_path = get_saved_hyperparams(stats_path, norm_reward=args.norm_reward)
+hyperparams, stats_path = get_saved_hyperparams(stats_path, norm_reward=args.norm_reward, test_mode=True)
 
 log_dir = args.reward_log if args.reward_log != '' else None
 
