@@ -26,10 +26,8 @@ LunarLanderContinuous-v2:
   learning_starts: 1000
 
 BipedalWalker-v2:
-  # normalize: "{'norm_obs': True, 'norm_reward': False}"
   n_timesteps: !!float 1e6
   policy: 'CustomSACPolicy'
-  # learning_rate: !!float 3e-3
   learning_rate: lin_3e-4
   buffer_size: 1000000
   batch_size: 64
@@ -38,36 +36,53 @@ BipedalWalker-v2:
   gradient_steps: 1
   learning_starts: 1000
 
-# Params ok
+BipedalWalkerHardcore-v2:
+  n_timesteps: !!float 3e7
+  policy: 'CustomSACPolicy'
+  learning_rate: lin_3e-4
+  buffer_size: 2000000
+  batch_size: 64
+  ent_coef: 0.005
+  train_freq: 1
+  gradient_steps: 1
+  learning_starts: 1000
+
 HalfCheetahBulletEnv-v0:
-  normalize: "{'norm_obs': True, 'norm_reward': False}"
   n_timesteps: !!float 2e6
   policy: 'CustomSACPolicy'
-  learning_rate: !!float 3e-3
+  learning_rate: lin_3e-4
   buffer_size: 1000000
   batch_size: 64
-  ent_coef: 0.01
-  train_freq: 300
-  gradient_steps: 300
+  ent_coef: 0.005
+  train_freq: 1
+  gradient_steps: 1
   learning_starts: 10000
 
 AntBulletEnv-v0:
-  normalize: "{'norm_obs': True, 'norm_reward': True}"
   n_timesteps: !!float 2e6
   policy: 'CustomSACPolicy'
-  learning_rate: !!float 3e-3
+  learning_rate: lin_3e-4
   buffer_size: 1000000
   batch_size: 64
-  ent_coef: 0.5
-  train_freq: 300
-  gradient_steps: 300
-  learning_starts: 10000
+  ent_coef: 0.01
+  train_freq: 1
+  gradient_steps: 1
+  learning_starts: 1000
 
 HopperBulletEnv-v0:
-  # normalize: "{'norm_obs': True, 'norm_reward': False}"
   n_timesteps: !!float 1e6
   policy: 'CustomSACPolicy'
-  # learning_rate: !!float 3e-4
+  learning_rate: lin_3e-4
+  buffer_size: 1000000
+  batch_size: 64
+  ent_coef: 0.01
+  train_freq: 1
+  gradient_steps: 1
+  learning_starts: 1000
+
+Walker2DBulletEnv-v0:
+  n_timesteps: !!float 1e6
+  policy: 'CustomSACPolicy'
   learning_rate: lin_3e-4
   buffer_size: 1000000
   batch_size: 64

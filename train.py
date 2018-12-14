@@ -158,10 +158,6 @@ for env_id in env_ids:
         print("Loading pretrained agent")
         # Policy should not be changed
         del hyperparams['policy']
-        # TODO: fix ppo2 in stable-baselines when loading
-        # if args.algo == "ppo2":
-        #     del hyperparams['learning_rate']
-        #     del hyperparams['cliprange']
 
         model = ALGOS[args.algo].load(args.trained_agent, env=env,
                                       tensorboard_log=tensorboard_log, verbose=1, **hyperparams)
@@ -185,6 +181,7 @@ for env_id in env_ids:
     save_path = os.path.join(log_path, "{}_{}".format(env_id, get_latest_run_id(log_path, env_id) + 1))
     params_path = "{}/{}".format(save_path, env_id)
     os.makedirs(params_path, exist_ok=True)
+    print("Saving to {}".format(save_path))
 
     model.save("{}/{}".format(save_path, env_id))
     # Save hyperparams

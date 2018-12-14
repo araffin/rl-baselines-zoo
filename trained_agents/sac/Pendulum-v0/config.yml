@@ -1,0 +1,8 @@
+!!python/object/apply:collections.OrderedDict
+- - [batch_size, 64]
+  - [buffer_size, 50000]
+  - [ent_coef, 0.2]
+  - [learning_rate, 0.003]
+  - [learning_starts, 1000]
+  - [n_timesteps, 60000.0]
+  - [policy, MlpPolicy]

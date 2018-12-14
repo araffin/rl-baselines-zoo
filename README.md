@@ -97,6 +97,7 @@ Additional Atari Games (to be completed):
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:  |
 | DQN     | :heavy_check_mark: | :heavy_check_mark:  |:heavy_check_mark:| N/A | N/A  |
 | DDPG     |  N/A |  N/A  | N/A| :heavy_check_mark: | :heavy_check_mark:  |
+| SAC     |  N/A |  N/A  | N/A| :heavy_check_mark: |   |
 
 
 ### Box2D Environments
@@ -107,8 +108,9 @@ Additional Atari Games (to be completed):
 | ACER     | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | ACKTR    | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: |:heavy_check_mark:|   |
-| DQN     | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
-| DDPG     |  | N/A | :heavy_check_mark: |  |   | |
+| DQN      | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
+| DDPG     |  | N/A | :heavy_check_mark: |  |  |  |
+| SAC      | :heavy_check_mark: | N/A | :heavy_check_mark: |  |  |  |
 
 ### PyBullet Environments
 
@@ -121,6 +123,7 @@ Note: those environments are derived from [Roboschool](https://github.com/openai
 |----------|-----------|-------------|-----|---------|---------|----------|
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:|
 | DDPG     |  | | |  | | | |
+| SAC      | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:|  | | :heavy_check_mark:| |
 
 PyBullet Envs (Continued)
 
