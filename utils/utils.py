@@ -218,10 +218,11 @@ def get_latest_run_id(log_path, env_id):
     return max_run_id
 
 
-def get_saved_hyperparams(stats_path, norm_reward=False):
+def get_saved_hyperparams(stats_path, norm_reward=False, test_mode=False):
     """
     :param stats_path: (str)
     :param norm_reward: (bool)
+    :param test_mode: (bool)
     :return: (dict, str)
     """
     hyperparams = {}
@@ -242,6 +243,8 @@ def get_saved_hyperparams(stats_path, norm_reward=False):
         if hyperparams['normalize']:
             if isinstance(hyperparams['normalize'], str):
                 normalize_kwargs = eval(hyperparams['normalize'])
+                if test_mode:
+                    normalize_kwargs['norm_reward'] = norm_reward
             else:
                 normalize_kwargs = {'norm_obs': hyperparams['normalize'], 'norm_reward': norm_reward}
             hyperparams['normalize_kwargs'] = normalize_kwargs

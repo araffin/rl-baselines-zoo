@@ -97,6 +97,7 @@ Additional Atari Games (to be completed):
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:  |
 | DQN     | :heavy_check_mark: | :heavy_check_mark:  |:heavy_check_mark:| N/A | N/A  |
 | DDPG     |  N/A |  N/A  | N/A| :heavy_check_mark: | :heavy_check_mark:  |
+| SAC     |  N/A |  N/A  | N/A| :heavy_check_mark: |   |
 
 
 ### Box2D Environments
@@ -107,18 +108,22 @@ Additional Atari Games (to be completed):
 | ACER     | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | ACKTR    | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: |:heavy_check_mark:|   |
-| DQN     | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
-| DDPG     |  | N/A | :heavy_check_mark: |  |   | |
+| DQN      | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
+| DDPG     |  | N/A | :heavy_check_mark: |  |  |  |
+| SAC      | :heavy_check_mark: | N/A | :heavy_check_mark: |  |  |  |
 
 ### PyBullet Environments
 
 See https://github.com/bulletphysics/bullet3/tree/master/examples/pybullet/gym/pybullet_envs.
 Similar to [MuJoCo Envs](https://gym.openai.com/envs/#mujoco) but with a free simulator: pybullet. We are using `BulletEnv-v0` version.
 
+Note: those environments are derived from [Roboschool](https://github.com/openai/roboschool) and are much harder than the Mujoco version (see [Pybullet issue](https://github.com/bulletphysics/bullet3/issues/1718#issuecomment-393198883))
+
 |  RL Algo |  Walker2D | HalfCheetah | Ant | Reacher |  Hopper | Humanoid |
 |----------|-----------|-------------|-----|---------|---------|----------|
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:|
 | DDPG     |  | | |  | | | |
+| SAC      | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:|  | | :heavy_check_mark:| |
 
 PyBullet Envs (Continued)
 
@@ -136,7 +141,7 @@ You can train agents online using [colab notebook](https://colab.research.google
 ### Stable-Baselines PyPi Package
 ```
 apt-get install swig cmake libopenmpi-dev zlib1g-dev ffmpeg
-pip install stable-baselines==2.2.1 box2d box2d-kengz pyyaml pybullet==2.1.0 pytablewriter
+pip install stable-baselines==2.4.0 box2d box2d-kengz pyyaml pybullet==2.1.0 pytablewriter
 ```
 
 Please see [Stable Baselines README](https://github.com/hill-a/stable-baselines) for alternatives.
