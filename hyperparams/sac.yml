@@ -1,14 +1,14 @@
+# Not working yet
 MountainCarContinuous-v0:
-  normalize: "{'norm_obs': False, 'norm_reward': True}"
-  n_timesteps: 1300000
+  n_timesteps: !!float 1e6
   policy: 'MlpPolicy'
-  learning_rate: !!float 3e-3
+  learning_rate: lin_3e-4
   buffer_size: 1000000
   batch_size: 64
+  ent_coef: 0.01
   train_freq: 1
-  ent_coef: 0.001
   gradient_steps: 1
-  learning_starts: 1000000
+  learning_starts: 10000
 
 Pendulum-v0:
   n_timesteps: !!float 60000
@@ -37,7 +37,7 @@ BipedalWalker-v2:
   learning_starts: 1000
 
 BipedalWalkerHardcore-v2:
-  n_timesteps: !!float 3e7
+  n_timesteps: !!float 5e7
   policy: 'CustomSACPolicy'
   learning_rate: lin_3e-4
   buffer_size: 2000000
@@ -53,7 +53,7 @@ HalfCheetahBulletEnv-v0:
   learning_rate: lin_3e-4
   buffer_size: 1000000
   batch_size: 64
-  ent_coef: 0.005
+  ent_coef: 0.01
   train_freq: 1
   gradient_steps: 1
   learning_starts: 10000
@@ -63,13 +63,35 @@ AntBulletEnv-v0:
   policy: 'CustomSACPolicy'
   learning_rate: lin_3e-4
   buffer_size: 1000000
-  batch_size: 64
+  batch_size: 256
   ent_coef: 0.01
   train_freq: 1
   gradient_steps: 1
   learning_starts: 1000
 
 HopperBulletEnv-v0:
+  n_timesteps: !!float 2e6
+  policy: 'CustomSACPolicy'
+  learning_rate: lin_3e-4
+  buffer_size: 1000000
+  batch_size: 256
+  ent_coef: 0.01
+  train_freq: 1
+  gradient_steps: 1
+  learning_starts: 1000
+
+Walker2DBulletEnv-v0:
+  n_timesteps: !!float 2e6
+  policy: 'CustomSACPolicy'
+  learning_rate: lin_3e-4
+  buffer_size: 1000000
+  batch_size: 256
+  ent_coef: 0.01
+  train_freq: 1
+  gradient_steps: 1
+  learning_starts: 1000
+
+ReacherBulletEnv-v0:
   n_timesteps: !!float 1e6
   policy: 'CustomSACPolicy'
   learning_rate: lin_3e-4
@@ -80,13 +102,59 @@ HopperBulletEnv-v0:
   gradient_steps: 1
   learning_starts: 1000
 
-Walker2DBulletEnv-v0:
+HumanoidBulletEnv-v0:
+  n_timesteps: !!float 2e7
+  policy: 'CustomSACPolicy'
+  learning_rate: lin_3e-4
+  buffer_size: 1000000
+  batch_size: 64
+  ent_coef: 0.01
+  train_freq: 1
+  gradient_steps: 1
+  learning_starts: 1000
+
+InvertedDoublePendulumBulletEnv-v0:
   n_timesteps: !!float 1e6
   policy: 'CustomSACPolicy'
   learning_rate: lin_3e-4
   buffer_size: 1000000
   batch_size: 64
   ent_coef: 0.01
+  train_freq: 1
+  gradient_steps: 1
+  learning_starts: 1000
+
+InvertedPendulumSwingupBulletEnv-v0:
+  n_timesteps: !!float 1e6
+  policy: 'CustomSACPolicy'
+  learning_rate: lin_3e-4
+  buffer_size: 1000000
+  batch_size: 64
+  ent_coef: 0.01
+  train_freq: 1
+  gradient_steps: 1
+  learning_starts: 1000
+
+MinitaurBulletEnv-v0:
+  normalize: "{'norm_obs': True, 'norm_reward': False}"
+  n_timesteps: !!float 1e6
+  policy: 'CustomSACPolicy'
+  learning_rate: lin_3e-4
+  buffer_size: 1000000
+  batch_size: 256
+  ent_coef: 0.05
+  train_freq: 1
+  gradient_steps: 1
+  learning_starts: 1000
+
+MinitaurBulletDuckEnv-v0:
+  normalize: "{'norm_obs': True, 'norm_reward': False}"
+  n_timesteps: !!float 1e6
+  policy: 'CustomSACPolicy'
+  learning_rate: lin_3e-4
+  buffer_size: 1000000
+  batch_size: 256
+  ent_coef: 0.05
   train_freq: 1
   gradient_steps: 1
   learning_starts: 1000

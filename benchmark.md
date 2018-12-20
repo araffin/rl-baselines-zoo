@@ -82,7 +82,7 @@
 |sac  |BipedalWalkerHardcore-v2           |    100.802|   117.769|     148974|        84|
 |sac  |HalfCheetahBulletEnv-v0            |   2021.599|   261.582|     150000|       150|
 |sac  |HopperBulletEnv-v0                 |   2438.152|   335.284|     149232|       155|
-|sac  |HumanoidBulletEnv-v0               |   1879.583|   476.072|     149164|       158|
+|sac  |HumanoidBulletEnv-v0               |   2048.187|   829.776|     149886|       172|
 |sac  |InvertedDoublePendulumBulletEnv-v0 |   9357.406|     0.504|     150000|       150|
 |sac  |InvertedPendulumSwingupBulletEnv-v0|    891.508|     0.963|     150000|       150|
 |sac  |LunarLanderContinuous-v2           |    194.191|   100.631|     149699|       304|
