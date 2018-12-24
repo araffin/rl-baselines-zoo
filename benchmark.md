@@ -77,10 +77,15 @@
 |ppo2 |SeaquestNoFrameskip-v4             |   1782.687|    80.883|     150535|        67|
 |ppo2 |SpaceInvadersNoFrameskip-v4        |    689.631|   202.143|     150081|       176|
 |ppo2 |Walker2DBulletEnv-v0               |   1276.848|   504.586|     149959|       179|
-|sac  |AntBulletEnv-v0                    |   1842.357|   169.365|     150000|       150|
+|sac  |AntBulletEnv-v0                    |   2354.785|    42.501|     150000|       150|
 |sac  |BipedalWalker-v2                   |    307.198|     1.055|     149794|       175|
+|sac  |BipedalWalkerHardcore-v2           |    100.802|   117.769|     148974|        84|
 |sac  |HalfCheetahBulletEnv-v0            |   2021.599|   261.582|     150000|       150|
-|sac  |HopperBulletEnv-v0                 |   2418.067|   143.625|     149316|       150|
+|sac  |HopperBulletEnv-v0                 |   2438.152|   335.284|     149232|       155|
+|sac  |HumanoidBulletEnv-v0               |   2048.187|   829.776|     149886|       172|
+|sac  |InvertedDoublePendulumBulletEnv-v0 |   9357.406|     0.504|     150000|       150|
+|sac  |InvertedPendulumSwingupBulletEnv-v0|    891.508|     0.963|     150000|       150|
 |sac  |LunarLanderContinuous-v2           |    194.191|   100.631|     149699|       304|
 |sac  |Pendulum-v0                        |   -159.669|    86.665|     150000|       750|
-|sac  |Walker2DBulletEnv-v0               |   1475.618|    22.791|     150000|       150|
+|sac  |ReacherBulletEnv-v0                |     17.529|     9.860|     150000|      1000|
+|sac  |Walker2DBulletEnv-v0               |   2052.646|    13.631|     150000|       150|

@@ -61,7 +61,7 @@ python -m utils.record_video --algo ppo2 --env BipedalWalkerHardcore-v2 -n 1000
 ```
 
 
-## Current Collection: 70+ Trained Agents!
+## Current Collection: 80+ Trained Agents!
 
 Scores can be found in `benchmark.md`. To compute them, simply run `python -m utils.benchmark`.
 
@@ -109,8 +109,8 @@ Additional Atari Games (to be completed):
 | ACKTR    | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: |:heavy_check_mark:|   |
 | DQN      | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
-| DDPG     |  | N/A | :heavy_check_mark: |  |  |  |
-| SAC      | :heavy_check_mark: | N/A | :heavy_check_mark: |  |  |  |
+| DDPG     |  | N/A | :heavy_check_mark: |  |  |
+| SAC      | :heavy_check_mark: | N/A | :heavy_check_mark: |:heavy_check_mark: | |
 
 ### PyBullet Environments
 
@@ -121,16 +121,17 @@ Note: those environments are derived from [Roboschool](https://github.com/openai
 
 |  RL Algo |  Walker2D | HalfCheetah | Ant | Reacher |  Hopper | Humanoid |
 |----------|-----------|-------------|-----|---------|---------|----------|
-| PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:|
+| PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
 | DDPG     |  | | |  | | | |
-| SAC      | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark:|  | | :heavy_check_mark:| |
+| SAC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 
 PyBullet Envs (Continued)
 
 |  RL Algo |  Minitaur | MinitaurDuck | InvertedDoublePendulum | InvertedPendulumSwingup |
 |----------|-----------|-------------|-----|---------|
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
-| DDPG     | | | | | |
+| DDPG     | | | | |
+| SAC      | | | :heavy_check_mark: | :heavy_check_mark: |
 
 ## Colab Notebook: Try it Online!
 
