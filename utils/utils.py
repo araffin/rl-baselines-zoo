@@ -130,12 +130,19 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         class_ = load(spec._entry_point)
         # HACK: force SubprocVecEnv for Bullet env that does not
         # have a render argument
+        render_name = None
         use_subproc = 'renders' not in inspect.getfullargspec(class_.__init__).args
+        if not use_subproc:
+            render_name = 'renders'
+        # Dev branch of pybullet
+        # use_subproc = use_subproc and 'render' not in inspect.getfullargspec(class_.__init__).args
+        # if not use_subproc and render_name is None:
+        #     render_name = 'render'
 
         # Create the env, with the original kwargs, and the new ones overriding them if needed
         def _init():
             # TODO: fix for pybullet locomotion envs
-            env = class_(**{**spec._kwargs}, renders=should_render)
+            env = class_(**{**spec._kwargs}, **{render_name: should_render})
             env.seed(0)
             if log_dir is not None:
                 env = Monitor(env, os.path.join(log_dir, "0"), allow_early_resets=True)
