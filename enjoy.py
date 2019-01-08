@@ -71,7 +71,7 @@ env = create_test_env(env_id, n_envs=args.n_envs, is_atari=is_atari,
                       should_render=not args.no_render,
                       hyperparams=hyperparams)
 
-model = ALGOS[algo].load(model_path)
+model = ALGOS[algo].load(model_path, env=env)
 
 obs = env.reset()
 
