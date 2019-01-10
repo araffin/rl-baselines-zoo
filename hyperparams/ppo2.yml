@@ -220,6 +220,7 @@ MinitaurBulletDuckEnv-v0:
   learning_rate: 2.5e-4
   cliprange: 0.2
 
+# To be tuned
 HumanoidBulletEnv-v0:
   normalize: true
   n_envs: 8

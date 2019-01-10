@@ -85,7 +85,7 @@
 |sac  |HumanoidBulletEnv-v0               |   2048.187|   829.776|     149886|       172|
 |sac  |InvertedDoublePendulumBulletEnv-v0 |   9357.406|     0.504|     150000|       150|
 |sac  |InvertedPendulumSwingupBulletEnv-v0|    891.508|     0.963|     150000|       150|
-|sac  |LunarLanderContinuous-v2           |    194.191|   100.631|     149699|       304|
+|sac  |LunarLanderContinuous-v2           |    269.783|    57.077|     149852|       709|
 |sac  |Pendulum-v0                        |   -159.669|    86.665|     150000|       750|
 |sac  |ReacherBulletEnv-v0                |     17.529|     9.860|     150000|      1000|
 |sac  |Walker2DBulletEnv-v0               |   2052.646|    13.631|     150000|       150|

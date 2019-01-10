@@ -5,7 +5,7 @@ MountainCarContinuous-v0:
   learning_rate: lin_3e-4
   buffer_size: 1000000
   batch_size: 64
-  ent_coef: 0.01
+  ent_coef: 'auto'
   train_freq: 1
   gradient_steps: 1
   learning_starts: 10000
@@ -13,16 +13,12 @@ MountainCarContinuous-v0:
 Pendulum-v0:
   n_timesteps: !!float 60000
   policy: 'MlpPolicy'
-  ent_coef: 0.2
   learning_starts: 1000
 
 LunarLanderContinuous-v2:
-  n_timesteps: !!float 1e5
+  n_timesteps: !!float 5e5
   policy: 'MlpPolicy'
-  learning_rate: !!float 3e-3
-  buffer_size: 50000
-  batch_size: 32
-  ent_coef: 0.2
+  batch_size: 256
   learning_starts: 1000
 
 BipedalWalker-v2:
@@ -53,7 +49,7 @@ HalfCheetahBulletEnv-v0:
   learning_rate: lin_3e-4
   buffer_size: 1000000
   batch_size: 64
-  ent_coef: 0.01
+  ent_coef: 'auto'
   train_freq: 1
   gradient_steps: 1
   learning_starts: 10000
@@ -103,12 +99,13 @@ ReacherBulletEnv-v0:
   learning_starts: 1000
 
 HumanoidBulletEnv-v0:
+  normalize: "{'norm_obs': True, 'norm_reward': False}"
   n_timesteps: !!float 2e7
   policy: 'CustomSACPolicy'
   learning_rate: lin_3e-4
   buffer_size: 1000000
   batch_size: 64
-  ent_coef: 0.01
+  ent_coef: 'auto'
   train_freq: 1
   gradient_steps: 1
   learning_starts: 1000
@@ -135,26 +132,29 @@ InvertedPendulumSwingupBulletEnv-v0:
   gradient_steps: 1
   learning_starts: 1000
 
+# To be tuned
 MinitaurBulletEnv-v0:
   normalize: "{'norm_obs': True, 'norm_reward': False}"
   n_timesteps: !!float 1e6
   policy: 'CustomSACPolicy'
   learning_rate: lin_3e-4
   buffer_size: 1000000
-  batch_size: 256
-  ent_coef: 0.05
+  batch_size: 64
+  ent_coef: 'auto'
+  # ent_coef: 0.0003
   train_freq: 1
   gradient_steps: 1
   learning_starts: 1000
 
+# To be tuned
 MinitaurBulletDuckEnv-v0:
-  normalize: "{'norm_obs': True, 'norm_reward': False}"
+  # normalize: "{'norm_obs': True, 'norm_reward': False}"
   n_timesteps: !!float 1e6
   policy: 'CustomSACPolicy'
   learning_rate: lin_3e-4
   buffer_size: 1000000
   batch_size: 256
-  ent_coef: 0.05
+  ent_coef: 'auto'
   train_freq: 1
   gradient_steps: 1
   learning_starts: 1000
