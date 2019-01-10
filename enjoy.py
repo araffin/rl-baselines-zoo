@@ -71,7 +71,10 @@ env = create_test_env(env_id, n_envs=args.n_envs, is_atari=is_atari,
                       should_render=not args.no_render,
                       hyperparams=hyperparams)
 
-model = ALGOS[algo].load(model_path, env=env)
+# ACER raises errors because the environment passed must have
+# the same number of environments as the model was trained on.
+load_env = None if algo == 'acer' else env
+model = ALGOS[algo].load(model_path, env=load_env)
 
 obs = env.reset()
 
