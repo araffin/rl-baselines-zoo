@@ -1,0 +1,5 @@
+!!python/object/apply:collections.OrderedDict
+- - [batch_size, 256]
+  - [learning_starts, 1000]
+  - [n_timesteps, 500000.0]
+  - [policy, MlpPolicy]

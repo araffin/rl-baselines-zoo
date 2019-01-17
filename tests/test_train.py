@@ -25,6 +25,8 @@ for algo in ALGOS:
 experiments['ppo2-BipedalWalkerHardcore-v2'] = ('ppo2', 'BipedalWalkerHardcore-v2')
 # Test for DDPG
 experiments['ddpg-MountainCarContinuous-v0'] = ('ddpg', 'MountainCarContinuous-v0')
+# Test for SAC
+experiments['sac-Pendulum-v0'] = ('sac', 'Pendulum-v0')
 
 # Clean up
 if os.path.isdir(LOG_FOLDER):
