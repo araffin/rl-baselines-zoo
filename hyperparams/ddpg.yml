@@ -19,6 +19,7 @@ Pendulum-v0:
   noise_std: 0.1
   memory_limit: 50000
 
+# To be tuned
 BipedalWalker-v2:
   n_timesteps: !!float 5e6
   policy: 'LnMlpPolicy'
@@ -27,6 +28,7 @@ BipedalWalker-v2:
   noise_std: 0.2
   memory_limit: 50000
 
+# To be tuned
 Walker2DBulletEnv-v0:
   n_timesteps: !!float 2e6
   policy: 'LnMlpPolicy'
@@ -36,6 +38,7 @@ Walker2DBulletEnv-v0:
   batch_size: 64
   normalize_observations: True
 
+# To be tuned
 HalfCheetahBulletEnv-v0:
   n_timesteps: !!float 2e6
   policy: 'LnMlpPolicy'
