@@ -17,12 +17,12 @@ RUN \
     mkdir $CODE_DIR && \
     cd $CODE_DIR && \
     pip install --upgrade pip && \
-    pip install tensorflow-gpu==1.8.0 && \
     pip install pytest==3.5.1 && \
     pip install pytest-cov && \
     pip install pyyaml && \
     pip install box2d-py==2.3.5 && \
     pip install stable-baselines==2.4.0 && \
+    pip install tensorflow-gpu==1.8.0 && \
     pip install pybullet==2.1.0 && \
     pip install pytablewriter==0.36.0
 
