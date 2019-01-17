@@ -48,7 +48,7 @@ if args.trained_agent != "":
         "The trained_agent must be a valid path to a .pkl file"
 
 for env_id in env_ids:
-    tensorboard_log = None if args.tensorboard_log == '' else args.tensorboard_log + '/' + env_id
+    tensorboard_log = None if args.tensorboard_log == '' else os.path.join(args.tensorboard_log, env_id)
 
     is_atari = False
     if 'NoFrameskip' in env_id:
