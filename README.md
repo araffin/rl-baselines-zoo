@@ -185,3 +185,7 @@ python -m pytest -v tests/
 ## Contributing
 
 If you trained an agent that is not present in the rl zoo, please submit a Pull Request (containing the hyperparameters and the score too).
+
+## Contributors
+
+We would like to thanks our contributors: [@iandanforth](https://github.com/iandanforth)
