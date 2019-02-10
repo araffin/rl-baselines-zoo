@@ -1,0 +1,4 @@
+!!python/object/apply:collections.OrderedDict
+- - [n_timesteps, 1000000.0]
+  - [normalize, true]
+  - [policy, MlpPolicy]

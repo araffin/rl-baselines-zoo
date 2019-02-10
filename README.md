@@ -95,9 +95,10 @@ Additional Atari Games (to be completed):
 | ACER     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | ACKTR    | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:  |
-| DQN     | :heavy_check_mark: | :heavy_check_mark:  |:heavy_check_mark:| N/A | N/A  |
+| DQN      | :heavy_check_mark: | :heavy_check_mark:  |:heavy_check_mark:| N/A | N/A  |
 | DDPG     |  N/A |  N/A  | N/A| :heavy_check_mark: | :heavy_check_mark:  |
-| SAC     |  N/A |  N/A  | N/A| :heavy_check_mark: |   |
+| SAC      |  N/A |  N/A  | N/A| :heavy_check_mark: |   |
+| TRPO     |  |  |  | :heavy_check_mark: |  |
 
 
 ### Box2D Environments

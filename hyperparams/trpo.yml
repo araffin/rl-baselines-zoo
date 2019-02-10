@@ -1,0 +1,4 @@
+Pendulum-v0:
+  n_timesteps: !!float 5e5
+  policy: 'MlpPolicy'
+  normalize: True
