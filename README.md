@@ -76,6 +76,8 @@ Scores can be found in `benchmark.md`. To compute them, simply run `python -m ut
 | ACKTR    |:heavy_check_mark:| :heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|  :heavy_check_mark: |
 | PPO2     |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark: |:heavy_check_mark:|:heavy_check_mark:|  :heavy_check_mark: |
 | DQN     |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+| TRPO     | | | | | | | |
+
 
 Additional Atari Games (to be completed):
 
@@ -98,7 +100,7 @@ Additional Atari Games (to be completed):
 | DQN      | :heavy_check_mark: | :heavy_check_mark:  |:heavy_check_mark:| N/A | N/A  |
 | DDPG     |  N/A |  N/A  | N/A| :heavy_check_mark: | :heavy_check_mark:  |
 | SAC      |  N/A |  N/A  | N/A| :heavy_check_mark: |   |
-| TRPO     |  |  |  | :heavy_check_mark: |  |
+| TRPO     | :heavy_check_mark: | :heavy_check_mark: |  | :heavy_check_mark: |  |
 
 
 ### Box2D Environments
@@ -112,6 +114,7 @@ Additional Atari Games (to be completed):
 | DQN      | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
 | DDPG     |  | N/A | :heavy_check_mark: |  |  |
 | SAC      | :heavy_check_mark: | N/A | :heavy_check_mark: |:heavy_check_mark: | |
+| TRPO     |  | :heavy_check_mark: | :heavy_check_mark: | | |
 
 ### PyBullet Environments
 
@@ -125,6 +128,7 @@ Note: those environments are derived from [Roboschool](https://github.com/openai
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
 | DDPG     |  | | |  | | | |
 | SAC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| TRPO     |  | :heavy_check_mark: |  |  |  |  |
 
 PyBullet Envs (Continued)
 
@@ -133,6 +137,7 @@ PyBullet Envs (Continued)
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
 | DDPG     | | | | |
 | SAC      | | | :heavy_check_mark: | :heavy_check_mark: |
+| TRPO     | | |  |  |
 
 ## Colab Notebook: Try it Online!
 
