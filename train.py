@@ -8,6 +8,7 @@ import gym
 import pybullet_envs
 import numpy as np
 import yaml
+from mpi4py import MPI
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.cmd_util import make_atari_env
 from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
@@ -29,6 +30,8 @@ parser.add_argument('--log-interval', help='Override log interval (default: -1, 
                     type=int)
 parser.add_argument('-f', '--log-folder', help='Log folder', type=str, default='logs')
 parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
+parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
+                    type=int)
 args = parser.parse_args()
 
 env_ids = args.env
@@ -47,6 +50,16 @@ if args.trained_agent != "":
     assert args.trained_agent.endswith('.pkl') and os.path.isfile(args.trained_agent), \
         "The trained_agent must be a valid path to a .pkl file"
 
+rank = 0
+if MPI.COMM_WORLD.Get_size() > 1:
+    print("Using MPI for multiprocessing with {} workers".format(MPI.COMM_WORLD.Get_size()))
+    rank = MPI.COMM_WORLD.Get_rank()
+    print("Worker rank: {}".format(rank))
+
+    args.seed += rank
+    if rank != 0:
+        args.verbose = 0
+
 for env_id in env_ids:
     tensorboard_log = None if args.tensorboard_log == '' else os.path.join(args.tensorboard_log, env_id)
 
@@ -58,18 +71,24 @@ for env_id in env_ids:
 
     # Load hyperparameters from yaml file
     with open('hyperparams/{}.yml'.format(args.algo), 'r') as f:
-        if is_atari:
-            hyperparams = yaml.load(f)['atari']
+        hyperparams_dict = yaml.load(f)
+        if env_id in list(hyperparams_dict.keys()):
+            hyperparams = hyperparams_dict[env_id]
+        elif is_atari:
+            hyperparams = hyperparams_dict['atari']
         else:
-            hyperparams = yaml.load(f)[env_id]
+            raise ValueError("Hyperparameters not found for {}-{}".format(args.algo, env_id))
 
     # Sort hyperparams that will be saved
     saved_hyperparams = OrderedDict([(key, hyperparams[key]) for key in sorted(hyperparams.keys())])
-    pprint(saved_hyperparams)
+
+    if args.verbose > 0:
+        pprint(saved_hyperparams)
 
     n_envs = hyperparams.get('n_envs', 1)
 
-    print("Using {} environments".format(n_envs))
+    if args.verbose > 0:
+        print("Using {} environments".format(n_envs))
 
     # Create learning rate schedules for ppo2 and sac
     if args.algo in ["ppo2", "sac"]:
@@ -107,7 +126,8 @@ for env_id in env_ids:
 
     # Create the environment and wrap it if necessary
     if is_atari:
-        print("Using Atari wrapper")
+        if args.verbose > 0:
+            print("Using Atari wrapper")
         env = make_atari_env(env_id, num_env=n_envs, seed=args.seed)
         # Frame-stacking with 4 frames
         env = VecFrameStack(env, n_stack=4)
@@ -160,7 +180,7 @@ for env_id in env_ids:
         del hyperparams['policy']
 
         model = ALGOS[args.algo].load(args.trained_agent, env=env,
-                                      tensorboard_log=tensorboard_log, verbose=1, **hyperparams)
+                                      tensorboard_log=tensorboard_log, verbose=args.verbose, **hyperparams)
 
         exp_folder = args.trained_agent.split('.pkl')[0]
         if normalize:
@@ -168,7 +188,7 @@ for env_id in env_ids:
             env.load_running_average(exp_folder)
     else:
         # Train an agent from scratch
-        model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=1, **hyperparams)
+        model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=args.verbose, **hyperparams)
 
     kwargs = {}
     if args.log_interval > -1:
@@ -181,16 +201,19 @@ for env_id in env_ids:
     save_path = os.path.join(log_path, "{}_{}".format(env_id, get_latest_run_id(log_path, env_id) + 1))
     params_path = "{}/{}".format(save_path, env_id)
     os.makedirs(params_path, exist_ok=True)
-    print("Saving to {}".format(save_path))
 
-    model.save("{}/{}".format(save_path, env_id))
-    # Save hyperparams
-    with open(os.path.join(params_path, 'config.yml'), 'w') as f:
-        yaml.dump(saved_hyperparams, f)
+    # Only save worker of rank 0 when using mpi
+    if rank == 0:
+        print("Saving to {}".format(save_path))
 
-    if normalize:
-        # Unwrap
-        if isinstance(env, VecFrameStack):
-            env = env.venv
-        # Important: save the running average, for testing the agent we need that normalization
-        env.save_running_average(params_path)
+        model.save("{}/{}".format(save_path, env_id))
+        # Save hyperparams
+        with open(os.path.join(params_path, 'config.yml'), 'w') as f:
+            yaml.dump(saved_hyperparams, f)
+
+        if normalize:
+            # Unwrap
+            if isinstance(env, VecFrameStack):
+                env = env.venv
+            # Important: save the running average, for testing the agent we need that normalization
+            env.save_running_average(params_path)

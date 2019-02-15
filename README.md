@@ -52,6 +52,13 @@ Continue training (here, load pretrained agent for Breakout and continue trainin
 python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/BreakoutNoFrameskip-v4.pkl -n 5000
 ```
 
+Note: when training TRPO, you have to use `mpirun` to enable multiprocessing:
+
+```
+mpirun -n 16 python train.py --algo trpo --env BreakoutNoFrameskip-v4
+```
+
+
 ## Record a Video of a Trained Agent
 
 Record 1000 steps:

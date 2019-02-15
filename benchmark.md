@@ -90,6 +90,7 @@
 |sac  |ReacherBulletEnv-v0                |     17.529|     9.860|     150000|      1000|
 |sac  |Walker2DBulletEnv-v0               |   2052.646|    13.631|     150000|       150|
 |trpo |CartPole-v1                        |    485.392|    70.505|     149986|       309|
+|trpo |HalfCheetahBulletEnv-v0            |   1893.694|   208.953|     150000|       150|
 |trpo |LunarLander-v2                     |    149.313|   108.546|     149893|       320|
 |trpo |LunarLanderContinuous-v2           |     64.619|    94.377|     149127|       181|
 |trpo |MountainCar-v0                     |   -144.537|    33.584|     149885|      1037|
