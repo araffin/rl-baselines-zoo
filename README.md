@@ -100,7 +100,7 @@ Additional Atari Games (to be completed):
 
 |  RL Algo |  CartPole-v1 | MountainCar-v0 | Acrobot-v1 |  Pendulum-v0 | MountainCarContinuous-v0 |
 |----------|--------------|----------------|------------|--------------|--------------------------|
-| A2C      | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: |       |                   |
+| A2C      | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |                   |
 | ACER     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | ACKTR    | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:  |

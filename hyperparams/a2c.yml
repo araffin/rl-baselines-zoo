@@ -29,3 +29,19 @@ Acrobot-v1:
   n_timesteps: !!float 5e5
   policy: 'MlpPolicy'
   ent_coef: .0
+
+Pendulum-v0:
+  n_envs: 8
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+  gamma: 0.95
+
+LunarLanderContinuous-v2:
+  n_envs: 8
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  gamma: 0.999
+  ent_coef: 0.0
+  lr_schedule: 'linear'
+  learning_rate: !!float 1e-3
