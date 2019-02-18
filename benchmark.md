@@ -2,12 +2,16 @@
 |-----|-----------------------------------|----------:|---------:|----------:|---------:|
 |a2c  |Acrobot-v1                         |    -86.616|    25.097|     149997|      1712|
 |a2c  |BeamRiderNoFrameskip-v4            |   2809.115|  1298.573|     150181|        52|
+|a2c  |BipedalWalker-v2                   |    255.012|    71.426|     149890|       169|
 |a2c  |BreakoutNoFrameskip-v4             |    384.865|    51.231|     146703|        52|
 |a2c  |CartPole-v1                        |    499.903|     1.672|     149971|       300|
 |a2c  |EnduroNoFrameskip-v4               |      0.000|     0.000|     149574|        45|
 |a2c  |LunarLander-v2                     |     36.321|   135.294|     149696|       463|
+|a2c  |LunarLanderContinuous-v2           |    203.912|    59.265|     149938|       253|
 |a2c  |MountainCar-v0                     |   -130.921|    32.188|     149904|      1145|
+|a2c  |MountainCarContinuous-v0           |     93.659|     0.199|     149985|      2187|
 |a2c  |MsPacmanNoFrameskip-v4             |   1581.111|   499.757|     150229|       189|
+|a2c  |Pendulum-v0                        |   -162.240|    99.351|     150000|       750|
 |a2c  |PongNoFrameskip-v4                 |     18.973|     2.135|     148288|        75|
 |a2c  |QbertNoFrameskip-v4                |   5742.333|  2033.074|     151311|       150|
 |a2c  |SeaquestNoFrameskip-v4             |    746.420|   111.370|     149749|        81|

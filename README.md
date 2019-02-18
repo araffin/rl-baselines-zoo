@@ -100,7 +100,7 @@ Additional Atari Games (to be completed):
 
 |  RL Algo |  CartPole-v1 | MountainCar-v0 | Acrobot-v1 |  Pendulum-v0 | MountainCarContinuous-v0 |
 |----------|--------------|----------------|------------|--------------|--------------------------|
-| A2C      | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |                   |
+| A2C      | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | ACER     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | ACKTR    | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:  |
@@ -155,7 +155,7 @@ You can train agents online using [colab notebook](https://colab.research.google
 ### Stable-Baselines PyPi Package
 ```
 apt-get install swig cmake libopenmpi-dev zlib1g-dev ffmpeg
-pip install stable-baselines==2.4.0 box2d box2d-kengz pyyaml pybullet==2.1.0 pytablewriter
+pip install stable-baselines>=2.5.0 box2d box2d-kengz pyyaml pybullet==2.1.0 pytablewriter
 ```
 
 Please see [Stable Baselines README](https://github.com/hill-a/stable-baselines) for alternatives.
