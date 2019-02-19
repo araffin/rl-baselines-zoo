@@ -15,7 +15,8 @@ from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNor
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.ppo2.ppo2 import constfn
 
-from utils import make_env, ALGOS, linear_schedule, get_latest_run_id
+from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, kill_env_processes
+from utils.hyperparams_opt import hyperparam_optimization
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', type=str, nargs='+', default=["CartPole-v1"], help='environment ID(s)')
@@ -30,6 +31,9 @@ parser.add_argument('--log-interval', help='Override log interval (default: -1, 
                     type=int)
 parser.add_argument('-f', '--log-folder', help='Log folder', type=str, default='logs')
 parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
+parser.add_argument('--n-trials', help='Number of trials for optimizing hyperparameters', type=int, default=10)
+parser.add_argument('-optimize', '--optimize-hyperparameters', action='store_true', default=False,
+                    help='Run hyperparameters search')
 parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                     type=int)
 args = parser.parse_args()
@@ -124,34 +128,47 @@ for env_id in env_ids:
         del hyperparams['n_envs']
     del hyperparams['n_timesteps']
 
-    # Create the environment and wrap it if necessary
-    if is_atari:
-        if args.verbose > 0:
-            print("Using Atari wrapper")
-        env = make_atari_env(env_id, num_env=n_envs, seed=args.seed)
-        # Frame-stacking with 4 frames
-        env = VecFrameStack(env, n_stack=4)
-    elif args.algo in ['dqn', 'ddpg']:
-        if hyperparams.get('normalize', False):
-            print("WARNING: normalization not supported yet for DDPG/DQN")
-        env = gym.make(env_id)
-        env.seed(args.seed)
-    else:
-        if n_envs == 1:
-            env = DummyVecEnv([make_env(env_id, 0, args.seed)])
-        else:
-            env = SubprocVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
-        if normalize:
-            print("Normalizing input and return")
-            env = VecNormalize(env, **normalize_kwargs)
 
-    # Optional Frame-stacking
-    n_stack = 1
-    if hyperparams.get('frame_stack', False):
-        n_stack = hyperparams['frame_stack']
-        env = VecFrameStack(env, n_stack)
-        print("Stacking {} frames".format(n_stack))
-        del hyperparams['frame_stack']
+    def create_env():
+        """
+        Create the environment and wrap it if necessary
+        :return: (gym.Env)
+        """
+        global hyperparams
+
+        if is_atari:
+            if args.verbose > 0:
+                print("Using Atari wrapper")
+            env = make_atari_env(env_id, num_env=n_envs, seed=args.seed)
+            # Frame-stacking with 4 frames
+            env = VecFrameStack(env, n_stack=4)
+        elif args.algo in ['dqn', 'ddpg']:
+            if hyperparams.get('normalize', False):
+                print("WARNING: normalization not supported yet for DDPG/DQN")
+            env = gym.make(env_id)
+            env.seed(args.seed)
+        else:
+            if n_envs == 1:
+                env = DummyVecEnv([make_env(env_id, 0, args.seed)])
+            else:
+                env = SubprocVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
+            if normalize:
+                print("Normalizing input and return")
+                env = VecNormalize(env, **normalize_kwargs)
+        # Optional Frame-stacking
+        n_stack = 1
+        if hyperparams.get('frame_stack', False):
+            n_stack = hyperparams['frame_stack']
+            env = VecFrameStack(env, n_stack)
+            print("Stacking {} frames".format(n_stack))
+            del hyperparams['frame_stack']
+        return env
+
+
+    env = create_env()
+    # Stop env processes to free memory
+    if args.optimize_hyperparameters and n_envs > 1:
+        kill_env_processes(env)
 
     # Parse noise string for DDPG
     if args.algo == 'ddpg' and hyperparams.get('noise_type') is not None:
@@ -186,6 +203,25 @@ for env_id in env_ids:
         if normalize:
             print("Loading saved running average")
             env.load_running_average(exp_folder)
+    elif args.optimize_hyperparameters:
+        if args.verbose > 0:
+            print("Optimizing hyperparameters")
+
+
+        def create_model(*_args, **kwargs):
+            return ALGOS[args.algo](env=create_env(), tensorboard_log=tensorboard_log,
+                                    verbose=0, **kwargs)
+
+
+        data_frame = hyperparam_optimization(args.algo, create_model, n_trials=args.n_trials,
+                                             n_timesteps=n_timesteps, hyperparams=hyperparams)
+        log_path = os.path.join(args.log_folder, args.algo,
+                                "report_{}_{}-trials_-{}.csv".format(env_id, args.n_trials, n_timesteps))
+
+        if args.verbose:
+            print("Writing report to {}".format(log_path))
+        data_frame.to_csv(log_path)
+        exit()
     else:
         # Train an agent from scratch
         model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=args.verbose, **hyperparams)

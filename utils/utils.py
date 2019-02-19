@@ -155,7 +155,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
             env = VecNormalize(env, training=False, **hyperparams['normalize_kwargs'])
             env.load_running_average(stats_path)
 
-        n_stack = hyperparams.get('n_stack', 0)
+        n_stack = hyperparams.get('frame_stack', 0)
         if n_stack > 0:
             print("Stacking {} frames".format(n_stack))
             env = VecFrameStack(env, n_stack)
@@ -247,3 +247,14 @@ def get_saved_hyperparams(stats_path, norm_reward=False, test_mode=False):
                 normalize_kwargs = {'norm_obs': hyperparams['normalize'], 'norm_reward': norm_reward}
             hyperparams['normalize_kwargs'] = normalize_kwargs
     return hyperparams, stats_path
+
+
+def kill_env_processes(env):
+    # Unwrap
+    if isinstance(env, VecFrameStack):
+        env = env.venv
+    if isinstance(env, VecNormalize):
+        env = env.venv
+    if isinstance(env, SubprocVecEnv):
+        for process in env.processes:
+            process.terminate()

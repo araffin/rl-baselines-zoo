@@ -19,6 +19,7 @@ def millions(x, pos):
     """
     return '{:.1f}M'.format(x * 1e-6)
 
+
 def movingAverage(values, window):
     """
     Smooth values by doing a moving average
@@ -29,6 +30,7 @@ def movingAverage(values, window):
     """
     weights = np.repeat(1.0, window) / window
     return np.convolve(values, weights, 'valid')
+
 
 def smooth(xy, window=50):
     x, y = xy
@@ -44,6 +46,7 @@ def smooth(xy, window=50):
     # Truncate x
     x = x[len(x) - len(y):]
     return x, y
+
 
 # Init seaborn
 seaborn.set()

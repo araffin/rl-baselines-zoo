@@ -73,6 +73,7 @@ HalfCheetahBulletEnv-v0:
 BipedalWalkerHardcore-v2:
   normalize: true
   n_envs: 16
+  frame_stack: 4
   n_timesteps: !!float 10e7
   policy: 'MlpPolicy'
   ent_coef: 0.001

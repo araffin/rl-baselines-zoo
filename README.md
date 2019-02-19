@@ -58,6 +58,18 @@ Note: when training TRPO, you have to use `mpirun` to enable multiprocessing:
 mpirun -n 16 python train.py --algo trpo --env BreakoutNoFrameskip-v4
 ```
 
+## Hyperparameter Optimization
+
+We use [Optuna](https://optuna.org/) for optimizing the hyperparameters.
+
+Note: hyperparameters search is only implemented for PPO2 for now.
+
+Budget of 20 trials with a maximum of 50000 steps:
+
+```
+python -m train.py --algo ppo2 --env MountainCar-v0 -n 50000 -optimize --n-trials 20
+```
+
 
 ## Record a Video of a Trained Agent
 
@@ -68,7 +80,7 @@ python -m utils.record_video --algo ppo2 --env BipedalWalkerHardcore-v2 -n 1000
 ```
 
 
-## Current Collection: 80+ Trained Agents!
+## Current Collection: 100+ Trained Agents!
 
 Scores can be found in `benchmark.md`. To compute them, simply run `python -m utils.benchmark`.
 
@@ -114,7 +126,7 @@ Additional Atari Games (to be completed):
 
 |  RL Algo |  BipedalWalker-v2 | LunarLander-v2 | LunarLanderContinuous-v2 |  BipedalWalkerHardcore-v2 | CarRacing-v0 |
 |----------|--------------|----------------|------------|--------------|--------------------------|
-| A2C      |  | :heavy_check_mark:  |  |       |                   |
+| A2C      | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |                   |
 | ACER     | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | ACKTR    | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: |:heavy_check_mark:|   |
@@ -132,6 +144,7 @@ Note: those environments are derived from [Roboschool](https://github.com/openai
 
 |  RL Algo |  Walker2D | HalfCheetah | Ant | Reacher |  Hopper | Humanoid |
 |----------|-----------|-------------|-----|---------|---------|----------|
+| A2C     |  | | |  | | | |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
 | DDPG     |  | | |  | | | |
 | SAC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
@@ -141,6 +154,7 @@ PyBullet Envs (Continued)
 
 |  RL Algo |  Minitaur | MinitaurDuck | InvertedDoublePendulum | InvertedPendulumSwingup |
 |----------|-----------|-------------|-----|---------|
+| A2C     | | | | |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
 | DDPG     | | | | |
 | SAC      | | | :heavy_check_mark: | :heavy_check_mark: |
@@ -155,7 +169,7 @@ You can train agents online using [colab notebook](https://colab.research.google
 ### Stable-Baselines PyPi Package
 ```
 apt-get install swig cmake libopenmpi-dev zlib1g-dev ffmpeg
-pip install stable-baselines>=2.5.0 box2d box2d-kengz pyyaml pybullet==2.1.0 pytablewriter
+pip install stable-baselines>=2.5.0 box2d box2d-kengz pyyaml pybullet optuna pytablewriter
 ```
 
 Please see [Stable Baselines README](https://github.com/hill-a/stable-baselines) for alternatives.
