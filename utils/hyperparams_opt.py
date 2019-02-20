@@ -47,6 +47,7 @@ def hyperparam_optimization(algo, model_fn, n_trials=10, n_timesteps=5000, hyper
             if mean_reward > _locals['self'].best_mean_reward:
                 _locals['self'].best_mean_reward = mean_reward
 
+            # Prune trial if need
             trial.report(-1 * _locals['self'].best_mean_reward, _locals['self'].num_timesteps)
             if trial.should_prune(_locals['self'].num_timesteps):
                 _locals['self'].is_pruned = True
@@ -87,6 +88,8 @@ def hyperparam_optimization(algo, model_fn, n_trials=10, n_timesteps=5000, hyper
 
 def sample_ppo2_params(trial):
     """
+    Sampler for PPO2 hyperparams.
+
     :param trial: (optuna.trial)
     :return: (dict)
     """
@@ -108,6 +111,28 @@ def sample_ppo2_params(trial):
     }
 
 
+def sample_a2c_params(trial):
+    """
+    Sampler for A2C hyperparams.
+
+    :param trial: (optuna.trial)
+    :return: (dict)
+    """
+    gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
+    n_steps = trial.suggest_categorical('n_steps', [5, 16, 32, 64])
+    lr_schedule = trial.suggest_categorical('lr_schedule', ['linear', 'constant'])
+    learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
+    ent_coef = trial.suggest_loguniform('ent_coef', 0.00000001, 0.1)
+
+    return {
+        'n_steps': n_steps,
+        'gamma': gamma,
+        'learning_rate': learning_rate,
+        'lr_schedule': lr_schedule,
+        'ent_coef': ent_coef
+    }
+
 HYPERPARAMS_SAMPLER = {
-    'ppo2': sample_ppo2_params
+    'ppo2': sample_ppo2_params,
+    'a2c': sample_a2c_params
 }

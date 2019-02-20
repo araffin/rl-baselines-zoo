@@ -3,6 +3,7 @@ import difflib
 import os
 from collections import OrderedDict
 from pprint import pprint
+import warnings
 
 import gym
 import pybullet_envs
@@ -17,6 +18,9 @@ from stable_baselines.ppo2.ppo2 import constfn
 
 from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, kill_env_processes
 from utils.hyperparams_opt import hyperparam_optimization
+
+# For pybullet envs
+warnings.filterwarnings("ignore")
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', type=str, nargs='+', default=["CartPole-v1"], help='environment ID(s)')
@@ -203,12 +207,17 @@ for env_id in env_ids:
         if normalize:
             print("Loading saved running average")
             env.load_running_average(exp_folder)
+
     elif args.optimize_hyperparameters:
+
         if args.verbose > 0:
             print("Optimizing hyperparameters")
 
 
         def create_model(*_args, **kwargs):
+            """
+            Helper to create a model with different hyperparameters
+            """
             return ALGOS[args.algo](env=create_env(), tensorboard_log=tensorboard_log,
                                     verbose=0, **kwargs)
 
@@ -216,7 +225,7 @@ for env_id in env_ids:
         data_frame = hyperparam_optimization(args.algo, create_model, n_trials=args.n_trials,
                                              n_timesteps=n_timesteps, hyperparams=hyperparams)
         log_path = os.path.join(args.log_folder, args.algo,
-                                "report_{}_{}-trials_-{}.csv".format(env_id, args.n_trials, n_timesteps))
+                                "report_{}_{}-trials-{}.csv".format(env_id, args.n_trials, n_timesteps))
 
         if args.verbose:
             print("Writing report to {}".format(log_path))
