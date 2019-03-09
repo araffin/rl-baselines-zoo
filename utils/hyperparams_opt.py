@@ -97,6 +97,9 @@ def sample_ppo2_params(trial):
     batch_size = trial.suggest_categorical('batch_size', [32, 64, 128, 256])
     n_steps = trial.suggest_categorical('n_steps', [16, 32, 64, 128, 256, 512, 1024, 2048])
     lam = trial.suggest_categorical('lamdba', [0.8, 0.9, 0.92, 0.95, 0.98, 0.99, 1.0])
+    gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
+    cliprange = trial.suggest_categorical('cliprange', [0.1, 0.2, 0.3, 0.4])
+    ent_coef = trial.suggest_loguniform('ent_coef', 0.00000001, 0.1)
     # learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
 
     if n_steps < batch_size:
@@ -107,7 +110,10 @@ def sample_ppo2_params(trial):
     return {
         'n_steps': n_steps,
         'nminibatches': nminibatches,
+        'gamma': gamma,
         # 'learning_rate': learning_rate,
+        'ent_coef': ent_coef,
+        'cliprange': cliprange,
         'lam': lam
     }
 
