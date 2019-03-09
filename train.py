@@ -16,7 +16,7 @@ from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNor
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.ppo2.ppo2 import constfn
 
-from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, kill_env_processes
+from utils import make_env, ALGOS, linear_schedule, get_latest_run_id
 from utils.hyperparams_opt import hyperparam_optimization
 
 # For pybullet envs
@@ -172,7 +172,7 @@ for env_id in env_ids:
     env = create_env()
     # Stop env processes to free memory
     if args.optimize_hyperparameters and n_envs > 1:
-        kill_env_processes(env)
+        env.close()
 
     # Parse noise string for DDPG
     if args.algo == 'ddpg' and hyperparams.get('noise_type') is not None:

@@ -1,7 +1,5 @@
 import numpy as np
 
-from .utils import kill_env_processes
-
 
 def hyperparam_optimization(algo, model_fn, n_trials=10, n_timesteps=5000, hyperparams=None):
     """
@@ -58,10 +56,13 @@ def hyperparam_optimization(algo, model_fn, n_trials=10, n_timesteps=5000, hyper
         model = model_fn(**kwargs)
         model.trial = trial
         model.learn(n_timesteps, callback=callback)
-        is_pruned = model.is_pruned
-        best_cost = -1 * model.best_mean_reward
+        is_pruned = False
+        best_cost = np.inf
+        if hasattr(model, 'is_pruned'):
+            is_pruned = model.is_pruned
+            best_cost = -1 * model.best_mean_reward
         # Free memory
-        kill_env_processes(model.env)
+        model.env.close()
         del model.env
         del model
 
