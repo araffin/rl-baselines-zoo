@@ -114,6 +114,8 @@ for env_id in env_ids:
 
     # Should we overwrite the number of timesteps?
     if args.n_timesteps > 0:
+        if args.verbose:
+            print("Overwriting n_timesteps with n={}".format(args.n_timesteps))
         n_timesteps = args.n_timesteps
     else:
         n_timesteps = int(hyperparams['n_timesteps'])
