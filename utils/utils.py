@@ -114,7 +114,8 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         # Frame-stacking with 4 frames
         env = VecFrameStack(env, n_stack=4)
     elif n_envs > 1:
-        env = SubprocVecEnv([make_env(env_id, i, seed, log_dir) for i in range(n_envs)])
+        env = SubprocVecEnv([make_env(env_id, i, seed, log_dir) for i in range(n_envs)],
+                            start_method='spawn')
     # Pybullet envs does not follow gym.render() interface
     elif "Bullet" in env_id:
         spec = gym.envs.registry.env_specs[env_id]
@@ -140,7 +141,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
             return env
 
         if use_subproc:
-            env = SubprocVecEnv([make_env(env_id, 0, seed, log_dir)])
+            env = SubprocVecEnv([make_env(env_id, 0, seed, log_dir)], start_method='spawn')
         else:
             env = DummyVecEnv([_init])
     else:
