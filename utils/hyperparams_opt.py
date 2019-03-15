@@ -54,7 +54,7 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
             # Initialize variables
             if not hasattr(self_, 'is_pruned'):
                 self_.is_pruned = False
-                self_.best_mean_test_reward = -np.inf
+                self_.last_mean_test_reward = -np.inf
                 self_.last_time_evaluated = 0
 
             if (self_.num_timesteps - self_.last_time_evaluated) < evaluate_every:
@@ -78,9 +78,7 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
                     obs = self_.test_env.reset()
 
             mean_reward = np.mean(rewards)
-
-            if mean_reward > self_.best_mean_test_reward:
-                self_.best_mean_test_reward = mean_reward
+            self_.last_mean_test_reward = mean_reward
 
             # report best or report current ?
             # report num_timesteps or elasped time ?
@@ -103,17 +101,17 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
             model.test_env.close()
             raise
         is_pruned = False
-        best_cost = np.inf
+        cost = np.inf
         if hasattr(model, 'is_pruned'):
             is_pruned = model.is_pruned
-            best_cost = -1 * model.best_mean_test_reward
+            cost = -1 * model.last_mean_test_reward
         del model.env, model.test_env
         del model
 
         if is_pruned:
             raise optuna.structs.TrialPruned()
 
-        return best_cost
+        return cost
 
     try:
         study.optimize(objective, n_trials=n_trials, n_jobs=n_jobs)

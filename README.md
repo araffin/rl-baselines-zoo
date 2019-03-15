@@ -62,12 +62,12 @@ mpirun -n 16 python train.py --algo trpo --env BreakoutNoFrameskip-v4
 
 We use [Optuna](https://optuna.org/) for optimizing the hyperparameters.
 
-Note: hyperparameters search is only implemented for PPO2 for now.
+Note: hyperparameters search is only implemented for PPO2/A2C/SAC/TRPO for now.
 
-Budget of 20 trials with a maximum of 50000 steps:
+Budget of 1000 trials with a maximum of 50000 steps:
 
 ```
-python -m train.py --algo ppo2 --env MountainCar-v0 -n 50000 -optimize --n-trials 20
+python -m train.py --algo ppo2 --env MountainCar-v0 -n 50000 -optimize --n-trials 1000
 ```
 
 
@@ -119,7 +119,7 @@ Additional Atari Games (to be completed):
 | DQN      | :heavy_check_mark: | :heavy_check_mark:  |:heavy_check_mark:| N/A | N/A  |
 | DDPG     |  N/A |  N/A  | N/A| :heavy_check_mark: | :heavy_check_mark:  |
 | SAC      |  N/A |  N/A  | N/A| :heavy_check_mark: |   |
-| TRPO     | :heavy_check_mark: | :heavy_check_mark: |  | :heavy_check_mark: |  |
+| TRPO     | :heavy_check_mark: | :heavy_check_mark: |  | :heavy_check_mark: | :heavy_check_mark: |
 
 
 ### Box2D Environments
