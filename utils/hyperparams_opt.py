@@ -223,9 +223,40 @@ def sample_sac_params(trial):
         'target_entropy': target_entropy
     }
 
+def sample_trpo_params(trial):
+    """
+    Sampler for TRPO hyperparams.
+
+    :param trial: (optuna.trial)
+    :return: (dict)
+    """
+    gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
+    timesteps_per_batch = trial.suggest_categorical('timesteps_per_batch', [16, 32, 64, 128, 256, 512, 1024, 2048])
+    max_kl = trial.suggest_loguniform('max_kl', 0.00000001, 1)
+    ent_coef = trial.suggest_loguniform('ent_coef', 0.00000001, 0.1)
+    lam = trial.suggest_categorical('lamdba', [0.8, 0.9, 0.92, 0.95, 0.98, 0.99, 1.0])
+    cg_damping = trial.suggest_loguniform('cg_damping', 1e-5, 1)
+    cg_iters = trial.suggest_categorical('cg_iters', [1, 10, 20, 30, 50])
+    vf_stepsize = trial.suggest_loguniform('vf_stepsize', 1e-5, 1)
+    vf_iters = trial.suggest_categorical('vf_iters', [1, 3, 5, 10, 20])
+
+
+    return {
+        'gamma': gamma,
+        'timesteps_per_batch': timesteps_per_batch,
+        'max_kl': max_kl,
+        'entcoeff': ent_coef,
+        'lam': lam,
+        'cg_damping': cg_damping,
+        'cg_iters': cg_iters,
+        'vf_stepsize': vf_stepsize,
+        'vf_iters': vf_iters
+    }
+
 
 HYPERPARAMS_SAMPLER = {
     'ppo2': sample_ppo2_params,
     'sac': sample_sac_params,
-    'a2c': sample_a2c_params
+    'a2c': sample_a2c_params,
+    'trpo': sample_trpo_params
 }

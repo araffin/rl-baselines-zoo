@@ -26,13 +26,12 @@ BreakoutNoFrameskip-v4:
   vf_iters: 3
   vf_stepsize: !!float 1e-4
 
-
 Pendulum-v0:
   n_timesteps: !!float 1e6
   policy: 'MlpPolicy'
   max_kl: 0.001
   lam: 0.92
-  
+
 MountainCar-v0:
   n_timesteps: !!float 1e6
   policy: 'MlpPolicy'
