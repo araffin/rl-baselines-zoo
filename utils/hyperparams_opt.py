@@ -22,18 +22,19 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     if hyperparams is None:
         hyperparams = {}
 
+    # test during 5 episodes
+    n_test_episodes = 5
+    # evaluate every 20th of the maximum budget per iteration
+    n_evaluations = 20
+    evaluate_interval = int(n_timesteps / n_evaluations)
+    deterministic_eval = False
     # n_warmup_steps: Disable pruner until the trial reaches the given number of step.
-    median_pruner = MedianPruner(n_startup_trials=20, n_warmup_steps=int(n_timesteps / 10))
+    median_pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=2)
     # pruner = SuccessiveHalvingPruner(min_resource=1, reduction_factor=4, min_early_stopping_rate=0)
     sampler = RandomSampler()
     # sampler = TPESampler()
     study = optuna.create_study(sampler=sampler, pruner=median_pruner)
     sampler = HYPERPARAMS_SAMPLER[algo]
-    # test during 5 episodes
-    n_test_episodes = 5
-    # evaluate every 20th of the maximum budget per iteration
-    evaluate_every = int(n_timesteps / 20)
-    deterministic_eval = False
 
     def objective(trial):
 
@@ -56,8 +57,9 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
                 self_.is_pruned = False
                 self_.last_mean_test_reward = -np.inf
                 self_.last_time_evaluated = 0
+                self_.eval_idx = 0
 
-            if (self_.num_timesteps - self_.last_time_evaluated) < evaluate_every:
+            if (self_.num_timesteps - self_.last_time_evaluated) < evaluate_interval:
                 return True
 
             self_.last_time_evaluated = self_.num_timesteps
@@ -79,12 +81,13 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
 
             mean_reward = np.mean(rewards)
             self_.last_mean_test_reward = mean_reward
+            self_.eval_idx += 1
 
             # report best or report current ?
             # report num_timesteps or elasped time ?
-            trial.report(-1 * mean_reward, self_.num_timesteps)
+            trial.report(-1 * mean_reward, self_.eval_idx)
             # Prune trial if need
-            if trial.should_prune(self_.num_timesteps):
+            if trial.should_prune(self_.eval_idx):
                 self_.is_pruned = True
                 return False
 
