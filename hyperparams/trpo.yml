@@ -1,5 +1,5 @@
 # Note: OpenAI uses 16 mpi workers for training on atari
-# in practice, it is run with with 4 workers
+# in practice it is run with with 4 workers
 atari:
   n_timesteps: !!float 1e7
   policy: 'CnnPolicy'
@@ -26,11 +26,19 @@ BreakoutNoFrameskip-v4:
   vf_iters: 3
   vf_stepsize: !!float 1e-4
 
+# Tuned
 Pendulum-v0:
-  n_timesteps: !!float 1e6
+  n_timesteps: !!float 3e5
   policy: 'MlpPolicy'
-  max_kl: 0.001
-  lam: 0.92
+  max_kl: 0.000193
+  timesteps_per_batch: 1024
+  gamma: 0.99
+  lam: 0.9
+  entcoeff: 0.01118
+  cg_damping: 2.35e-05
+  vf_iters: 10
+  vf_stepsize: 0.00428
+
 
 MountainCar-v0:
   n_timesteps: !!float 1e6
@@ -93,12 +101,12 @@ LunarLanderContinuous-v2:
 HalfCheetahBulletEnv-v0:
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
-  timesteps_per_batch: 4096
-  max_kl: 0.05
+  timesteps_per_batch: 2048
+  max_kl: 0.015
   cg_iters: 10
-  cg_damping: 0.1
+  cg_damping: 0.005
   entcoeff: 0.0
-  gamma: 0.99
-  lam: 0.95
+  gamma: 0.95
+  lam: 1.0
   vf_iters: 5
-  vf_stepsize: !!float 1e-3
+  vf_stepsize: 0.0003758
