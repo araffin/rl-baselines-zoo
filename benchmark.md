@@ -99,4 +99,5 @@
 |trpo |LunarLander-v2                     |    149.313|   108.546|     149893|       320|
 |trpo |LunarLanderContinuous-v2           |     64.619|    94.377|     149127|       181|
 |trpo |MountainCar-v0                     |   -144.537|    33.584|     149885|      1037|
+|trpo |MountainCarContinuous-v0           |     93.428|     1.509|     149998|      1067|
 |trpo |Pendulum-v0                        |   -176.951|    97.098|     150000|       750|
