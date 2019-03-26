@@ -1,4 +1,8 @@
 import numpy as np
+import optuna
+from optuna.pruners import SuccessiveHalvingPruner, MedianPruner
+from optuna.samplers import RandomSampler, TPESampler
+from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 
 
 def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=5000, hyperparams=None,
@@ -13,10 +17,6 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     :param n_jobs: (int)
     :return: (pd.Dataframe)
     """
-    # Avoid showing tf logging
-    import optuna
-    from optuna.pruners import SuccessiveHalvingPruner, MedianPruner
-    from optuna.samplers import RandomSampler, TPESampler
     # TODO: eval each hyperparams several times to account for noisy evaluation
 
     if hyperparams is None:
@@ -31,15 +31,17 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     # n_warmup_steps: Disable pruner until the trial reaches the given number of step.
     median_pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=2)
     # pruner = SuccessiveHalvingPruner(min_resource=1, reduction_factor=4, min_early_stopping_rate=0)
-    sampler = RandomSampler()
-    # sampler = TPESampler()
+    # sampler = RandomSampler()
+    sampler = TPESampler()
     study = optuna.create_study(sampler=sampler, pruner=median_pruner)
-    sampler = HYPERPARAMS_SAMPLER[algo]
+    algo_sampler = HYPERPARAMS_SAMPLER[algo]
 
     def objective(trial):
 
         kwargs = hyperparams.copy()
-        kwargs.update(sampler(trial))
+        # Hack to use DDPG sampler
+        trial.n_actions = env_fn(n_envs=1).action_space.shape[0]
+        kwargs.update(algo_sampler(trial))
 
         def callback(_locals, _globals):
             """
@@ -256,9 +258,47 @@ def sample_trpo_params(trial):
     }
 
 
+def sample_ddpg_params(trial):
+    """
+    Sampler for DDPG hyperparams.
+
+    :param trial: (optuna.trial)
+    :return: (dict)
+    """
+    gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
+    # actor_lr = trial.suggest_loguniform('actor_lr', 1e-5, 1)
+    batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 128, 256])
+    buffer_size = trial.suggest_categorical('memory_limit', [int(1e4), int(1e5), int(1e6)])
+    noise_type = trial.suggest_categorical('noise_type', ['ornstein-uhlenbeck', 'normal', 'adaptive-param'])
+    noise_std = trial.suggest_uniform('noise_std', 0, 1)
+    normalize_observations = trial.suggest_categorical('normalize_observations', [True, False])
+    normalize_returns = trial.suggest_categorical('normalize_returns', [True, False])
+
+    hyperparams = {
+        'gamma': gamma,
+        # 'actor_lr': actor_lr,
+        'batch_size': batch_size,
+        'memory_limit': buffer_size,
+        'normalize_observations': normalize_observations,
+        'normalize_returns': normalize_returns
+    }
+
+    if noise_type == 'adaptive-param' :
+        hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std,
+                                                            desired_action_stddev=noise_std)
+    elif noise_type == 'normal':
+        hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(trialn_actions),
+                                                        sigma=noise_std * np.ones(trial.n_actions))
+    elif noise_type == 'ornstein-uhlenbeck':
+        hyperparams['action_noise'] = OrnsteinUhlenbeckActionNoise(mean=np.zeros(trial.n_actions),
+                                                                   sigma=noise_std * np.ones(trial.n_actions))
+    return hyperparams
+
+
 HYPERPARAMS_SAMPLER = {
     'ppo2': sample_ppo2_params,
     'sac': sample_sac_params,
     'a2c': sample_a2c_params,
-    'trpo': sample_trpo_params
+    'trpo': sample_trpo_params,
+    'ddpg': sample_ddpg_params
 }

@@ -38,6 +38,7 @@ if __name__ == '__main__':
     parser.add_argument('--n-trials', help='Number of trials for optimizing hyperparameters', type=int, default=10)
     parser.add_argument('-optimize', '--optimize-hyperparameters', action='store_true', default=False,
                         help='Run hyperparameters search')
+    parser.add_argument('--n-jobs', help='Number of parallel jobs when optimizing hyperparameters', type=int, default=1)
     parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                         type=int)
     args = parser.parse_args()
@@ -226,7 +227,8 @@ if __name__ == '__main__':
 
 
             data_frame = hyperparam_optimization(args.algo, create_model, create_env, n_trials=args.n_trials,
-                                                 n_timesteps=n_timesteps, hyperparams=hyperparams)
+                                                 n_timesteps=n_timesteps, hyperparams=hyperparams,
+                                                 n_jobs=args.n_jobs)
             log_path = os.path.join(args.log_folder, args.algo,
                                     "report_{}_{}-trials-{}.csv".format(env_id, args.n_trials, n_timesteps))
 
