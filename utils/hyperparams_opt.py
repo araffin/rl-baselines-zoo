@@ -27,12 +27,13 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     # evaluate every 20th of the maximum budget per iteration
     n_evaluations = 20
     evaluate_interval = int(n_timesteps / n_evaluations)
-    deterministic_eval = False
+    # Use default value for deterministic_eval
+    # deterministic_eval = False
     # n_warmup_steps: Disable pruner until the trial reaches the given number of step.
     median_pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=2)
     # pruner = SuccessiveHalvingPruner(min_resource=1, reduction_factor=4, min_early_stopping_rate=0)
-    # sampler = RandomSampler()
-    sampler = TPESampler()
+    # sampler = RandomSampler(seed=0)
+    sampler = TPESampler(n_startup_trials=5, seed=0)
     study = optuna.create_study(sampler=sampler, pruner=median_pruner)
     algo_sampler = HYPERPARAMS_SAMPLER[algo]
 
@@ -71,7 +72,7 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
             n_episodes, reward_sum = 0, 0.0
             obs = self_.test_env.reset()
             while n_episodes < n_test_episodes:
-                action, _ = self_.predict(obs, deterministic=deterministic_eval)
+                action, _ = self_.predict(obs)
                 obs, reward, done, _ = self_.test_env.step(action)
                 reward_sum += reward
 
