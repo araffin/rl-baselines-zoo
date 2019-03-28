@@ -7,6 +7,9 @@ import yaml
 import gym
 import pybullet_envs
 from gym.envs.registration import load
+# Bug fix for Travis CI
+import matplotlib
+matplotlib.use('agg')
 from stable_baselines.deepq.policies import FeedForwardPolicy
 from stable_baselines.common.policies import FeedForwardPolicy as BasePolicy
 from stable_baselines.common.policies import register_policy
