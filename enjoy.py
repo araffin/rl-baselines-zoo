@@ -4,6 +4,9 @@ import os
 import gym
 import pybullet_envs
 import numpy as np
+# Bug fix for Travis CI
+import matplotlib
+matplotlib.use('agg')
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.vec_env import VecNormalize, VecFrameStack
 

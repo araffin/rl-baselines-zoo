@@ -12,6 +12,9 @@ import pybullet_envs
 import numpy as np
 import yaml
 from mpi4py import MPI
+# Bug fix for Travis CI
+import matplotlib
+matplotlib.use('agg')
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.cmd_util import make_atari_env
 from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
