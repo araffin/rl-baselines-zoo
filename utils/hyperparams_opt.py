@@ -1,8 +1,11 @@
+from copy import deepcopy
+
 import numpy as np
 import optuna
 from optuna.pruners import SuccessiveHalvingPruner, MedianPruner
 from optuna.samplers import RandomSampler, TPESampler
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
+from stable_baselines.common.vec_env import VecNormalize
 
 
 def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=5000, hyperparams=None,
@@ -70,6 +73,14 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
             # Evaluate the trained agent on the test env
             rewards = []
             n_episodes, reward_sum = 0, 0.0
+
+            # Sync the obs rms if using vecnormalize
+            # NOTE: this does not cover all the possible cases
+            if isinstance(self_.test_env, VecNormalize):
+                self_.test_env.obs_rms = deepcopy(self_.env.obs_rms)
+                # Do not normalize reward
+                self_.test_env.norm_reward = False
+
             obs = self_.test_env.reset()
             while n_episodes < n_test_episodes:
                 action, _ = self_.predict(obs)
