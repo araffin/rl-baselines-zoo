@@ -11,10 +11,14 @@ CartPole-v1:
   ent_coef: 0.0
 
 LunarLander-v2:
-  n_envs: 16
-  n_timesteps: !!float 2e6
+  n_envs: 8
+  n_timesteps: !!float 2e5
   policy: 'MlpPolicy'
-  gamma: 0.999
+  gamma: 0.995
+  n_steps: 5
+  learning_rate: 0.00083
+  lr_schedule: 'linear'
+  ent_coef: 0.00001
 
 MountainCar-v0:
   normalize: true
@@ -63,18 +67,74 @@ BipedalWalker-v2:
 
 HalfCheetahBulletEnv-v0:
   normalize: true
-  n_envs: 8
+  n_envs: 4
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
   ent_coef: 0.0
+  n_steps: 32
+  vf_coef: 0.5
   lr_schedule: 'linear'
   gamma: 0.99
+  learning_rate: 0.002
 
 BipedalWalkerHardcore-v2:
   normalize: true
   n_envs: 16
-  frame_stack: 4
   n_timesteps: !!float 10e7
   policy: 'MlpPolicy'
+  # frame_stack: 4
   ent_coef: 0.001
+  n_steps: 32
+  vf_coef: 0.5
   lr_schedule: 'linear'
+  gamma: 0.99
+  learning_rate: 0.002
+
+Walker2DBulletEnv-v0:
+  normalize: true
+  n_envs: 4
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+  n_steps: 32
+  vf_coef: 0.5
+  lr_schedule: 'linear'
+  gamma: 0.99
+  learning_rate: 0.002
+
+AntBulletEnv-v0:
+  normalize: true
+  n_envs: 4
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+  n_steps: 32
+  vf_coef: 0.5
+  lr_schedule: 'linear'
+  gamma: 0.99
+  learning_rate: 0.002
+
+HopperBulletEnv-v0:
+  normalize: true
+  n_envs: 4
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+  n_steps: 32
+  vf_coef: 0.5
+  lr_schedule: 'linear'
+  gamma: 0.99
+  learning_rate: 0.002
+
+# Not working yet
+ReacherBulletEnv-v0:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 1e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.001
+  n_steps: 32
+  vf_coef: 0.5
+  lr_schedule: 'linear'
+  gamma: 0.99
+  learning_rate: 0.002

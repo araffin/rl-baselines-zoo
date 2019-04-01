@@ -1,12 +1,15 @@
 |algo |              env_id               |mean_reward|std_reward|n_timesteps|n_episodes|
 |-----|-----------------------------------|----------:|---------:|----------:|---------:|
 |a2c  |Acrobot-v1                         |    -86.616|    25.097|     149997|      1712|
+|a2c  |AntBulletEnv-v0                    |   2271.322|   160.233|     150000|       150|
 |a2c  |BeamRiderNoFrameskip-v4            |   2809.115|  1298.573|     150181|        52|
 |a2c  |BipedalWalker-v2                   |    255.012|    71.426|     149890|       169|
 |a2c  |BipedalWalkerHardcore-v2           |    102.754|   136.304|     149643|       137|
 |a2c  |BreakoutNoFrameskip-v4             |    384.865|    51.231|     146703|        52|
 |a2c  |CartPole-v1                        |    499.903|     1.672|     149971|       300|
 |a2c  |EnduroNoFrameskip-v4               |      0.000|     0.000|     149574|        45|
+|a2c  |HalfCheetahBulletEnv-v0            |   2069.627|   103.895|     150000|       150|
+|a2c  |HopperBulletEnv-v0                 |   1575.871|   669.267|     149075|       189|
 |a2c  |LunarLander-v2                     |     36.321|   135.294|     149696|       463|
 |a2c  |LunarLanderContinuous-v2           |    203.912|    59.265|     149938|       253|
 |a2c  |MountainCar-v0                     |   -130.921|    32.188|     149904|      1145|
@@ -17,6 +20,7 @@
 |a2c  |QbertNoFrameskip-v4                |   5742.333|  2033.074|     151311|       150|
 |a2c  |SeaquestNoFrameskip-v4             |    746.420|   111.370|     149749|        81|
 |a2c  |SpaceInvadersNoFrameskip-v4        |    658.907|   197.833|     149846|       151|
+|a2c  |Walker2DBulletEnv-v0               |    618.318|   291.293|     149234|       187|
 |acer |Acrobot-v1                         |    -90.850|    32.797|     149989|      1633|
 |acer |BeamRiderNoFrameskip-v4            |   2440.692|  1357.964|     149127|        52|
 |acer |CartPole-v1                        |    498.620|    23.862|     149586|       300|
@@ -95,7 +99,7 @@
 |sac  |ReacherBulletEnv-v0                |     17.529|     9.860|     150000|      1000|
 |sac  |Walker2DBulletEnv-v0               |   2052.646|    13.631|     150000|       150|
 |trpo |CartPole-v1                        |    485.392|    70.505|     149986|       309|
-|trpo |HalfCheetahBulletEnv-v0            |   1893.694|   208.953|     150000|       150|
+|trpo |HalfCheetahBulletEnv-v0            |   1850.967|   282.093|     150000|       150|
 |trpo |LunarLander-v2                     |    149.313|   108.546|     149893|       320|
 |trpo |LunarLanderContinuous-v2           |     64.619|    94.377|     149127|       181|
 |trpo |MountainCar-v0                     |   -144.537|    33.584|     149885|      1037|

@@ -1,6 +1,9 @@
 import argparse
 import os
+import warnings
 
+# For pybullet envs
+warnings.filterwarnings("ignore")
 import gym
 import pybullet_envs
 import numpy as np
