@@ -53,7 +53,10 @@ if __name__ == '__main__':
     for env_id in env_ids:
         # If the environment is not found, suggest the closest match
         if env_id not in registered_envs:
-            closest_match = difflib.get_close_matches(env_id, registered_envs, n=1)[0]
+            try:
+                closest_match = difflib.get_close_matches(env_id, registered_envs, n=1)[0]
+            except IndexError:
+                closest_match = "'no close match found...'"
             raise ValueError('{} not found in gym registry, you maybe meant {}?'.format(env_id, closest_match))
 
     set_global_seeds(args.seed)

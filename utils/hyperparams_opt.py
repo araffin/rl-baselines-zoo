@@ -21,7 +21,7 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     :return: (pd.Dataframe)
     """
     # TODO: eval each hyperparams several times to account for noisy evaluation
-
+    # TODO: take into account the normalization (also for the test env -> sync obs_rms)
     if hyperparams is None:
         hyperparams = {}
 
@@ -33,11 +33,11 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     # Use default value for deterministic_eval
     # deterministic_eval = False
     # n_warmup_steps: Disable pruner until the trial reaches the given number of step.
-    median_pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=2)
+    pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=2)
     # pruner = SuccessiveHalvingPruner(min_resource=1, reduction_factor=4, min_early_stopping_rate=0)
-    # sampler = RandomSampler(seed=0)
-    sampler = TPESampler(n_startup_trials=5, seed=0)
-    study = optuna.create_study(sampler=sampler, pruner=median_pruner)
+    sampler = RandomSampler(seed=0)
+    # sampler = TPESampler(n_startup_trials=5, seed=0)
+    study = optuna.create_study(sampler=sampler, pruner=pruner)
     algo_sampler = HYPERPARAMS_SAMPLER[algo]
 
     def objective(trial):
@@ -191,17 +191,19 @@ def sample_a2c_params(trial):
     :return: (dict)
     """
     gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
-    n_steps = trial.suggest_categorical('n_steps', [5, 16, 32, 64])
+    n_steps = trial.suggest_categorical('n_steps', [5, 16, 32, 64, 128, 256])
     lr_schedule = trial.suggest_categorical('lr_schedule', ['linear', 'constant'])
     learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
     ent_coef = trial.suggest_loguniform('ent_coef', 0.00000001, 0.1)
+    # normalize = trial.suggest_categorical('normalize', [True, False])
+    # TODO: take into account the normalization (also for the test env)
 
     return {
         'n_steps': n_steps,
         'gamma': gamma,
         'learning_rate': learning_rate,
         'lr_schedule': lr_schedule,
-        'ent_coef': ent_coef
+        'ent_coef': ent_coef,
     }
 
 
@@ -299,7 +301,7 @@ def sample_ddpg_params(trial):
         hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std,
                                                             desired_action_stddev=noise_std)
     elif noise_type == 'normal':
-        hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(trialn_actions),
+        hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(trial.n_actions),
                                                         sigma=noise_std * np.ones(trial.n_actions))
     elif noise_type == 'ornstein-uhlenbeck':
         hyperparams['action_noise'] = OrnsteinUhlenbeckActionNoise(mean=np.zeros(trial.n_actions),

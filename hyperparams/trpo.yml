@@ -102,11 +102,11 @@ HalfCheetahBulletEnv-v0:
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
   timesteps_per_batch: 2048
-  max_kl: 0.015
-  cg_iters: 10
-  cg_damping: 0.005
+  max_kl: 0.01
+  cg_iters: 20
+  cg_damping: 0.00086
   entcoeff: 0.0
-  gamma: 0.95
-  lam: 1.0
-  vf_iters: 5
-  vf_stepsize: 0.0003758
+  gamma: 0.99
+  lam: 0.95
+  vf_iters: 10
+  vf_stepsize: 0.0014
