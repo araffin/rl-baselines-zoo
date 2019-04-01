@@ -112,6 +112,9 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
         model.trial = trial
         try:
             model.learn(n_timesteps, callback=callback)
+            # Free memory
+            model.env.close()
+            model.test_env.close()
         except AssertionError:
             # Sometimes, random hyperparams can generate NaN
             # Free memory

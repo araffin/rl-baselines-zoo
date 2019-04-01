@@ -165,7 +165,9 @@ if __name__ == '__main__':
                 if n_envs == 1:
                     env = DummyVecEnv([make_env(env_id, 0, args.seed)])
                 else:
-                    env = SubprocVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
+                    # env = SubprocVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
+                    # On most env, SubprocVecEnv does not help and is quite memory hungry
+                    env = DummyVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
                 if normalize:
                     print("Normalizing input and return")
                     env = VecNormalize(env, **normalize_kwargs)
