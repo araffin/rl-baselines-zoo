@@ -169,7 +169,8 @@ if __name__ == '__main__':
                     # On most env, SubprocVecEnv does not help and is quite memory hungry
                     env = DummyVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
                 if normalize:
-                    print("Normalizing input and return")
+                    if args.verbose > 0:
+                        print("Normalizing input and return")
                     env = VecNormalize(env, **normalize_kwargs)
             # Optional Frame-stacking
             n_stack = 1

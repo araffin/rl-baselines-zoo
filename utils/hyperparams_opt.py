@@ -33,8 +33,8 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     # Use default value for deterministic_eval
     # deterministic_eval = False
     # n_warmup_steps: Disable pruner until the trial reaches the given number of step.
-    pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=2)
-    # pruner = SuccessiveHalvingPruner(min_resource=1, reduction_factor=4, min_early_stopping_rate=0)
+    # pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=2)
+    pruner = SuccessiveHalvingPruner(min_resource=1, reduction_factor=4, min_early_stopping_rate=0)
     sampler = RandomSampler(seed=0)
     # sampler = TPESampler(n_startup_trials=5, seed=0)
     study = optuna.create_study(sampler=sampler, pruner=pruner)
@@ -44,7 +44,8 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
 
         kwargs = hyperparams.copy()
         # Hack to use DDPG sampler
-        trial.n_actions = env_fn(n_envs=1).action_space.shape[0]
+        if algo == 'ddpg':
+            trial.n_actions = env_fn(n_envs=1).action_space.shape[0]
         kwargs.update(algo_sampler(trial))
 
         def callback(_locals, _globals):
@@ -198,6 +199,7 @@ def sample_a2c_params(trial):
     lr_schedule = trial.suggest_categorical('lr_schedule', ['linear', 'constant'])
     learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
     ent_coef = trial.suggest_loguniform('ent_coef', 0.00000001, 0.1)
+    vf_coef = trial.suggest_uniform('vf_coef', 0, 1)
     # normalize = trial.suggest_categorical('normalize', [True, False])
     # TODO: take into account the normalization (also for the test env)
 
@@ -207,6 +209,7 @@ def sample_a2c_params(trial):
         'learning_rate': learning_rate,
         'lr_schedule': lr_schedule,
         'ent_coef': ent_coef,
+        'vf_coef': vf_coef
     }
 
 
@@ -284,6 +287,7 @@ def sample_ddpg_params(trial):
     """
     gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
     # actor_lr = trial.suggest_loguniform('actor_lr', 1e-5, 1)
+    # critic_lr = trial.suggest_loguniform('actor_lr', 1e-5, 1)
     batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 128, 256])
     buffer_size = trial.suggest_categorical('memory_limit', [int(1e4), int(1e5), int(1e6)])
     noise_type = trial.suggest_categorical('noise_type', ['ornstein-uhlenbeck', 'normal', 'adaptive-param'])
