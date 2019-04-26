@@ -266,7 +266,7 @@ InvertedPendulumSwingupBulletEnv-v0:
 QuadRate-v0:
   normalize: true
   n_envs: 8
-  n_timesteps: !!float 1e5
+  n_timesteps: !!float 2e7
   policy: 'MlpPolicy'
   n_steps: 2048
   nminibatches: 32
