@@ -276,3 +276,32 @@ QuadRate-v0:
   ent_coef: 0.001
   learning_rate: !!float 2.5e-4
   cliprange: 0.2
+
+BallBouncingQuad-v0:
+  normalize: true
+  n_envs: 32
+  n_timesteps: !!float 2e7
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 256
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.001
+  learning_rate: !!float 2.5e-4
+  cliprange: 0.2
+
+OveractuatedQuad-v0:
+  normalize: true
+  n_envs: 32
+  n_timesteps: !!float 1e7
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 256
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.001
+  learning_rate: !!float 2.5e-4
+  cliprange: 0.2
+
