@@ -15,6 +15,7 @@ from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, Orn
 from stable_baselines.ppo2.ppo2 import constfn
 
 from utils import make_env, ALGOS, linear_schedule, get_latest_run_id
+import tensorflow as tf
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', type=str, nargs='+', default=["CartPole-v1"], help='environment ID(s)')
@@ -68,8 +69,17 @@ for env_id in env_ids:
     pprint(saved_hyperparams)
 
     n_envs = hyperparams.get('n_envs', 1)
-
     print("Using {} environments".format(n_envs))
+
+    act_func = hyperparams.get('policy_act_fun',1)
+    if (act_func=='tf.nn.relu'):
+        policy_act_fun=tf.nn.relu
+    elif (act_func=='tf.nn.tanh'):
+        policy_act_fun=tf.nn.tanhh
+    policy_net_arch = hyperparams.get('policy_net_arch',1)
+    policy_kwargs = dict(act_fun=policy_act_fun, net_arch=policy_net_arch)
+    del hyperparams['policy_act_fun']
+    del hyperparams['policy_net_arch']
 
     # Create learning rate schedules for ppo2 and sac
     if args.algo in ["ppo2", "sac"]:
@@ -167,8 +177,9 @@ for env_id in env_ids:
             print("Loading saved running average")
             env.load_running_average(exp_folder)
     else:
+
         # Train an agent from scratch
-        model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=1, **hyperparams)
+        model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=1, **hyperparams, policy_kwargs=policy_kwargs)
 
     kwargs = {}
     if args.log_interval > -1:
