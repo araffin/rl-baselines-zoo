@@ -71,15 +71,19 @@ for env_id in env_ids:
     n_envs = hyperparams.get('n_envs', 1)
     print("Using {} environments".format(n_envs))
 
-    act_func = hyperparams.get('policy_act_fun',1)
+    act_func = hyperparams.get('policy_act_fun',0)
     if (act_func=='tf.nn.relu'):
         policy_act_fun=tf.nn.relu
     elif (act_func=='tf.nn.tanh'):
         policy_act_fun=tf.nn.tanhh
-    policy_net_arch = hyperparams.get('policy_net_arch',1)
-    policy_kwargs = dict(act_fun=policy_act_fun, net_arch=policy_net_arch)
-    del hyperparams['policy_act_fun']
-    del hyperparams['policy_net_arch']
+    policy_net_arch = hyperparams.get('policy_net_arch',0)
+    #if policy_act_fun in locals() and  policy_net_arch in locals():
+    if (act_func!= 0 and policy_net_arch != 0):
+        policy_kwargs = dict(act_fun=policy_act_fun, net_arch=policy_net_arch)
+        del hyperparams['policy_act_fun']
+        del hyperparams['policy_net_arch']
+        print("policy_kwargs=",policy_kwargs)
+    else: policy_kwargs={}
 
     # Create learning rate schedules for ppo2 and sac
     if args.algo in ["ppo2", "sac"]:
