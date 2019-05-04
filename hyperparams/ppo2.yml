@@ -268,8 +268,8 @@ QuadRate-v0:
   n_envs: 32
   n_timesteps: !!float 50e7
   policy: 'MlpPolicy'
-  #policy_act_fun: tf.nn.relu
-  #policy_net_arch: [128, 128] #default= (2 layers of 64) (i.e., [64, 64])
+  policy_act_fun: tf.nn.relu
+  policy_net_arch: [64, 64] #default= (2 layers of 64) (i.e., [64, 64])
   n_steps: 2048
   nminibatches: 256
   lam: 0.95
