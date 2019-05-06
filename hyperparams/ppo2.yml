@@ -282,7 +282,7 @@ QuadRate-v0:
 BallBouncingQuad-v0:
   normalize: true
   n_envs: 32
-  n_timesteps: !!float 2e7
+  n_timesteps: !!float 10e7
   policy: 'MlpPolicy'
   n_steps: 2048
   nminibatches: 256
