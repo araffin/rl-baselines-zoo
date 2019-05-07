@@ -136,6 +136,9 @@ if __name__ == '__main__':
                 normalize = True
             del hyperparams['normalize']
 
+        if 'policy_kwargs' in hyperparams.keys():
+            hyperparams['policy_kwargs'] = eval(hyperparams['policy_kwargs'])
+
         # Delete keys so the dict can be pass to the model constructor
         if 'n_envs' in hyperparams.keys():
             del hyperparams['n_envs']

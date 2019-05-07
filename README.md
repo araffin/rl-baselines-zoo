@@ -146,7 +146,7 @@ Note: those environments are derived from [Roboschool](https://github.com/openai
 |----------|-----------|-------------|-----|---------|---------|----------|
 | A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  | :heavy_check_mark: | | |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
-| DDPG     |  | | |  | | | |
+| DDPG     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | | | |
 | SAC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | TRPO     |  | :heavy_check_mark: |  |  |  |  |
 

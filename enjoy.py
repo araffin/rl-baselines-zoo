@@ -1,6 +1,8 @@
 import argparse
 import os
 import warnings
+import sys
+import pkg_resources
 
 # For pybullet envs
 warnings.filterwarnings("ignore")
@@ -10,11 +12,16 @@ import numpy as np
 # Bug fix for Travis CI
 import matplotlib
 matplotlib.use('agg')
+import stable_baselines
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.vec_env import VecNormalize, VecFrameStack
 
 from utils import ALGOS, create_test_env, get_latest_run_id, get_saved_hyperparams
 
+# Fix for breaking change in v2.6.0
+if pkg_resources.get_distribution("stable_baselines").version >= "2.6.0":
+    sys.modules['stable_baselines.ddpg.memory'] = stable_baselines.deepq.replay_buffer
+    stable_baselines.deepq.replay_buffer.Memory = stable_baselines.deepq.replay_buffer.ReplayBuffer
 
 def main():
     parser = argparse.ArgumentParser()

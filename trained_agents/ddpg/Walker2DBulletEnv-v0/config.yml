@@ -1,0 +1,10 @@
+!!python/object/apply:collections.OrderedDict
+- - [batch_size, 128]
+  - [gamma, 0.95]
+  - [memory_limit, 1000000]
+  - [n_timesteps, 2000000.0]
+  - [noise_std, 0.15]
+  - [noise_type, normal]
+  - [normalize_observations, true]
+  - [normalize_returns, true]
+  - [policy, LnMlpPolicy]
