@@ -49,6 +49,7 @@
 |ddpg |LunarLanderContinuous-v2           |    244.566|    75.617|     149531|       660|
 |ddpg |MountainCarContinuous-v0           |     91.858|     1.350|     149945|      1818|
 |ddpg |Pendulum-v0                        |   -169.829|    93.303|     150000|       750|
+|ddpg |Walker2DBulletEnv-v0               |   1954.753|   368.613|     149152|       155|
 |dqn  |Acrobot-v1                         |    -88.103|    33.037|     149954|      1683|
 |dqn  |BeamRiderNoFrameskip-v4            |    888.741|   248.487|     149395|        81|
 |dqn  |BreakoutNoFrameskip-v4             |    191.165|    97.795|     149817|        97|
