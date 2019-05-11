@@ -33,7 +33,9 @@ experiments['sac-Pendulum-v0'] = ('sac', 'Pendulum-v0')
 # Clean up
 if os.path.isdir(LOG_FOLDER):
     shutil.rmtree(LOG_FOLDER)
-
+else:
+    # Create folder:
+    os.makedirs(LOG_FOLDER, exist_ok=True)
 
 @pytest.mark.parametrize("sampler", ['random', 'tpe'])
 @pytest.mark.parametrize("pruner", ['none', 'halving', 'median'])
