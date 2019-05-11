@@ -9,16 +9,21 @@ from stable_baselines.common.vec_env import VecNormalize
 
 
 def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=5000, hyperparams=None,
-                            n_jobs=1):
+                            n_jobs=1, sampler_method='random', pruner_method='halving',
+                            seed=0, verbose=1):
     """
     :param algo: (str)
-    :param model_fn: (func)
-    :param env_fn: (func)
-    :param n_trials: (int)
-    :param n_timesteps: (int)
+    :param model_fn: (func) function that is used to instantiate the model
+    :param env_fn: (func) function that is used to instantiate the env
+    :param n_trials: (int) maximum number of trials for finding the best hyperparams
+    :param n_timesteps: (int) maximum number of timesteps per trial
     :param hyperparams: (dict)
-    :param n_jobs: (int)
-    :return: (pd.Dataframe)
+    :param n_jobs: (int) number of parallel jobs
+    :param sampler_method: (str)
+    :param pruner_method: (str)
+    :param seed: (int)
+    :param verbose: (int)
+    :return: (pd.Dataframe) detailed result of the optimization
     """
     # TODO: eval each hyperparams several times to account for noisy evaluation
     # TODO: take into account the normalization (also for the test env -> sync obs_rms)
@@ -30,13 +35,28 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     # evaluate every 20th of the maximum budget per iteration
     n_evaluations = 20
     evaluate_interval = int(n_timesteps / n_evaluations)
-    # Use default value for deterministic_eval
-    # deterministic_eval = False
+
     # n_warmup_steps: Disable pruner until the trial reaches the given number of step.
-    # pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=2)
-    pruner = SuccessiveHalvingPruner(min_resource=1, reduction_factor=4, min_early_stopping_rate=0)
-    sampler = RandomSampler(seed=0)
-    # sampler = TPESampler(n_startup_trials=5, seed=0)
+    if sampler_method == 'random':
+        sampler = RandomSampler(seed=seed)
+    elif sampler_method == 'tpe':
+        sampler = TPESampler(n_startup_trials=5, seed=seed)
+    else:
+        raise ValueError('Unknown sampler: {}'.format(sampler_method))
+
+    if pruner_method == 'halving':
+        pruner = SuccessiveHalvingPruner(min_resource=1, reduction_factor=4, min_early_stopping_rate=0)
+    elif pruner_method == 'median':
+        pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=2)
+    elif pruner_method == 'none':
+        # Do not prune
+        pruner = MedianPruner(n_startup_trials=n_trials, n_warmup_steps=n_evaluations)
+    else:
+        raise ValueError('Unknown pruner: {}'.format(pruner_method))
+
+    if verbose > 0:
+        print("Sampler: {} - Pruner: {}".format(sampler_method, pruner_method))
+
     study = optuna.create_study(sampler=sampler, pruner=pruner)
     algo_sampler = HYPERPARAMS_SAMPLER[algo]
 
@@ -84,6 +104,7 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
 
             obs = self_.test_env.reset()
             while n_episodes < n_test_episodes:
+                # Use default value for deterministic
                 action, _ = self_.predict(obs)
                 obs, reward, done, _ = self_.test_env.step(action)
                 reward_sum += reward
@@ -145,9 +166,9 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     print('Best trial:')
     trial = study.best_trial
 
-    print('  Value: ', trial.value)
+    print('Value: ', trial.value)
 
-    print('  Params: ')
+    print('Params: ')
     for key, value in trial.params.items():
         print('    {}: {}'.format(key, value))
 
@@ -233,7 +254,7 @@ def sample_sac_params(trial):
 
     target_entropy = 'auto'
     if ent_coef == 'auto':
-        target_entropy =  trial.suggest_categorical('target_entropy', ['auto', -1, -10, -20, -50, -100])
+        target_entropy = trial.suggest_categorical('target_entropy', ['auto', -1, -10, -20, -50, -100])
 
     return {
         'gamma': gamma,
@@ -246,6 +267,7 @@ def sample_sac_params(trial):
         'ent_coef': ent_coef,
         'target_entropy': target_entropy
     }
+
 
 def sample_trpo_params(trial):
     """
@@ -263,7 +285,6 @@ def sample_trpo_params(trial):
     cg_iters = trial.suggest_categorical('cg_iters', [1, 10, 20, 30, 50])
     vf_stepsize = trial.suggest_loguniform('vf_stepsize', 1e-5, 1)
     vf_iters = trial.suggest_categorical('vf_iters', [1, 3, 5, 10, 20])
-
 
     return {
         'gamma': gamma,
@@ -287,7 +308,7 @@ def sample_ddpg_params(trial):
     """
     gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
     # actor_lr = trial.suggest_loguniform('actor_lr', 1e-5, 1)
-    # critic_lr = trial.suggest_loguniform('actor_lr', 1e-5, 1)
+    # critic_lr = trial.suggest_loguniform('critic_lr', 1e-5, 1)
     batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 128, 256])
     buffer_size = trial.suggest_categorical('memory_limit', [int(1e4), int(1e5), int(1e6)])
     noise_type = trial.suggest_categorical('noise_type', ['ornstein-uhlenbeck', 'normal', 'adaptive-param'])
@@ -304,7 +325,7 @@ def sample_ddpg_params(trial):
         'normalize_returns': normalize_returns
     }
 
-    if noise_type == 'adaptive-param' :
+    if noise_type == 'adaptive-param':
         hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std,
                                                             desired_action_stddev=noise_std)
     elif noise_type == 'normal':

@@ -12,9 +12,7 @@ import pybullet_envs
 import numpy as np
 import yaml
 from mpi4py import MPI
-# Bug fix for Travis CI
-import matplotlib
-matplotlib.use('agg')
+
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.cmd_util import make_atari_env
 from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
@@ -42,6 +40,10 @@ if __name__ == '__main__':
     parser.add_argument('-optimize', '--optimize-hyperparameters', action='store_true', default=False,
                         help='Run hyperparameters search')
     parser.add_argument('--n-jobs', help='Number of parallel jobs when optimizing hyperparameters', type=int, default=1)
+    parser.add_argument('--sampler', help='Sampler to use when optimizing hyperparameters', type=str,
+                        default='tpe', choices=['random', 'tpe'])
+    parser.add_argument('--pruner', help='Pruner to use when optimizing hyperparameters', type=str,
+                        default='none', choices=['halving', 'median', 'none'])
     parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                         type=int)
     args = parser.parse_args()
@@ -176,7 +178,6 @@ if __name__ == '__main__':
                         print("Normalizing input and return")
                     env = VecNormalize(env, **normalize_kwargs)
             # Optional Frame-stacking
-            n_stack = 1
             if hyperparams.get('frame_stack', False):
                 n_stack = hyperparams['frame_stack']
                 env = VecFrameStack(env, n_stack)
@@ -240,9 +241,14 @@ if __name__ == '__main__':
 
             data_frame = hyperparam_optimization(args.algo, create_model, create_env, n_trials=args.n_trials,
                                                  n_timesteps=n_timesteps, hyperparams=hyperparams,
-                                                 n_jobs=args.n_jobs)
-            log_path = os.path.join(args.log_folder, args.algo,
-                                    "report_{}_{}-trials-{}.csv".format(env_id, args.n_trials, n_timesteps))
+                                                 n_jobs=args.n_jobs, seed=args.seed,
+                                                 sampler_method=args.sampler, pruner_method=args.pruner,
+                                                 verbose=args.verbose)
+
+            report_name = "report_{}_{}-trials-{}-{}-{}.csv".format(env_id, args.n_trials, n_timesteps,
+                                                                    args.sampler, args.pruner)
+
+            log_path = os.path.join(args.log_folder, args.algo, report_name)
 
             if args.verbose:
                 print("Writing report to {}".format(log_path))

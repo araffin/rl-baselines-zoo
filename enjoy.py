@@ -9,9 +9,7 @@ warnings.filterwarnings("ignore")
 import gym
 import pybullet_envs
 import numpy as np
-# Bug fix for Travis CI
-import matplotlib
-matplotlib.use('agg')
+
 import stable_baselines
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.vec_env import VecNormalize, VecFrameStack

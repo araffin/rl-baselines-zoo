@@ -1,11 +1,10 @@
 import argparse
-import os
 
-import seaborn
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import seaborn
 from matplotlib.ticker import FuncFormatter
-from stable_baselines.results_plotter import load_results, ts2xy, plot_curves
+from stable_baselines.results_plotter import load_results, ts2xy
 
 
 def millions(x, pos):
@@ -20,7 +19,7 @@ def millions(x, pos):
     return '{:.1f}M'.format(x * 1e-6)
 
 
-def movingAverage(values, window):
+def moving_average(values, window):
     """
     Smooth values by doing a moving average
 
@@ -38,7 +37,7 @@ def smooth(xy, window=50):
         return x, y
 
     original_y = y.copy()
-    y = movingAverage(y, window)
+    y = moving_average(y, window)
 
     if len(y) == 0:
         return x, original_y

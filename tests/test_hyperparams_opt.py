@@ -35,8 +35,10 @@ if os.path.isdir(LOG_FOLDER):
     shutil.rmtree(LOG_FOLDER)
 
 
+@pytest.mark.parametrize("sampler", ['random', 'tpe'])
+@pytest.mark.parametrize("pruner", ['none', 'halving', 'median'])
 @pytest.mark.parametrize("experiment", experiments.keys())
-def test_optimize(experiment):
+def test_optimize(sampler, pruner, experiment):
     algo, env_id = experiments[experiment]
     args = [
         '-n', str(N_STEPS),
@@ -44,7 +46,10 @@ def test_optimize(experiment):
         '--env', env_id,
         '--log-folder', LOG_FOLDER,
         '--n-trials', str(N_TRIALS),
-        '--n-jobs', str(N_JOBS)
+        '--n-jobs', str(N_JOBS),
+        '--sampler', sampler,
+        '--pruner', pruner,
+        '-optimize'
     ]
 
     return_code = subprocess.call(['python', 'train.py'] + args)

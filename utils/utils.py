@@ -7,9 +7,7 @@ import yaml
 import gym
 import pybullet_envs
 from gym.envs.registration import load
-# Bug fix for Travis CI
-import matplotlib
-matplotlib.use('agg')
+
 from stable_baselines.deepq.policies import FeedForwardPolicy
 from stable_baselines.common.policies import FeedForwardPolicy as BasePolicy
 from stable_baselines.common.policies import register_policy
@@ -117,8 +115,8 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         # Frame-stacking with 4 frames
         env = VecFrameStack(env, n_stack=4)
     elif n_envs > 1:
-        env = SubprocVecEnv([make_env(env_id, i, seed, log_dir) for i in range(n_envs)],
-                            start_method='spawn')
+        # start_method = 'spawn' for thread safe
+        env = SubprocVecEnv([make_env(env_id, i, seed, log_dir) for i in range(n_envs)])
     # Pybullet envs does not follow gym.render() interface
     elif "Bullet" in env_id:
         spec = gym.envs.registry.env_specs[env_id]
@@ -144,7 +142,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
             return env
 
         if use_subproc:
-            env = SubprocVecEnv([make_env(env_id, 0, seed, log_dir)], start_method='spawn')
+            env = SubprocVecEnv([make_env(env_id, 0, seed, log_dir)])
         else:
             env = DummyVecEnv([_init])
     else:
