@@ -252,6 +252,8 @@ if __name__ == '__main__':
 
             if args.verbose:
                 print("Writing report to {}".format(log_path))
+
+            os.makedirs(os.path.dirname(log_path), exist_ok=True)
             data_frame.to_csv(log_path)
             exit()
         else:
