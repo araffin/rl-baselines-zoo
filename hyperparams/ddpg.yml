@@ -29,21 +29,46 @@ BipedalWalker-v2:
   memory_limit: 50000
 
 # To be tuned
+HalfCheetahBulletEnv-v0:
+  n_timesteps: !!float 1e6
+  policy: 'LnMlpPolicy'
+  gamma: 0.99
+  memory_limit: 100000
+  noise_type: 'normal'
+  noise_std: 0.024
+  batch_size: 64
+  normalize_observations: True
+  normalize_returns: True
+
 Walker2DBulletEnv-v0:
   n_timesteps: !!float 2e6
   policy: 'LnMlpPolicy'
-  noise_type: 'ornstein-uhlenbeck'
-  noise_std: 0.1
-  memory_limit: 1000000
+  gamma: 0.99
+  memory_limit: 100000
+  noise_type: 'normal'
+  noise_std: 0.024
   batch_size: 64
   normalize_observations: True
+  normalize_returns: True
 
-# To be tuned
-HalfCheetahBulletEnv-v0:
+AntBulletEnv-v0:
   n_timesteps: !!float 2e6
   policy: 'LnMlpPolicy'
-  noise_type: 'ornstein-uhlenbeck'
-  noise_std: 0.1
-  memory_limit: 1000000
+  gamma: 0.99
+  memory_limit: 100000
+  noise_type: 'normal'
+  noise_std: 0.024
   batch_size: 64
   normalize_observations: True
+  normalize_returns: True
+
+HopperBulletEnv-v0:
+  n_timesteps: !!float 2e6
+  policy: 'LnMlpPolicy'
+  gamma: 0.99
+  memory_limit: 100000
+  noise_type: 'normal'
+  noise_std: 0.024
+  batch_size: 64
+  normalize_observations: True
+  normalize_returns: True

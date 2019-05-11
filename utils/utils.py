@@ -7,18 +7,14 @@ import yaml
 import gym
 import pybullet_envs
 from gym.envs.registration import load
+
 from stable_baselines.deepq.policies import FeedForwardPolicy
 from stable_baselines.common.policies import FeedForwardPolicy as BasePolicy
 from stable_baselines.common.policies import register_policy
+from stable_baselines.sac.policies import FeedForwardPolicy as SACPolicy
 from stable_baselines.bench import Monitor
 from stable_baselines import logger
-from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, DDPG
-
-# Temp fix until SAC is integrated into stable_baselines
-try:
-    from stable_baselines import SAC
-except ImportError:
-    SAC = None
+from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, DDPG, TRPO, SAC
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize, \
     VecFrameStack, SubprocVecEnv
 from stable_baselines.common.cmd_util import make_atari_env
@@ -31,7 +27,8 @@ ALGOS = {
     'dqn': DQN,
     'ddpg': DDPG,
     'sac': SAC,
-    'ppo2': PPO2
+    'ppo2': PPO2,
+    'trpo': TRPO
 }
 
 
@@ -52,19 +49,14 @@ class CustomMlpPolicy(BasePolicy):
                                               feature_extraction="mlp")
 
 
-if SAC is not None:
-    from stable_baselines.sac.policies import FeedForwardPolicy as SACPolicy
+class CustomSACPolicy(SACPolicy):
+    def __init__(self, *args, **kwargs):
+        super(CustomSACPolicy, self).__init__(*args, **kwargs,
+                                              layers=[256, 256],
+                                              feature_extraction="mlp")
 
 
-    class CustomSACPolicy(SACPolicy):
-        def __init__(self, *args, **kwargs):
-            super(CustomSACPolicy, self).__init__(*args, **kwargs,
-                                                  layers=[256, 256],
-                                                  feature_extraction="mlp")
-
-
-    register_policy('CustomSACPolicy', CustomSACPolicy)
-
+register_policy('CustomSACPolicy', CustomSACPolicy)
 register_policy('CustomDQNPolicy', CustomDQNPolicy)
 register_policy('CustomMlpPolicy', CustomMlpPolicy)
 
@@ -123,6 +115,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         # Frame-stacking with 4 frames
         env = VecFrameStack(env, n_stack=4)
     elif n_envs > 1:
+        # start_method = 'spawn' for thread safe
         env = SubprocVecEnv([make_env(env_id, i, seed, log_dir) for i in range(n_envs)])
     # Pybullet envs does not follow gym.render() interface
     elif "Bullet" in env_id:
@@ -164,7 +157,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
             env = VecNormalize(env, training=False, **hyperparams['normalize_kwargs'])
             env.load_running_average(stats_path)
 
-        n_stack = hyperparams.get('n_stack', 0)
+        n_stack = hyperparams.get('frame_stack', 0)
         if n_stack > 0:
             print("Stacking {} frames".format(n_stack))
             env = VecFrameStack(env, n_stack)

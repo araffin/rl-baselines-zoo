@@ -1,0 +1,6 @@
+!!python/object/apply:collections.OrderedDict
+- - [ent_coef, 0.0]
+  - [gamma, 0.95]
+  - [n_envs, 8]
+  - [n_timesteps, 2000000.0]
+  - [policy, MlpPolicy]

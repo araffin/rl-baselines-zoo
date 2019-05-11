@@ -23,27 +23,28 @@ Pendulum-v0:
   learning_rate: !!float 3e-4
   cliprange: 0.2
 
+# Tuned
 CartPole-v1:
   n_envs: 8
-  n_timesteps: !!float 1e6
+  n_timesteps: !!float 1e5
   policy: 'MlpPolicy'
-  n_steps: 2048
-  nminibatches: 32
-  lam: 0.95
-  gamma: 0.99
-  noptepochs: 10
+  n_steps: 32
+  nminibatches: 1
+  lam: 0.8
+  gamma: 0.98
+  noptepochs: 20
   ent_coef: 0.0
-  learning_rate: !!float 3e-4
-  cliprange: 0.2
+  learning_rate: lin_0.001
+  cliprange: lin_0.2
 
 MountainCar-v0:
   normalize: true
   n_envs: 16
   n_timesteps: !!float 1e6
   policy: 'MlpPolicy'
-  n_steps: 256
-  nminibatches: 8
-  lam: 0.94
+  n_steps: 16
+  nminibatches: 1
+  lam: 0.98
   gamma: 0.99
   noptepochs: 4
   ent_coef: 0.0

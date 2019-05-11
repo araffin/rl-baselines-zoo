@@ -5,6 +5,7 @@ import pytest
 
 from utils import get_trained_models
 
+
 def _assert_eq(left, right):
     assert left == right, '{} != {}'.format(left, right)
 

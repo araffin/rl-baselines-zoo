@@ -52,6 +52,27 @@ Continue training (here, load pretrained agent for Breakout and continue trainin
 python train.py --algo a2c --env BreakoutNoFrameskip-v4 -i trained_agents/a2c/BreakoutNoFrameskip-v4.pkl -n 5000
 ```
 
+Note: when training TRPO, you have to use `mpirun` to enable multiprocessing:
+
+```
+mpirun -n 16 python train.py --algo trpo --env BreakoutNoFrameskip-v4
+```
+
+## Hyperparameter Optimization
+
+We use [Optuna](https://optuna.org/) for optimizing the hyperparameters.
+
+Note: hyperparameters search is only implemented for PPO2/A2C/SAC/TRPO/DDPG for now.
+when using SuccessiveHalvingPruner ("halving"), you must specify `--n-jobs > 1`
+
+Budget of 1000 trials with a maximum of 50000 steps:
+
+```
+python -m train.py --algo ppo2 --env MountainCar-v0 -n 50000 -optimize --n-trials 1000 --n-jobs 2 \
+  --sampler random --pruner median
+```
+
+
 ## Record a Video of a Trained Agent
 
 Record 1000 steps:
@@ -61,7 +82,7 @@ python -m utils.record_video --algo ppo2 --env BipedalWalkerHardcore-v2 -n 1000
 ```
 
 
-## Current Collection: 80+ Trained Agents!
+## Current Collection: 100+ Trained Agents!
 
 Scores can be found in `benchmark.md`. To compute them, simply run `python -m utils.benchmark`.
 
@@ -76,6 +97,8 @@ Scores can be found in `benchmark.md`. To compute them, simply run `python -m ut
 | ACKTR    |:heavy_check_mark:| :heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark:|  :heavy_check_mark: |
 | PPO2     |:heavy_check_mark:|:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark: |:heavy_check_mark:|:heavy_check_mark:|  :heavy_check_mark: |
 | DQN     |:heavy_check_mark:| :heavy_check_mark: |:heavy_check_mark:| :heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+| TRPO     | | | | | | | |
+
 
 Additional Atari Games (to be completed):
 
@@ -91,26 +114,28 @@ Additional Atari Games (to be completed):
 
 |  RL Algo |  CartPole-v1 | MountainCar-v0 | Acrobot-v1 |  Pendulum-v0 | MountainCarContinuous-v0 |
 |----------|--------------|----------------|------------|--------------|--------------------------|
-| A2C      | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: |       |                   |
+| A2C      | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | ACER     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | ACKTR    | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:  |
-| DQN     | :heavy_check_mark: | :heavy_check_mark:  |:heavy_check_mark:| N/A | N/A  |
+| DQN      | :heavy_check_mark: | :heavy_check_mark:  |:heavy_check_mark:| N/A | N/A  |
 | DDPG     |  N/A |  N/A  | N/A| :heavy_check_mark: | :heavy_check_mark:  |
-| SAC     |  N/A |  N/A  | N/A| :heavy_check_mark: |   |
+| SAC      |  N/A |  N/A  | N/A| :heavy_check_mark: |   |
+| TRPO     | :heavy_check_mark: | :heavy_check_mark: |  | :heavy_check_mark: | :heavy_check_mark: |
 
 
 ### Box2D Environments
 
 |  RL Algo |  BipedalWalker-v2 | LunarLander-v2 | LunarLanderContinuous-v2 |  BipedalWalkerHardcore-v2 | CarRacing-v0 |
 |----------|--------------|----------------|------------|--------------|--------------------------|
-| A2C      |  | :heavy_check_mark:  |  |       |                   |
+| A2C      | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |                   |
 | ACER     | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | ACKTR    | N/A | :heavy_check_mark:      | N/A | N/A          | N/A                      |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: |:heavy_check_mark:|   |
 | DQN      | N/A | :heavy_check_mark: | N/A | N/A | N/A  |
 | DDPG     |  | N/A | :heavy_check_mark: |  |  |
 | SAC      | :heavy_check_mark: | N/A | :heavy_check_mark: |:heavy_check_mark: | |
+| TRPO     |  | :heavy_check_mark: | :heavy_check_mark: | | |
 
 ### PyBullet Environments
 
@@ -121,17 +146,21 @@ Note: those environments are derived from [Roboschool](https://github.com/openai
 
 |  RL Algo |  Walker2D | HalfCheetah | Ant | Reacher |  Hopper | Humanoid |
 |----------|-----------|-------------|-----|---------|---------|----------|
+| A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  | :heavy_check_mark: | | |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
-| DDPG     |  | | |  | | | |
+| DDPG     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | | | |
 | SAC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| TRPO     |  | :heavy_check_mark: |  |  |  |  |
 
 PyBullet Envs (Continued)
 
 |  RL Algo |  Minitaur | MinitaurDuck | InvertedDoublePendulum | InvertedPendulumSwingup |
 |----------|-----------|-------------|-----|---------|
+| A2C     | | | | |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
 | DDPG     | | | | |
 | SAC      | | | :heavy_check_mark: | :heavy_check_mark: |
+| TRPO     | | |  |  |
 
 ## Colab Notebook: Try it Online!
 
@@ -140,9 +169,12 @@ You can train agents online using [colab notebook](https://colab.research.google
 ## Installation
 
 ### Stable-Baselines PyPi Package
+
+Min version: stable-baselines >= 2.5.1
+
 ```
 apt-get install swig cmake libopenmpi-dev zlib1g-dev ffmpeg
-pip install stable-baselines==2.4.0 box2d box2d-kengz pyyaml pybullet==2.1.0 pytablewriter
+pip install stable-baselines box2d box2d-kengz pyyaml pybullet optuna pytablewriter
 ```
 
 Please see [Stable Baselines README](https://github.com/hill-a/stable-baselines) for alternatives.

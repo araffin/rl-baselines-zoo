@@ -21,9 +21,10 @@ RUN \
     pip install pytest-cov && \
     pip install pyyaml && \
     pip install box2d-py==2.3.5 && \
-    pip install stable-baselines==2.4.0 && \
     pip install tensorflow-gpu==1.8.0 && \
-    pip install pybullet==2.1.0 && \
+    pip install stable-baselines && \
+    pip install pybullet && \
+    pip install optuna && \
     pip install pytablewriter==0.36.0
 
 ENV PATH=$VENV/bin:$PATH
