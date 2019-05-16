@@ -78,6 +78,15 @@ def make_env(env_id, rank=0, seed=0, log_dir=None):
     def _init():
         set_global_seeds(seed + rank)
         env = gym.make(env_id)
+
+        # from baselines
+        #flatten_dict_observations = alg not in {'her'}
+        flatten_dict_observations = True
+        # check if it is a MiniGrid observation space
+        if flatten_dict_observations and isinstance(env.observation_space, gym.spaces.Dict):
+            keys = env.observation_space.spaces.keys()
+            env = gym.wrappers.FlattenDictWrapper(env, dict_keys=list(keys))
+        
         env.seed(seed + rank)
         env = Monitor(env, os.path.join(log_dir, str(rank)), allow_early_resets=True)
         return env

@@ -8,7 +8,15 @@ import warnings
 # For pybullet envs
 warnings.filterwarnings("ignore")
 import gym
-import pybullet_envs
+try:
+    import pybullet_envs
+except ImportError:
+    pybullet_envs = None
+# for MiniGrid
+try:
+    import gym_minigrid
+except ImportError:
+    gym_minigrid = None
 import numpy as np
 import yaml
 from mpi4py import MPI
