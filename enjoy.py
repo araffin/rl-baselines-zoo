@@ -8,10 +8,6 @@ import pkg_resources
 warnings.filterwarnings("ignore")
 import gym
 import pybullet_envs
-try:
-    import gym_minigrid
-except ImportError:
-    gym_minigrid = None
 import numpy as np
 
 import stable_baselines
@@ -47,10 +43,15 @@ def main():
                         help='Normalize reward if applicable (trained with VecNormalize)')
     parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
     parser.add_argument('--reward-log', help='Where to log reward', default='', type=str)
-
+    parser.add_argument('--gym-packages', type=str, nargs='+', help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
     args = parser.parse_args()
+    
+    env_ids = args.env
 
-    env_id = args.env
+    for env_module in args.gym_packages:
+        import importlib
+        importlib.import_module(env_module)
+    
     algo = args.algo
     folder = args.folder
 

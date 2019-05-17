@@ -12,11 +12,6 @@ try:
     import pybullet_envs
 except ImportError:
     pybullet_envs = None
-# for MiniGrid
-try:
-    import gym_minigrid
-except ImportError:
-    gym_minigrid = None
 import numpy as np
 import yaml
 from mpi4py import MPI
@@ -54,10 +49,15 @@ if __name__ == '__main__':
                         default='none', choices=['halving', 'median', 'none'])
     parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                         type=int)
+    parser.add_argument('--gym-packages', type=str, nargs='+', help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
     args = parser.parse_args()
 
     env_ids = args.env
 
+    for env_module in args.gym_packages:
+        import importlib
+        importlib.import_module(env_module)
+    
     registered_envs = set(gym.envs.registry.env_specs.keys())
 
     for env_id in env_ids:
