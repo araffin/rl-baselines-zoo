@@ -46,12 +46,11 @@ def main():
     parser.add_argument('--gym-packages', type=str, nargs='+', help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
     args = parser.parse_args()
     
-    env_ids = args.env
-
     for env_module in args.gym_packages:
         import importlib
         importlib.import_module(env_module)
     
+    env_id = args.env
     algo = args.algo
     folder = args.folder
 
