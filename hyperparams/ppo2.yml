@@ -263,3 +263,33 @@ InvertedPendulumSwingupBulletEnv-v0:
   ent_coef: 0.0
   learning_rate: 2.5e-4
   cliprange: 0.2
+
+# following https://github.com/lcswillems/rl-starter-files
+# https://stable-baselines.readthedocs.io/en/master/modules/ppo2.html
+MiniGrid-DoorKey-5x5-v0:
+  normalize: true
+  n_envs: 8 # number of environment copies running in parallel
+  n_timesteps: !!float 1e5 # 80000 frames ?
+  policy: MlpPolicy # 'ActorCliticPolicy' or Mlp/Cnn/CnnLstmPolicy otherwise
+  n_steps: 2048 # batch size is n_steps * n_env
+  nminibatches: 32 # Number of training minibatches per update
+  lam: 0.95 #  Factor for trade-off of bias vs variance for Generalized Advantage Estimator
+  gamma: 0.99
+  noptepochs: 10 #  Number of epoch when optimizing the surrogate
+  ent_coef: 0.0 # Entropy coefficient for the loss caculation
+  learning_rate: 2.5e-4 # The learning rate, it can be a function
+  cliprange: 0.2 # Clipping parameter, it can be a function
+
+MiniGrid-FourRooms-v0:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 4e6 # as saturated around 3.2M
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: 2.5e-4
+  cliprange: 0.2
