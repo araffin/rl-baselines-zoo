@@ -8,6 +8,10 @@ import pkg_resources
 warnings.filterwarnings("ignore")
 import gym
 import pybullet_envs
+try:
+    import gym_minigrid
+except ImportError:
+    gym_minigrid = None
 import numpy as np
 
 import stable_baselines
