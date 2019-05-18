@@ -4,6 +4,7 @@ import os
 from collections import OrderedDict
 from pprint import pprint
 import warnings
+import importlib
 
 # For pybullet envs
 warnings.filterwarnings("ignore")
@@ -54,7 +55,6 @@ if __name__ == '__main__':
 
     # Going through custom gym packages to let them register in the global registory
     for env_module in args.gym_packages:
-        import importlib
         importlib.import_module(env_module)
     
     env_ids = args.env

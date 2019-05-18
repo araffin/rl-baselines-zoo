@@ -3,6 +3,7 @@ import os
 import warnings
 import sys
 import pkg_resources
+import importlib
 
 # For pybullet envs
 warnings.filterwarnings("ignore")
@@ -48,7 +49,6 @@ def main():
     
     # Going through custom gym packages to let them register in the global registory
     for env_module in args.gym_packages:
-        import importlib
         importlib.import_module(env_module)
     
     env_id = args.env
