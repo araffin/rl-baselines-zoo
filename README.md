@@ -162,6 +162,23 @@ PyBullet Envs (Continued)
 | SAC      | | | :heavy_check_mark: | :heavy_check_mark: |
 | TRPO     | | |  |  |
 
+### MiniGrid Envs
+
+See https://github.com/maximecb/gym-minigrid
+A simple, lightweight and fast Gym environments implementation of the famous gridworld.
+
+Note that you need to specify --gym-packages gym_minigrid with enjoy.py and train.py as it is not a standard Gym environment.
+
+|  RL Algo | Empty | FourRooms | DoorKey | MultiRoom | Fetch |
+|----------|-------|-----------|---------|-----------|-------|
+| A2C      | | | | | |
+| PPO2     | | :heavy_check_mark: | :heavy_check_mark: | | |
+| DDPG     | | | | | |
+| SAC      | | | | | |
+| TRPO     | | | | | |
+
+There are 19 environment groups (variations for each) in total.
+
 ## Colab Notebook: Try it Online!
 
 You can train agents online using [colab notebook](https://colab.research.google.com/drive/1cPGK3XrCqEs3QLqiijsfib9OFht3kObX).
