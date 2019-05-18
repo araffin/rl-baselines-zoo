@@ -49,15 +49,15 @@ if __name__ == '__main__':
                         default='none', choices=['halving', 'median', 'none'])
     parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                         type=int)
-    parser.add_argument('--gym-packages', type=str, nargs='+', help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
+    parser.add_argument('--gym-packages', type=str, nargs='+', default=[], help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
     args = parser.parse_args()
 
-    env_ids = args.env
-
+    # Going through custom gym packages to let them register in the global registory
     for env_module in args.gym_packages:
         import importlib
         importlib.import_module(env_module)
     
+    env_ids = args.env
     registered_envs = set(gym.envs.registry.env_specs.keys())
 
     for env_id in env_ids:
