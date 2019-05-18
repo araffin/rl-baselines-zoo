@@ -24,6 +24,7 @@ RUN \
     pip install tensorflow-gpu==1.8.0 && \
     pip install stable-baselines && \
     pip install pybullet && \
+    pip install gym-minigrid && \
     pip install optuna && \
     pip install pytablewriter==0.36.0
 
