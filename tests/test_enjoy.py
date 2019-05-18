@@ -13,6 +13,7 @@ def _assert_eq(left, right):
 FOLDER = 'trained_agents/'
 N_STEPS = 100
 
+
 trained_models = get_trained_models(FOLDER)
 
 
@@ -27,6 +28,9 @@ def test_enjoy(trained_model):
         '--no-render'
     ]
 
+    if '-MiniGrid-' in trained_model:
+        args = args + ['--gym-packages', 'gym_minigrid']
+    
     return_code = subprocess.call(['python', 'enjoy.py'] + args)
     _assert_eq(return_code, 0)
 
