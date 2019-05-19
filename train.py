@@ -191,12 +191,13 @@ if __name__ == '__main__':
         if args.optimize_hyperparameters and n_envs > 1:
             env.close()
 
-        # Parse noise string for DDPG
-        if args.algo == 'ddpg' and hyperparams.get('noise_type') is not None:
+        # Parse noise string for DDPG and SAC
+        if args.algo in ['ddpg', 'sac'] and hyperparams.get('noise_type') is not None:
             noise_type = hyperparams['noise_type'].strip()
             noise_std = hyperparams['noise_std']
             n_actions = env.action_space.shape[0]
             if 'adaptive-param' in noise_type:
+                assert args.algo == 'ddpg', 'Parameter is not supported by SAC'
                 hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std,
                                                                     desired_action_stddev=noise_std)
             elif 'normal' in noise_type:

@@ -58,7 +58,7 @@ Note: when training TRPO, you have to use `mpirun` to enable multiprocessing:
 mpirun -n 16 python train.py --algo trpo --env BreakoutNoFrameskip-v4
 ```
 
-## Hyperparameter Optimization
+## Hyperparameter Tuning
 
 We use [Optuna](https://optuna.org/) for optimizing the hyperparameters.
 
@@ -120,7 +120,7 @@ Additional Atari Games (to be completed):
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:  |
 | DQN      | :heavy_check_mark: | :heavy_check_mark:  |:heavy_check_mark:| N/A | N/A  |
 | DDPG     |  N/A |  N/A  | N/A| :heavy_check_mark: | :heavy_check_mark:  |
-| SAC      |  N/A |  N/A  | N/A| :heavy_check_mark: |   |
+| SAC      |  N/A |  N/A  | N/A| :heavy_check_mark: | :heavy_check_mark: |
 | TRPO     | :heavy_check_mark: | :heavy_check_mark: |  | :heavy_check_mark: | :heavy_check_mark: |
 
 
