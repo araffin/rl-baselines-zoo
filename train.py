@@ -41,9 +41,9 @@ if __name__ == '__main__':
                         help='Run hyperparameters search')
     parser.add_argument('--n-jobs', help='Number of parallel jobs when optimizing hyperparameters', type=int, default=1)
     parser.add_argument('--sampler', help='Sampler to use when optimizing hyperparameters', type=str,
-                        default='tpe', choices=['random', 'tpe'])
+                        default='random', choices=['random', 'tpe'])
     parser.add_argument('--pruner', help='Pruner to use when optimizing hyperparameters', type=str,
-                        default='none', choices=['halving', 'median', 'none'])
+                        default='median', choices=['halving', 'median', 'none'])
     parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                         type=int)
     args = parser.parse_args()

@@ -47,7 +47,7 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     if pruner_method == 'halving':
         pruner = SuccessiveHalvingPruner(min_resource=1, reduction_factor=4, min_early_stopping_rate=0)
     elif pruner_method == 'median':
-        pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=2)
+        pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=n_evaluations // 3)
     elif pruner_method == 'none':
         # Do not prune
         pruner = MedianPruner(n_startup_trials=n_trials, n_warmup_steps=n_evaluations)
@@ -309,6 +309,7 @@ def sample_ddpg_params(trial):
     gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
     # actor_lr = trial.suggest_loguniform('actor_lr', 1e-5, 1)
     # critic_lr = trial.suggest_loguniform('critic_lr', 1e-5, 1)
+    learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
     batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 128, 256])
     buffer_size = trial.suggest_categorical('memory_limit', [int(1e4), int(1e5), int(1e6)])
     noise_type = trial.suggest_categorical('noise_type', ['ornstein-uhlenbeck', 'normal', 'adaptive-param'])
@@ -318,7 +319,8 @@ def sample_ddpg_params(trial):
 
     hyperparams = {
         'gamma': gamma,
-        # 'actor_lr': actor_lr,
+        'actor_lr': learning_rate,
+        'critic_lr': learning_rate,
         'batch_size': batch_size,
         'memory_limit': buffer_size,
         'normalize_observations': normalize_observations,
@@ -328,6 +330,8 @@ def sample_ddpg_params(trial):
     if noise_type == 'adaptive-param':
         hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std,
                                                             desired_action_stddev=noise_std)
+        # Apply layer normalization when using parameter perturbation
+        hyperparams['policy_kwargs'] = dict(layer_norm=True)
     elif noise_type == 'normal':
         hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(trial.n_actions),
                                                         sigma=noise_std * np.ones(trial.n_actions))
