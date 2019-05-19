@@ -11,6 +11,10 @@ import gym
 import pybullet_envs
 import numpy as np
 import yaml
+try:
+    import highway_env
+except ImportError:
+    highway_env = None
 from mpi4py import MPI
 
 from stable_baselines.common import set_global_seeds
@@ -99,6 +103,14 @@ if __name__ == '__main__':
         # Sort hyperparams that will be saved
         saved_hyperparams = OrderedDict([(key, hyperparams[key]) for key in sorted(hyperparams.keys())])
 
+        algo_ = args.algo
+        # HER is only a wrapper around an algo
+        if args.algo == 'her':
+            algo_ = saved_hyperparams['model_class']
+            assert algo_ in {'sac', 'ddpg', 'dqn'}, "{} is not compatible with HER".format(algo_)
+            # Retrieve the model class
+            hyperparams['model_class'] = ALGOS[saved_hyperparams['model_class']]
+
         if args.verbose > 0:
             pprint(saved_hyperparams)
 
@@ -108,7 +120,7 @@ if __name__ == '__main__':
             print("Using {} environments".format(n_envs))
 
         # Create learning rate schedules for ppo2 and sac
-        if args.algo in ["ppo2", "sac"]:
+        if algo_ in ["ppo2", "sac"]:
             for key in ['learning_rate', 'cliprange']:
                 if key not in hyperparams:
                     continue
@@ -161,7 +173,7 @@ if __name__ == '__main__':
                 env = make_atari_env(env_id, num_env=n_envs, seed=args.seed)
                 # Frame-stacking with 4 frames
                 env = VecFrameStack(env, n_stack=4)
-            elif args.algo in ['dqn', 'ddpg']:
+            elif algo_ in ['dqn', 'ddpg']:
                 if hyperparams.get('normalize', False):
                     print("WARNING: normalization not supported yet for DDPG/DQN")
                 env = gym.make(env_id)
@@ -192,12 +204,12 @@ if __name__ == '__main__':
             env.close()
 
         # Parse noise string for DDPG and SAC
-        if args.algo in ['ddpg', 'sac'] and hyperparams.get('noise_type') is not None:
+        if algo_ in ['ddpg', 'sac'] and hyperparams.get('noise_type') is not None:
             noise_type = hyperparams['noise_type'].strip()
             noise_std = hyperparams['noise_std']
             n_actions = env.action_space.shape[0]
             if 'adaptive-param' in noise_type:
-                assert args.algo == 'ddpg', 'Parameter is not supported by SAC'
+                assert algo_ == 'ddpg', 'Parameter is not supported by SAC'
                 hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std,
                                                                     desired_action_stddev=noise_std)
             elif 'normal' in noise_type:

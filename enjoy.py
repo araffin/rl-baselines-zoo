@@ -9,7 +9,10 @@ warnings.filterwarnings("ignore")
 import gym
 import pybullet_envs
 import numpy as np
-
+try:
+    import highway_env
+except ImportError:
+    highway_env = None
 import stable_baselines
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.vec_env import VecNormalize, VecFrameStack
@@ -92,7 +95,7 @@ def main():
     # Force deterministic for DQN and DDPG
     deterministic = args.deterministic or algo in ['dqn', 'ddpg', 'sac']
 
-    running_reward = 0.0
+    episode_reward = 0.0
     ep_len = 0
     for _ in range(args.n_timesteps):
         action, _ = model.predict(obs, deterministic=deterministic)
@@ -104,7 +107,14 @@ def main():
         obs, reward, done, infos = env.step(action)
         if not args.no_render:
             env.render('human')
-        running_reward += reward[0]
+
+        # TODO: fix bug with DDPG and VecEnv
+        # idem if SAC trained with VecEnv, must be tested with VecEnv
+        if isinstance(reward, float):
+            reward = [reward]
+            infos = [infos]
+
+        episode_reward += reward[0]
         ep_len += 1
 
         if args.n_envs == 1:
@@ -119,10 +129,16 @@ def main():
             if done and not is_atari and args.verbose >= 1:
                 # NOTE: for env using VecNormalize, the mean reward
                 # is a normalized reward when `--norm_reward` flag is passed
-                print("Episode Reward: {:.2f}".format(running_reward))
+                print("Episode Reward: {:.2f}".format(episode_reward))
                 print("Episode Length", ep_len)
-                running_reward = 0.0
+                episode_reward = 0.0
                 ep_len = 0
+
+            # Reset also when the goal is achieved when using HER
+            if done or infos[0].get('is_success', False):
+                if args.algo == 'her' and args.verbose >= 1:
+                    print("Success?", infos[0].get('is_success', False))
+                obs = env.reset()
 
     # Workaround for https://github.com/openai/gym/issues/893
     if not args.no_render:

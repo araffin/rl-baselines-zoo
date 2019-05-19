@@ -14,7 +14,7 @@ from stable_baselines.common.policies import register_policy
 from stable_baselines.sac.policies import FeedForwardPolicy as SACPolicy
 from stable_baselines.bench import Monitor
 from stable_baselines import logger
-from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, DDPG, TRPO, SAC
+from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, HER, DDPG, TRPO, SAC
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize, \
     VecFrameStack, SubprocVecEnv
 from stable_baselines.common.cmd_util import make_atari_env
@@ -26,6 +26,7 @@ ALGOS = {
     'acktr': ACKTR,
     'dqn': DQN,
     'ddpg': DDPG,
+    'her': HER,
     'sac': SAC,
     'ppo2': PPO2,
     'trpo': TRPO
@@ -146,7 +147,10 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         else:
             env = DummyVecEnv([_init])
     else:
-        env = DummyVecEnv([make_env(env_id, 0, seed, log_dir)])
+        if hyperparams.get('model_class') is not None and hyperparams['model_class'] == 'ddpg':
+            env = make_env(env_id, 0, seed, log_dir)()
+        else:
+            env = DummyVecEnv([make_env(env_id, 0, seed, log_dir)])
 
     # Load saved stats for normalizing input and rewards
     # And optionally stack frames
