@@ -24,6 +24,7 @@ RUN \
     pip install box2d-py==2.3.5 && \
     pip install stable-baselines && \
     pip install pybullet && \
+    pip install gym-minigrid && \
     pip install optuna && \
     pip install pytablewriter==0.36.0
 

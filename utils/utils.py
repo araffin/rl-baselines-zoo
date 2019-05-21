@@ -61,6 +61,12 @@ register_policy('CustomDQNPolicy', CustomDQNPolicy)
 register_policy('CustomMlpPolicy', CustomMlpPolicy)
 
 
+def flatten_dict_observations(env):
+    assert isinstance(env.observation_space, gym.spaces.Dict)
+    keys = env.observation_space.spaces.keys()
+    return gym.wrappers.FlattenDictWrapper(env, dict_keys=list(keys))
+
+
 def make_env(env_id, rank=0, seed=0, log_dir=None):
     """
     Helper function to multiprocess training
@@ -78,6 +84,16 @@ def make_env(env_id, rank=0, seed=0, log_dir=None):
     def _init():
         set_global_seeds(seed + rank)
         env = gym.make(env_id)
+        
+        # Dict observation space is currently not supported.
+        # https://github.com/hill-a/stable-baselines/issues/321
+        # We should exclude the case: alg not in {'her'}
+        # For those gym envs like MiniGrid with Dict observation space,
+        # we put observation space into a big 1D vector.
+        # MlpPolicy would work, but custom policies should be provided.
+        if isinstance(env.observation_space, gym.spaces.Dict):
+            env = flatten_dict_observations(env)
+        
         env.seed(seed + rank)
         env = Monitor(env, os.path.join(log_dir, str(rank)), allow_early_resets=True)
         return env
