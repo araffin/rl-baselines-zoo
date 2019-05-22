@@ -110,7 +110,7 @@ def main():
 
         # TODO: fix bug with DDPG and VecEnv
         # idem if SAC trained with VecEnv, must be tested with VecEnv
-        if isinstance(reward, float):
+        if isinstance(reward, (float, int, np.float32)):
             reward = [reward]
             infos = [infos]
 
@@ -138,6 +138,8 @@ def main():
             if done or infos[0].get('is_success', False):
                 if args.algo == 'her' and args.verbose >= 1:
                     print("Success?", infos[0].get('is_success', False))
+                # Alternatively, you can add a check to wait for the end of the episode
+                # if done:
                 obs = env.reset()
 
     # Workaround for https://github.com/openai/gym/issues/893

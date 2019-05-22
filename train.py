@@ -80,6 +80,7 @@ if __name__ == '__main__':
         args.seed += rank
         if rank != 0:
             args.verbose = 0
+            args.tensorboard_log = ''
 
     for env_id in env_ids:
         tensorboard_log = None if args.tensorboard_log == '' else os.path.join(args.tensorboard_log, env_id)
