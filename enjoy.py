@@ -15,7 +15,7 @@ except ImportError:
     highway_env = None
 import stable_baselines
 from stable_baselines.common import set_global_seeds
-from stable_baselines.common.vec_env import VecNormalize, VecFrameStack
+from stable_baselines.common.vec_env import VecNormalize, VecFrameStack, VecEnv
 
 from utils import ALGOS, create_test_env, get_latest_run_id, get_saved_hyperparams
 
@@ -144,7 +144,7 @@ def main():
 
     # Workaround for https://github.com/openai/gym/issues/893
     if not args.no_render:
-        if args.n_envs == 1 and 'Bullet' not in env_id and not is_atari:
+        if args.n_envs == 1 and 'Bullet' not in env_id and not is_atari and isinstance(env, VecEnv):
             # DummyVecEnv
             # Unwrap env
             while isinstance(env, VecNormalize) or isinstance(env, VecFrameStack):

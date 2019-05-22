@@ -47,7 +47,6 @@ FetchReach-v1:
   noise_std: 0.2
   normalize_observations: true
   normalize_returns: false
-  policy_kwargs: "dict(layers=[256, 256, 256])"
 
 
 # TODO: run it with 8 workers
