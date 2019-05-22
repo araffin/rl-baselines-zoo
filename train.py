@@ -19,7 +19,7 @@ from mpi4py import MPI
 
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.cmd_util import make_atari_env
-from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
+from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv, GoalEnvVecNormalize
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.ppo2.ppo2 import constfn
 
@@ -188,8 +188,14 @@ if __name__ == '__main__':
                     env = DummyVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
                 if normalize:
                     if args.verbose > 0:
-                        print("Normalizing input and return")
-                    env = VecNormalize(env, **normalize_kwargs)
+                        if len(normalize_kwargs) > 0:
+                            print("Normalization activated: {}".format(normalize_kwargs))
+                        else:
+                            print("Normalizing input and reward")
+                    if args.algo == 'her':
+                        env = GoalEnvVecNormalize(env, **normalize_kwargs)
+                    else:
+                        env = VecNormalize(env, **normalize_kwargs)
             # Optional Frame-stacking
             if hyperparams.get('frame_stack', False):
                 n_stack = hyperparams['frame_stack']

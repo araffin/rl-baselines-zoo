@@ -31,22 +31,23 @@ parking-v0:
 
 
 # Mujoco Robotic Env
-FetchReach-v1:
-  n_timesteps: !!float 20000
-  policy: 'MlpPolicy'
-  model_class: 'ddpg'
-  n_sampled_goal: 4
-  goal_selection_strategy: 'future'
-  buffer_size: 1000000
-  batch_size: 256
-  gamma: 0.95
-  random_exploration: 0.3
-  actor_lr: !!float 1e-3
-  critic_lr: !!float 1e-3
-  noise_type: 'normal'
-  noise_std: 0.2
-  normalize_observations: true
-  normalize_returns: false
+# DDPG hyperparams
+# FetchReach-v1:
+#   n_timesteps: !!float 20000
+#   policy: 'MlpPolicy'
+#   model_class: 'ddpg'
+#   n_sampled_goal: 4
+#   goal_selection_strategy: 'future'
+#   buffer_size: 1000000
+#   batch_size: 256
+#   gamma: 0.95
+#   random_exploration: 0.3
+#   actor_lr: !!float 1e-3
+#   critic_lr: !!float 1e-3
+#   noise_type: 'normal'
+#   noise_std: 0.2
+#   normalize_observations: true
+#   normalize_returns: false
 
 
 # TODO: run it with 8 workers
@@ -69,23 +70,26 @@ FetchPush-v1:
   policy_kwargs: "dict(layers=[256, 256, 256])"
 
 # Not working yet for SAC
-# FetchReach-v1:
-#   n_timesteps: !!float 1e5
-#   policy: 'MlpPolicy'
-#   model_class: 'sac'
-#   n_sampled_goal: 4
-#   goal_selection_strategy: 'future'
-#   buffer_size: 1000000
-#   # batch_size: 256
-#   # gamma: 0.95
-#   # learning_rate: !!float 1e-3
-#   # random_exploration: 0.3
-#   # noise_type: 'normal'
-#   # noise_std: 0.2
-#   # train_freq: 100
-#   # gradient_steps: 50
-#   learning_starts: 20000
-#   # normalize: "{'norm_obs': True, 'norm_reward': False}"
-#   # noise_type: 'ornstein-uhlenbeck'
-#   # noise_std: 0.5
-#   # policy_kwargs: "dict(layers=[256, 256, 256])"
+FetchReach-v1:
+  n_timesteps: !!float 1e5
+  policy: 'MlpPolicy'
+  model_class: 'sac'
+  n_sampled_goal: 4
+  goal_selection_strategy: 'future'
+  buffer_size: 100000
+  # ent_coef: '0.001'
+  batch_size: 16
+  gamma: 0.98
+  # learning_rate: 0.00796
+  random_exploration: 0.01
+  # noise_type: 'normal'
+  # noise_std: 0.2
+  train_freq: 10
+  # train_freq: 100
+  # gradient_steps: 50
+  # learning_starts: 20000
+  # normalize: "{'norm_obs': True, 'norm_reward': False}"
+  # noise_type: 'ornstein-uhlenbeck'
+  # noise_std: 0.5
+  # tau: 0.001
+  # policy_kwargs: "dict(layers=[256, 256, 256])"

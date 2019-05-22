@@ -16,7 +16,7 @@ from stable_baselines.bench import Monitor
 from stable_baselines import logger
 from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, HER, DDPG, TRPO, SAC
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize, \
-    VecFrameStack, SubprocVecEnv
+    VecFrameStack, SubprocVecEnv, GoalEnvVecNormalize
 from stable_baselines.common.cmd_util import make_atari_env
 from stable_baselines.common import set_global_seeds
 
@@ -158,7 +158,10 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         if hyperparams['normalize']:
             print("Loading running average")
             print("with params: {}".format(hyperparams['normalize_kwargs']))
-            env = VecNormalize(env, training=False, **hyperparams['normalize_kwargs'])
+            if hyperparams.get('model_class') is not None:
+                env = GoalEnvVecNormalize(env, training=False, **hyperparams['normalize_kwargs'])
+            else:
+                env = VecNormalize(env, training=False, **hyperparams['normalize_kwargs'])
             env.load_running_average(stats_path)
 
         n_stack = hyperparams.get('frame_stack', 0)

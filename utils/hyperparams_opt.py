@@ -4,8 +4,11 @@ import numpy as np
 import optuna
 from optuna.pruners import SuccessiveHalvingPruner, MedianPruner
 from optuna.samplers import RandomSampler, TPESampler
+from stable_baselines import SAC, DDPG
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
-from stable_baselines.common.vec_env import VecNormalize
+from stable_baselines.common.vec_env import VecNormalize, VecEnv
+from stable_baselines.her import HERGoalEnvWrapper
+from stable_baselines.common.base_class import _UnvecWrapper
 
 
 def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=5000, hyperparams=None,
@@ -63,8 +66,13 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     def objective(trial):
 
         kwargs = hyperparams.copy()
+
+        trial.model_class = None
+        if algo == 'her':
+            trial.model_class = hyperparams['model_class']
+
         # Hack to use DDPG sampler
-        if algo == 'ddpg':
+        if algo == 'ddpg' or trial.model_class == 'ddpg':
             trial.n_actions = env_fn(n_envs=1).action_space.shape[0]
         kwargs.update(algo_sampler(trial))
 
@@ -132,6 +140,13 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
         model = model_fn(**kwargs)
         model.test_env = env_fn(n_envs=1)
         model.trial = trial
+        if algo == 'her':
+            model.model.trial = trial
+            # Wrap the env if need to flatten the dict obs
+            if isinstance(model.test_env, VecEnv):
+                model.test_env = _UnvecWrapper(model.test_env)
+            model.model.test_env = HERGoalEnvWrapper(model.test_env)
+
         try:
             model.learn(n_timesteps, callback=callback)
             # Free memory
@@ -341,10 +356,29 @@ def sample_ddpg_params(trial):
     return hyperparams
 
 
+def sample_her_params(trial):
+    """
+    Sampler for HER hyperparams.
+
+    :param trial: (optuna.trial)
+    :return: (dict)
+    """
+    if trial.model_class == SAC:
+        hyperparams = sample_sac_params(trial)
+    elif trial.model_class == DDPG:
+        hyperparams = sample_ddpg_params(trial)
+
+    hyperparams['random_exploration'] = trial.suggest_uniform('random_exploration', 0, 1)
+    hyperparams['n_sampled_goal'] = trial.suggest_categorical('n_sampled_goal', [1, 2, 4, 6, 8])
+
+    return hyperparams
+
+
 HYPERPARAMS_SAMPLER = {
     'ppo2': sample_ppo2_params,
     'sac': sample_sac_params,
     'a2c': sample_a2c_params,
     'trpo': sample_trpo_params,
-    'ddpg': sample_ddpg_params
+    'ddpg': sample_ddpg_params,
+    'her': sample_her_params
 }
