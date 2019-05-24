@@ -3,6 +3,7 @@ import os
 import inspect
 import glob
 import yaml
+import importlib
 
 import gym
 import pybullet_envs
@@ -68,13 +69,18 @@ def flatten_dict_observations(env):
 
 
 def treat_env_wrapper_hyperparams(hyperparams):
-    env_wrapper = None
+    def get_module_name(fullname):
+        return '.'.join(wrapper_name.split('.')[:-1])
+    
+    def get_class_name(fullname):
+        return wrapper_name.split('.')[-1]
+    
     if 'env_wrapper' in hyperparams.keys():
         wrapper_name = hyperparams.get('env_wrapper')
-        wrapper_module = importlib.import_module(wrapper_name.split('.')[:-1])
-        env_wrapper = getattr(wrapper_module, wrapper_name.split('.')[-1])
-        del hyperparams['env_wrapper']
-    return env_wrapper
+        wrapper_module = importlib.import_module(get_module_name(wrapper_name))
+        return getattr(wrapper_module, get_class_name(wrapper_name))
+    else:
+        return None
 
 
 def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None):
@@ -139,6 +145,8 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
 
     # Create the environment and wrap it if necessary
     env_wrapper = treat_env_wraper_hyperparams(hyperparams)
+    if 'env_wrapper' in hyperparams.keys():
+        del hyperparams['env_wrapper']
     
     if is_atari:
         print("Using Atari wrapper")

@@ -157,6 +157,8 @@ if __name__ == '__main__':
         # obtain a class object from a wrapper name string in hyperparams
         # and delete the entry
         env_wrapper = treat_env_wrapper_hyperparams(hyperparams)
+        if 'env_wrapper' in hyperparams.keys():
+            del hyperparams['env_wrapper']
         
         def create_env(n_envs):
             """
