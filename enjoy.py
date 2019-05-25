@@ -97,6 +97,8 @@ def main():
 
     episode_reward = 0.0
     ep_len = 0
+    # For HER, monitor success rate
+    successes = []
     for _ in range(args.n_timesteps):
         action, _ = model.predict(obs, deterministic=deterministic)
         # Random Agent
@@ -136,11 +138,17 @@ def main():
 
             # Reset also when the goal is achieved when using HER
             if done or infos[0].get('is_success', False):
-                if args.algo == 'her' and args.verbose >= 1:
+                if args.algo == 'her' and args.verbose > 1:
                     print("Success?", infos[0].get('is_success', False))
                 # Alternatively, you can add a check to wait for the end of the episode
                 # if done:
                 obs = env.reset()
+                if args.algo == 'her':
+                    successes.append(infos[0].get('is_success', False))
+                    episode_reward, ep_len = 0.0, 0
+
+    if len(successes) > 0:
+        print("Success rate: {:.2f}%".format(100 * np.mean(successes)))
 
     # Workaround for https://github.com/openai/gym/issues/893
     if not args.no_render:

@@ -50,14 +50,14 @@ parking-v0:
 #   normalize_returns: false
 
 
-# TODO: run it with 8 workers
+# NOTE: shoube be run with 8 workers: mpirun -n 8
 FetchPush-v1:
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
   model_class: 'ddpg'
   n_sampled_goal: 4
   goal_selection_strategy: 'future'
-  buffer_size: 1000000
+  buffer_size: 200000
   batch_size: 256
   gamma: 0.95
   random_exploration: 0.3
@@ -67,7 +67,7 @@ FetchPush-v1:
   noise_std: 0.2
   normalize_observations: true
   normalize_returns: false
-  policy_kwargs: "dict(layers=[256, 256, 256])"
+  policy_kwargs: "dict(layers=[16, 16, 16])"
 
 # FetchPush-v1:
 #   n_timesteps: !!float 1e5
@@ -81,6 +81,11 @@ FetchPush-v1:
 #   gamma: 0.95
 #   learning_rate: 0.001
 #   learning_starts: 1000
+#   # random_exploration: 0.3
+#   # noise_type: 'ornstein-uhlenbeck'
+#   # noise_std: 0.5
+#   train_freq: 2
+#   # policy_kwargs: "dict(layers=[64, 64])"
 
 # SAC hyperparams, note: must use not a VecEnv
 FetchReach-v1:
