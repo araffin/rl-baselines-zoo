@@ -144,7 +144,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         logger.configure()
 
     # Create the environment and wrap it if necessary
-    env_wrapper = treat_env_wraper_hyperparams(hyperparams)
+    env_wrapper = treat_env_wrapper_hyperparams(hyperparams)
     if 'env_wrapper' in hyperparams.keys():
         del hyperparams['env_wrapper']
     
