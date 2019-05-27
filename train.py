@@ -4,11 +4,15 @@ import os
 from collections import OrderedDict
 from pprint import pprint
 import warnings
+import importlib
 
 # For pybullet envs
 warnings.filterwarnings("ignore")
 import gym
-import pybullet_envs
+try:
+    import pybullet_envs
+except ImportError:
+    pybullet_envs = None
 import numpy as np
 import yaml
 try:
@@ -23,7 +27,7 @@ from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNor
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.ppo2.ppo2 import constfn
 
-from utils import make_env, ALGOS, linear_schedule, get_latest_run_id
+from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class
 from utils.hyperparams_opt import hyperparam_optimization
 
 if __name__ == '__main__':
@@ -50,10 +54,14 @@ if __name__ == '__main__':
                         default='median', choices=['halving', 'median', 'none'])
     parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                         type=int)
+    parser.add_argument('--gym-packages', type=str, nargs='+', default=[], help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
     args = parser.parse_args()
 
+    # Going through custom gym packages to let them register in the global registory
+    for env_module in args.gym_packages:
+        importlib.import_module(env_module)
+    
     env_ids = args.env
-
     registered_envs = set(gym.envs.registry.env_specs.keys())
 
     for env_id in env_ids:
@@ -159,7 +167,12 @@ if __name__ == '__main__':
             del hyperparams['n_envs']
         del hyperparams['n_timesteps']
 
-
+        # obtain a class object from a wrapper name string in hyperparams
+        # and delete the entry
+        env_wrapper = get_wrapper_class(hyperparams)
+        if 'env_wrapper' in hyperparams.keys():
+            del hyperparams['env_wrapper']
+        
         def create_env(n_envs):
             """
             Create the environment and wrap it if necessary
@@ -177,15 +190,16 @@ if __name__ == '__main__':
             elif algo_ in ['dqn', 'ddpg', 'sac']:
                 if hyperparams.get('normalize', False):
                     print("WARNING: normalization not supported yet for DDPG/DQN")
+                # No env_wrapper applied for now as not using make_env()
                 env = gym.make(env_id)
                 env.seed(args.seed)
             else:
                 if n_envs == 1:
-                    env = DummyVecEnv([make_env(env_id, 0, args.seed)])
+                    env = DummyVecEnv([make_env(env_id, 0, args.seed, wrapper_class=env_wrapper)])
                 else:
                     # env = SubprocVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
                     # On most env, SubprocVecEnv does not help and is quite memory hungry
-                    env = DummyVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
+                    env = DummyVecEnv([make_env(env_id, i, args.seed, wrapper_class=env_wrapper) for i in range(n_envs)])
                 if normalize:
                     if args.verbose > 0:
                         if len(normalize_kwargs) > 0:
