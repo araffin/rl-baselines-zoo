@@ -68,7 +68,18 @@ def flatten_dict_observations(env):
     return gym.wrappers.FlattenDictWrapper(env, dict_keys=list(keys))
 
 
-def treat_env_wrapper_hyperparams(hyperparams):
+def get_wrapper_class(hyperparams):
+    """
+    Get a Gym environment wrapper class specified as a hyper parameter
+    "env_wrapper".
+    e.g.
+    env_wrapper: gym_minigrid.wrappers.FlatObsWrapper
+    
+    :param hyperparams: (dict) 
+    :return: a subclass of gym.Wrapper (class object) you can use to
+             create another Gym env giving an original env.
+    """
+    
     def get_module_name(fullname):
         return '.'.join(wrapper_name.split('.')[:-1])
     
@@ -92,8 +103,8 @@ def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None):
     :param rank: (int)
     :param seed: (int)
     :param log_dir: (str)
-    :param wrapper: a subclass of gym.Wrapper to wrap the original env
-                    with (type)
+    :param wrapper: (type) a subclass of gym.Wrapper to wrap the original
+                    env with
     """
     if log_dir is None and log_dir != '':
         log_dir = "/tmp/gym/{}/".format(int(time.time()))
@@ -105,10 +116,8 @@ def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None):
         
         # Dict observation space is currently not supported.
         # https://github.com/hill-a/stable-baselines/issues/321
-        # We allow an GymEnv wrapper (a subclass of gym.ObservationWrapper)
-        #if isinstance(env.observation_space, gym.spaces.Dict):
+        # We allow a Gym env wrapper (a subclass of gym.Wrapper)
         if wrapper_class:
-            #env = flatten_dict_observations(env)
             env = wrapper_class(env)
         
         env.seed(seed + rank)
@@ -144,7 +153,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         logger.configure()
 
     # Create the environment and wrap it if necessary
-    env_wrapper = treat_env_wrapper_hyperparams(hyperparams)
+    env_wrapper = get_wrapper_class(hyperparams)
     if 'env_wrapper' in hyperparams.keys():
         del hyperparams['env_wrapper']
     
@@ -181,7 +190,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
             return env
 
         if use_subproc:
-            env = SubprocVecEnv([make_env(env_id, 0, seed, log_dir)])
+            env = SubprocVecEnv([make_env(env_id, 0, seed, log_dir, wrapper_class=env_wrapper)])
         else:
             env = DummyVecEnv([_init])
     else:

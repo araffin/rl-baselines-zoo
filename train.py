@@ -23,7 +23,7 @@ from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNor
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.ppo2.ppo2 import constfn
 
-from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, treat_env_wrapper_hyperparams
+from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class
 from utils.hyperparams_opt import hyperparam_optimization
 
 if __name__ == '__main__':
@@ -156,7 +156,7 @@ if __name__ == '__main__':
 
         # obtain a class object from a wrapper name string in hyperparams
         # and delete the entry
-        env_wrapper = treat_env_wrapper_hyperparams(hyperparams)
+        env_wrapper = get_wrapper_class(hyperparams)
         if 'env_wrapper' in hyperparams.keys():
             del hyperparams['env_wrapper']
         
