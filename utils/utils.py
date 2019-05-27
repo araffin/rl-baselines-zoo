@@ -3,6 +3,7 @@ import os
 import inspect
 import glob
 import yaml
+import importlib
 
 import gym
 import pybullet_envs
@@ -67,15 +68,43 @@ def flatten_dict_observations(env):
     return gym.wrappers.FlattenDictWrapper(env, dict_keys=list(keys))
 
 
-def make_env(env_id, rank=0, seed=0, log_dir=None):
+def get_wrapper_class(hyperparams):
+    """
+    Get a Gym environment wrapper class specified as a hyper parameter
+    "env_wrapper".
+    e.g.
+    env_wrapper: gym_minigrid.wrappers.FlatObsWrapper
+    
+    :param hyperparams: (dict) 
+    :return: a subclass of gym.Wrapper (class object) you can use to
+             create another Gym env giving an original env.
+    """
+    
+    def get_module_name(fullname):
+        return '.'.join(wrapper_name.split('.')[:-1])
+    
+    def get_class_name(fullname):
+        return wrapper_name.split('.')[-1]
+    
+    if 'env_wrapper' in hyperparams.keys():
+        wrapper_name = hyperparams.get('env_wrapper')
+        wrapper_module = importlib.import_module(get_module_name(wrapper_name))
+        return getattr(wrapper_module, get_class_name(wrapper_name))
+    else:
+        return None
+
+
+def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None):
     """
     Helper function to multiprocess training
     and log the progress.
-
+    
     :param env_id: (str)
     :param rank: (int)
     :param seed: (int)
     :param log_dir: (str)
+    :param wrapper: (type) a subclass of gym.Wrapper to wrap the original
+                    env with
     """
     if log_dir is None and log_dir != '':
         log_dir = "/tmp/gym/{}/".format(int(time.time()))
@@ -87,12 +116,9 @@ def make_env(env_id, rank=0, seed=0, log_dir=None):
         
         # Dict observation space is currently not supported.
         # https://github.com/hill-a/stable-baselines/issues/321
-        # We should exclude the case: alg not in {'her'}
-        # For those gym envs like MiniGrid with Dict observation space,
-        # we put observation space into a big 1D vector.
-        # MlpPolicy would work, but custom policies should be provided.
-        if isinstance(env.observation_space, gym.spaces.Dict):
-            env = flatten_dict_observations(env)
+        # We allow a Gym env wrapper (a subclass of gym.Wrapper)
+        if wrapper_class:
+            env = wrapper_class(env)
         
         env.seed(seed + rank)
         env = Monitor(env, os.path.join(log_dir, str(rank)), allow_early_resets=True)
@@ -114,6 +140,8 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
     :param seed: (int) Seed for random number generator
     :param log_dir: (str) Where to log rewards
     :param should_render: (bool) For Pybullet env, display the GUI
+    :param env_wrapper: (type) A subclass of gym.Wrapper to wrap the orignal
+                        env with
     :param hyperparams: (dict) Additional hyperparams (ex: n_stack)
     :return: (gym.Env)
     """
@@ -125,6 +153,10 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         logger.configure()
 
     # Create the environment and wrap it if necessary
+    env_wrapper = get_wrapper_class(hyperparams)
+    if 'env_wrapper' in hyperparams.keys():
+        del hyperparams['env_wrapper']
+    
     if is_atari:
         print("Using Atari wrapper")
         env = make_atari_env(env_id, num_env=n_envs, seed=seed)
@@ -132,7 +164,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         env = VecFrameStack(env, n_stack=4)
     elif n_envs > 1:
         # start_method = 'spawn' for thread safe
-        env = SubprocVecEnv([make_env(env_id, i, seed, log_dir) for i in range(n_envs)])
+        env = SubprocVecEnv([make_env(env_id, i, seed, log_dir, wrapper_class=env_wrapper) for i in range(n_envs)])
     # Pybullet envs does not follow gym.render() interface
     elif "Bullet" in env_id:
         spec = gym.envs.registry.env_specs[env_id]
@@ -158,11 +190,11 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
             return env
 
         if use_subproc:
-            env = SubprocVecEnv([make_env(env_id, 0, seed, log_dir)])
+            env = SubprocVecEnv([make_env(env_id, 0, seed, log_dir, wrapper_class=env_wrapper)])
         else:
             env = DummyVecEnv([_init])
     else:
-        env = DummyVecEnv([make_env(env_id, 0, seed, log_dir)])
+        env = DummyVecEnv([make_env(env_id, 0, seed, log_dir, wrapper_class=env_wrapper)])
 
     # Load saved stats for normalizing input and rewards
     # And optionally stack frames
