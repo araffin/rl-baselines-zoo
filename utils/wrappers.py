@@ -3,7 +3,8 @@ import gym
 
 class DoneOnSuccessWrapper(gym.Wrapper):
     """
-    Reset on success and offsett the reward
+    Reset on success and offsets the reward.
+    Useful for GoalEnv.
     """
     def __init__(self, env, reward_offset=1.0):
         super(DoneOnSuccessWrapper, self).__init__(env)
