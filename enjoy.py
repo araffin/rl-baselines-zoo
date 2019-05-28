@@ -49,11 +49,11 @@ def main():
     parser.add_argument('--reward-log', help='Where to log reward', default='', type=str)
     parser.add_argument('--gym-packages', type=str, nargs='+', default=[], help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
     args = parser.parse_args()
-    
+
     # Going through custom gym packages to let them register in the global registory
     for env_module in args.gym_packages:
         importlib.import_module(env_module)
-    
+
     env_id = args.env
     algo = args.algo
     folder = args.folder

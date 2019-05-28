@@ -60,7 +60,7 @@ if __name__ == '__main__':
     # Going through custom gym packages to let them register in the global registory
     for env_module in args.gym_packages:
         importlib.import_module(env_module)
-    
+
     env_ids = args.env
     registered_envs = set(gym.envs.registry.env_specs.keys())
 
@@ -172,7 +172,7 @@ if __name__ == '__main__':
         env_wrapper = get_wrapper_class(hyperparams)
         if 'env_wrapper' in hyperparams.keys():
             del hyperparams['env_wrapper']
-        
+
         def create_env(n_envs):
             """
             Create the environment and wrap it if necessary
@@ -190,9 +190,10 @@ if __name__ == '__main__':
             elif algo_ in ['dqn', 'ddpg', 'sac']:
                 if hyperparams.get('normalize', False):
                     print("WARNING: normalization not supported yet for DDPG/DQN")
-                # No env_wrapper applied for now as not using make_env()
                 env = gym.make(env_id)
                 env.seed(args.seed)
+                if env_wrapper is not None:
+                    env = env_wrapper(env)
             else:
                 if n_envs == 1:
                     env = DummyVecEnv([make_env(env_id, 0, args.seed, wrapper_class=env_wrapper)])
