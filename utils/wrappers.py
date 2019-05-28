@@ -24,10 +24,16 @@ class DoneOnSuccessWrapper(gym.Wrapper):
 
 
 class TimeFeatureWrapper(gym.Wrapper):
-    """Add time to observation space for fixed length episodes."""
+    """
+    Add time to observation space for fixed length episodes.
 
+    :param env: (gym.Env)
+    :param max_steps: (int) Max number of steps of an episode
+        if it is not wrapped in a TimeLimit object.
+    """
     def __init__(self, env, max_steps=1000):
         assert isinstance(env.observation_space, gym.spaces.Box)
+        # Add a time feature to the observation
         low, high = env.observation_space.low, env.observation_space.high
         low, high= np.concatenate((low, [0])), np.concatenate((high, [1.]))
         env.observation_space = gym.spaces.Box(low=low, high=high, dtype=np.float32)
@@ -50,4 +56,10 @@ class TimeFeatureWrapper(gym.Wrapper):
         return self._get_obs(obs), reward, done, info
 
     def _get_obs(self, obs):
+        """
+        Concatenate the time feature to the current observation.
+
+        :param obs: (np.ndarray)
+        :return: (np.ndarray)
+        """
         return np.concatenate((obs, [self._current_step / self._max_steps]))
