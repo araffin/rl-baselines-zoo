@@ -187,7 +187,7 @@ if __name__ == '__main__':
                 env = make_atari_env(env_id, num_env=n_envs, seed=args.seed)
                 # Frame-stacking with 4 frames
                 env = VecFrameStack(env, n_stack=4)
-            elif algo_ in ['dqn', 'ddpg', 'sac']:
+            elif algo_ in ['dqn', 'ddpg']:
                 if hyperparams.get('normalize', False):
                     print("WARNING: normalization not supported yet for DDPG/DQN")
                 env = gym.make(env_id)

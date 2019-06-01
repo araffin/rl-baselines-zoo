@@ -115,12 +115,6 @@ def main():
         if not args.no_render:
             env.render('human')
 
-        # TODO: fix bug with DDPG and VecEnv
-        # idem if SAC trained with VecEnv, must be tested with VecEnv
-        if isinstance(reward, (float, int, np.float32)):
-            reward = [reward]
-            infos = [infos]
-
         episode_reward += reward[0]
         ep_len += 1
 

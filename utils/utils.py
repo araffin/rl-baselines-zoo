@@ -195,10 +195,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         else:
             env = DummyVecEnv([_init])
     else:
-        if hyperparams.get('model_class') is not None:
-            env = make_env(env_id, 0, seed, log_dir, wrapper_class=env_wrapper)()
-        else:
-            env = DummyVecEnv([make_env(env_id, 0, seed, log_dir, wrapper_class=env_wrapper)])
+        env = DummyVecEnv([make_env(env_id, 0, seed, log_dir, wrapper_class=env_wrapper)])
 
     # Load saved stats for normalizing input and rewards
     # And optionally stack frames
