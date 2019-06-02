@@ -152,6 +152,21 @@ HalfCheetahBulletEnv-v0:
   learning_rate: !!float 3e-4
   cliprange: 0.2
 
+# TODO: remove clipping on the value function
+HalfCheetah-v2:
+  normalize: true
+  n_envs: 1
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: lin_3e-4
+  cliprange: 0.2
+
 AntBulletEnv-v0:
   normalize: true
   n_envs: 8
