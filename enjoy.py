@@ -43,6 +43,8 @@ def main():
                         help='Do not render the environment (useful for tests)')
     parser.add_argument('--deterministic', action='store_true', default=False,
                         help='Use deterministic actions')
+    parser.add_argument('--stochastic', action='store_true', default=False,
+                        help='Use stochastic actions (for DDPG/DQN/SAC)')
     parser.add_argument('--norm-reward', action='store_true', default=False,
                         help='Normalize reward if applicable (trained with VecNormalize)')
     parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
@@ -97,10 +99,11 @@ def main():
 
     obs = env.reset()
 
-    # Force deterministic for DQN and DDPG
-    deterministic = args.deterministic or algo in ['dqn', 'ddpg', 'sac']
+    # Force deterministic for DQN, DDPG, SAC and HER (that is a wrapper around)
+    deterministic = args.deterministic or algo in ['dqn', 'ddpg', 'sac', 'her'] and not args.stochastic
 
     episode_reward = 0.0
+    episode_rewards = []
     ep_len = 0
     # For HER, monitor success rate
     successes = []
@@ -127,11 +130,12 @@ def main():
                     print("Atari Episode Score: {:.2f}".format(episode_infos['r']))
                     print("Atari Episode Length", episode_infos['l'])
 
-            if done and not is_atari and args.verbose >= 1:
+            if done and not is_atari and args.verbose > 0:
                 # NOTE: for env using VecNormalize, the mean reward
                 # is a normalized reward when `--norm_reward` flag is passed
                 print("Episode Reward: {:.2f}".format(episode_reward))
                 print("Episode Length", ep_len)
+                episode_rewards.append(episode_reward)
                 episode_reward = 0.0
                 ep_len = 0
 
@@ -146,8 +150,11 @@ def main():
                     successes.append(infos[0].get('is_success', False))
                     episode_reward, ep_len = 0.0, 0
 
-    if len(successes) > 0:
+    if args.verbose > 0 and len(successes) > 0:
         print("Success rate: {:.2f}%".format(100 * np.mean(successes)))
+
+    if args.verbose > 0 and len(episode_rewards) > 0:
+        print("Mean reward: {:.2f}".format(np.mean(episode_rewards)))
 
     # Workaround for https://github.com/openai/gym/issues/893
     if not args.no_render:
