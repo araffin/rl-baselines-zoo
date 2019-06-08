@@ -258,13 +258,14 @@ def sample_sac_params(trial):
     """
     gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
     learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
-    batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 128, 256])
+    batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 128, 256, 512])
     buffer_size = trial.suggest_categorical('buffer_size', [int(1e4), int(1e5), int(1e6)])
     learning_starts = trial.suggest_categorical('learning_starts', [0, 1000, 10000, 20000])
-    train_freq = trial.suggest_categorical('train_freq', [1, 100, 300])
+    train_freq = trial.suggest_categorical('train_freq', [1, 10, 100, 300])
     # gradient_steps takes too much time
     # gradient_steps = trial.suggest_categorical('gradient_steps', [1, 100, 300])
-    gradient_steps = 1
+    # gradient_steps = 1
+    gradient_steps = trial.suggest_categorical('gradient_steps', [1, 2, 5])
     ent_coef = trial.suggest_categorical('ent_coef', ['auto', 0.5, 0.1, 0.05, 0.01, 0.0001])
 
     target_entropy = 'auto'

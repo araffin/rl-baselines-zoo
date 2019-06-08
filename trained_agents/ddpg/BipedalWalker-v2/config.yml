@@ -1,0 +1,13 @@
+!!python/object/apply:collections.OrderedDict
+- - [actor_lr, 0.000527]
+  - [batch_size, 256]
+  - [gamma, 0.999]
+  - [memory_limit, 100000]
+  - [n_timesteps, 1000000.0]
+  - [noise_std, 0.287]
+  - [noise_type, adaptive-param]
+  - [normalize_observations, true]
+  - [normalize_returns, false]
+  - [policy, MlpPolicy]
+  - [policy_kwargs, dict(layer_norm=True)]
+  - [random_exploration, 0.0]
