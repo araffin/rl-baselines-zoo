@@ -45,6 +45,7 @@
 |acktr|SeaquestNoFrameskip-v4             |   1672.239|   105.092|     149148|        67|
 |acktr|SpaceInvadersNoFrameskip-v4        |    738.045|   306.756|     149714|       156|
 |ddpg |AntBulletEnv-v0                    |   2070.790|    74.253|     150000|       150|
+|ddpg |BipedalWalker-v2                   |     94.202|   142.679|     149647|       240|
 |ddpg |HalfCheetahBulletEnv-v0            |   2549.452|    37.652|     150000|       150|
 |ddpg |LunarLanderContinuous-v2           |    244.566|    75.617|     149531|       660|
 |ddpg |MountainCarContinuous-v0           |     91.858|     1.350|     149945|      1818|

@@ -19,56 +19,69 @@ Pendulum-v0:
   noise_std: 0.1
   memory_limit: 50000
 
-# To be tuned
+# Tuned
 BipedalWalker-v2:
-  n_timesteps: !!float 5e6
-  policy: 'LnMlpPolicy'
-  normalize_observations: True
-  noise_type: 'adaptive-param'
-  noise_std: 0.2
-  memory_limit: 50000
-
-# To be tuned
-HalfCheetahBulletEnv-v0:
   n_timesteps: !!float 1e6
-  policy: 'LnMlpPolicy'
-  gamma: 0.99
+  policy: 'MlpPolicy'
+  noise_type: 'adaptive-param'
+  noise_std: 0.287
   memory_limit: 100000
-  noise_type: 'normal'
-  noise_std: 0.024
-  batch_size: 64
   normalize_observations: True
-  normalize_returns: True
+  normalize_returns: False
+  gamma: 0.999
+  actor_lr: !!float 0.000527
+  batch_size: 256
+  random_exploration: 0.0
+  policy_kwargs: 'dict(layer_norm=True)'
 
+# Tuned
+HalfCheetahBulletEnv-v0:
+  env_wrapper: utils.wrappers.InfiniteHorizonWrapper
+  n_timesteps: !!float 2e6
+  policy: 'LnMlpPolicy'
+  gamma: 0.95
+  memory_limit: 1000000
+  noise_type: 'normal'
+  noise_std: 0.22
+  batch_size: 256
+  normalize_observations: True
+  normalize_returns: False
+
+# Tuned
 Walker2DBulletEnv-v0:
   n_timesteps: !!float 2e6
   policy: 'LnMlpPolicy'
-  gamma: 0.99
-  memory_limit: 100000
+  gamma: 0.95
+  memory_limit: 1000000
   noise_type: 'normal'
-  noise_std: 0.024
-  batch_size: 64
+  noise_std: 0.15
+  batch_size: 128
   normalize_observations: True
   normalize_returns: True
 
+# To be tuned
 AntBulletEnv-v0:
+  env_wrapper: utils.wrappers.InfiniteHorizonWrapper
   n_timesteps: !!float 2e6
-  policy: 'LnMlpPolicy'
+  policy: 'MlpPolicy'
   gamma: 0.99
-  memory_limit: 100000
+  memory_limit: 1000000
   noise_type: 'normal'
-  noise_std: 0.024
-  batch_size: 64
+  noise_std: 0.22
+  batch_size: 256
   normalize_observations: True
-  normalize_returns: True
+  normalize_returns: False
 
+# To be tuned
 HopperBulletEnv-v0:
   n_timesteps: !!float 2e6
-  policy: 'LnMlpPolicy'
-  gamma: 0.99
-  memory_limit: 100000
-  noise_type: 'normal'
-  noise_std: 0.024
-  batch_size: 64
+  policy: 'MlpPolicy'
+  gamma: 0.98
+  memory_limit: 1000000
+  noise_type: 'ornstein-uhlenbeck'
+  noise_std: 0.652
+  batch_size: 256
+  actor_lr: 0.00156
+  critic_lr: 0.00156
   normalize_observations: True
-  normalize_returns: True
+  normalize_returns: False
