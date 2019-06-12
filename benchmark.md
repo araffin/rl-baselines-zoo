@@ -90,7 +90,7 @@
 |ppo2 |SeaquestNoFrameskip-v4             |   1782.687|    80.883|     150535|        67|
 |ppo2 |SpaceInvadersNoFrameskip-v4        |    689.631|   202.143|     150081|       176|
 |ppo2 |Walker2DBulletEnv-v0               |   1276.848|   504.586|     149959|       179|
-|sac  |AntBulletEnv-v0                    |   2354.785|    42.501|     150000|       150|
+|sac  |AntBulletEnv-v0                    |   3485.228|    29.964|     150000|       150|
 |sac  |BipedalWalker-v2                   |    307.198|     1.055|     149794|       175|
 |sac  |BipedalWalkerHardcore-v2           |    100.802|   117.769|     148974|        84|
 |sac  |HalfCheetahBulletEnv-v0            |   3330.911|    95.575|     150000|       150|
