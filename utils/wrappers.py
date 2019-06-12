@@ -111,6 +111,6 @@ class TimeFeatureWrapper(gym.Wrapper):
         # Remaining time is more general
         time_feature = 1 - (self._current_step / self._max_steps)
         if self._test_mode:
-            time_feature = 0.0
+            time_feature = 1.0
         # Optionnaly: concatenate [time_feature, time_feature ** 2]
         return np.concatenate((obs, [time_feature]))
