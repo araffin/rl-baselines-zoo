@@ -23,47 +23,6 @@ class DoneOnSuccessWrapper(gym.Wrapper):
         return reward + self.reward_offset
 
 
-class InfiniteHorizonWrapper(gym.Wrapper):
-    """
-    Ignore the termination signal ("done") if it comes from reaching the max timesteps limit.
-    The idea is similar to the TimeFeatureWrapper, so the value function
-    can have a good estimate of the current state value but taking into account an infinite horizon
-    (in fact limited by gamma (horizon = 1 / (1 - gamma))).
-    Also patch previous gym versions.
-
-    :param env: (gym.Env)
-    :param max_steps: (int) Max number of steps of an episode
-        if it is not wrapped in a TimeLimit object.
-    """
-    def __init__(self, env, max_steps=1000):
-        if isinstance(env, TimeLimit):
-            self._max_episode_steps = env._max_episode_steps
-            # Unwrap to patch old gym versions
-            env = env.env
-            self.env = env
-        else:
-            self._max_steps = max_steps
-            raise NotImplementedError()
-        super(InfiniteHorizonWrapper, self).__init__(env)
-        self._elapsed_steps = 0
-
-    def reset(self):
-        obs = self.env.reset()
-        self._elapsed_steps = 0
-        return obs
-
-    def step(self, action):
-        self._elapsed_steps += 1
-        obs, reward, done, info = self.env.step(action)
-        # Ignore terminal signal
-        # done = False if self._current_step == self._max_steps else done
-
-        if self._elapsed_steps >= self._max_episode_steps:
-            info['TimeLimit.truncated'] = not done
-            done = True
-        return obs, reward, done, info
-
-
 class TimeFeatureWrapper(gym.Wrapper):
     """
     Add remaining time to observation space for fixed length episodes.
