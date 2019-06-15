@@ -36,7 +36,7 @@ BipedalWalker-v2:
 
 # Tuned
 HalfCheetahBulletEnv-v0:
-  env_wrapper: utils.wrappers.InfiniteHorizonWrapper
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: !!float 2e6
   policy: 'LnMlpPolicy'
   gamma: 0.95
@@ -46,6 +46,7 @@ HalfCheetahBulletEnv-v0:
   batch_size: 256
   normalize_observations: True
   normalize_returns: False
+  tau: 0.005
 
 # Tuned
 Walker2DBulletEnv-v0:
@@ -61,7 +62,7 @@ Walker2DBulletEnv-v0:
 
 # To be tuned
 AntBulletEnv-v0:
-  env_wrapper: utils.wrappers.InfiniteHorizonWrapper
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
   gamma: 0.99
