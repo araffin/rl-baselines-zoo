@@ -8,12 +8,18 @@ import importlib
 # For pybullet envs
 warnings.filterwarnings("ignore")
 import gym
-import pybullet_envs
+try:
+    import pybullet_envs
+except ImportError:
+    pybullet_envs = None
 import numpy as np
-
+try:
+    import highway_env
+except ImportError:
+    highway_env = None
 import stable_baselines
 from stable_baselines.common import set_global_seeds
-from stable_baselines.common.vec_env import VecNormalize, VecFrameStack
+from stable_baselines.common.vec_env import VecNormalize, VecFrameStack, VecEnv
 
 from utils import ALGOS, create_test_env, get_latest_run_id, get_saved_hyperparams
 
@@ -40,17 +46,19 @@ def main():
                         help='Do not render the environment (useful for tests)')
     parser.add_argument('--deterministic', action='store_true', default=False,
                         help='Use deterministic actions')
+    parser.add_argument('--stochastic', action='store_true', default=False,
+                        help='Use stochastic actions (for DDPG/DQN/SAC)')
     parser.add_argument('--norm-reward', action='store_true', default=False,
                         help='Normalize reward if applicable (trained with VecNormalize)')
     parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
     parser.add_argument('--reward-log', help='Where to log reward', default='', type=str)
     parser.add_argument('--gym-packages', type=str, nargs='+', default=[], help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
     args = parser.parse_args()
-    
+
     # Going through custom gym packages to let them register in the global registory
     for env_module in args.gym_packages:
         importlib.import_module(env_module)
-    
+
     env_id = args.env
     algo = args.algo
     folder = args.folder
@@ -94,11 +102,14 @@ def main():
 
     obs = env.reset()
 
-    # Force deterministic for DQN and DDPG
-    deterministic = args.deterministic or algo in ['dqn', 'ddpg', 'sac']
+    # Force deterministic for DQN, DDPG, SAC and HER (that is a wrapper around)
+    deterministic = args.deterministic or algo in ['dqn', 'ddpg', 'sac', 'her'] and not args.stochastic
 
-    running_reward = 0.0
+    episode_reward = 0.0
+    episode_rewards = []
     ep_len = 0
+    # For HER, monitor success rate
+    successes = []
     for _ in range(args.n_timesteps):
         action, _ = model.predict(obs, deterministic=deterministic)
         # Random Agent
@@ -109,7 +120,8 @@ def main():
         obs, reward, done, infos = env.step(action)
         if not args.no_render:
             env.render('human')
-        running_reward += reward[0]
+
+        episode_reward += reward[0]
         ep_len += 1
 
         if args.n_envs == 1:
@@ -121,17 +133,35 @@ def main():
                     print("Atari Episode Score: {:.2f}".format(episode_infos['r']))
                     print("Atari Episode Length", episode_infos['l'])
 
-            if done and not is_atari and args.verbose >= 1:
+            if done and not is_atari and args.verbose > 0:
                 # NOTE: for env using VecNormalize, the mean reward
                 # is a normalized reward when `--norm_reward` flag is passed
-                print("Episode Reward: {:.2f}".format(running_reward))
+                print("Episode Reward: {:.2f}".format(episode_reward))
                 print("Episode Length", ep_len)
-                running_reward = 0.0
+                episode_rewards.append(episode_reward)
+                episode_reward = 0.0
                 ep_len = 0
+
+            # Reset also when the goal is achieved when using HER
+            if done or infos[0].get('is_success', False):
+                if args.algo == 'her' and args.verbose > 1:
+                    print("Success?", infos[0].get('is_success', False))
+                # Alternatively, you can add a check to wait for the end of the episode
+                # if done:
+                obs = env.reset()
+                if args.algo == 'her':
+                    successes.append(infos[0].get('is_success', False))
+                    episode_reward, ep_len = 0.0, 0
+
+    if args.verbose > 0 and len(successes) > 0:
+        print("Success rate: {:.2f}%".format(100 * np.mean(successes)))
+
+    if args.verbose > 0 and len(episode_rewards) > 0:
+        print("Mean reward: {:.2f}".format(np.mean(episode_rewards)))
 
     # Workaround for https://github.com/openai/gym/issues/893
     if not args.no_render:
-        if args.n_envs == 1 and 'Bullet' not in env_id and not is_atari:
+        if args.n_envs == 1 and 'Bullet' not in env_id and not is_atari and isinstance(env, VecEnv):
             # DummyVecEnv
             # Unwrap env
             while isinstance(env, VecNormalize) or isinstance(env, VecFrameStack):

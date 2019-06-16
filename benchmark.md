@@ -45,6 +45,7 @@
 |acktr|SeaquestNoFrameskip-v4             |   1672.239|   105.092|     149148|        67|
 |acktr|SpaceInvadersNoFrameskip-v4        |    738.045|   306.756|     149714|       156|
 |ddpg |AntBulletEnv-v0                    |   2070.790|    74.253|     150000|       150|
+|ddpg |BipedalWalker-v2                   |     94.202|   142.679|     149647|       240|
 |ddpg |HalfCheetahBulletEnv-v0            |   2549.452|    37.652|     150000|       150|
 |ddpg |LunarLanderContinuous-v2           |    244.566|    75.617|     149531|       660|
 |ddpg |MountainCarContinuous-v0           |     91.858|     1.350|     149945|      1818|
@@ -70,7 +71,7 @@
 |ppo2 |BreakoutNoFrameskip-v4             |    228.594|   141.964|     150921|       101|
 |ppo2 |CartPole-v1                        |    500.000|     0.000|     150000|       300|
 |ppo2 |EnduroNoFrameskip-v4               |    643.824|   205.988|     149683|        17|
-|ppo2 |HalfCheetahBulletEnv-v0            |   2037.586|    59.480|     150000|       150|
+|ppo2 |HalfCheetahBulletEnv-v0            |   3195.326|   115.730|     150000|       150|
 |ppo2 |HopperBulletEnv-v0                 |   1944.588|   612.994|     149157|       176|
 |ppo2 |HumanoidBulletEnv-v0               |   1285.814|   918.715|     149544|       244|
 |ppo2 |InvertedDoublePendulumBulletEnv-v0 |   7702.750|  2888.815|     149089|       181|
@@ -89,15 +90,16 @@
 |ppo2 |SeaquestNoFrameskip-v4             |   1782.687|    80.883|     150535|        67|
 |ppo2 |SpaceInvadersNoFrameskip-v4        |    689.631|   202.143|     150081|       176|
 |ppo2 |Walker2DBulletEnv-v0               |   1276.848|   504.586|     149959|       179|
-|sac  |AntBulletEnv-v0                    |   2354.785|    42.501|     150000|       150|
+|sac  |AntBulletEnv-v0                    |   3485.228|    29.964|     150000|       150|
 |sac  |BipedalWalker-v2                   |    307.198|     1.055|     149794|       175|
 |sac  |BipedalWalkerHardcore-v2           |    100.802|   117.769|     148974|        84|
-|sac  |HalfCheetahBulletEnv-v0            |   2021.599|   261.582|     150000|       150|
+|sac  |HalfCheetahBulletEnv-v0            |   3330.911|    95.575|     150000|       150|
 |sac  |HopperBulletEnv-v0                 |   2438.152|   335.284|     149232|       155|
 |sac  |HumanoidBulletEnv-v0               |   2048.187|   829.776|     149886|       172|
 |sac  |InvertedDoublePendulumBulletEnv-v0 |   9357.406|     0.504|     150000|       150|
 |sac  |InvertedPendulumSwingupBulletEnv-v0|    891.508|     0.963|     150000|       150|
 |sac  |LunarLanderContinuous-v2           |    269.783|    57.077|     149852|       709|
+|sac  |MountainCarContinuous-v0           |     90.421|     0.997|     149989|      1311|
 |sac  |Pendulum-v0                        |   -159.669|    86.665|     150000|       750|
 |sac  |ReacherBulletEnv-v0                |     17.529|     9.860|     150000|      1000|
 |sac  |Walker2DBulletEnv-v0               |   2052.646|    13.631|     150000|       150|

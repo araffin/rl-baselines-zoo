@@ -138,17 +138,33 @@ Walker2DBulletEnv-v0:
   cliprange: 0.2
 
 HalfCheetahBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   normalize: true
-  n_envs: 8
+  n_envs: 1
   n_timesteps: !!float 2e6
-  policy: 'CustomMlpPolicy'
-  n_steps: 256
+  policy: 'MlpPolicy'
+  n_steps: 2048
   nminibatches: 32
   lam: 0.95
   gamma: 0.99
   noptepochs: 10
   ent_coef: 0.0
-  learning_rate: 2.5e-4
+  learning_rate: !!float 3e-4
+  cliprange: 0.2
+
+# TODO: remove clipping on the value function
+HalfCheetah-v2:
+  normalize: true
+  n_envs: 1
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.0
+  learning_rate: lin_3e-4
   cliprange: 0.2
 
 AntBulletEnv-v0:

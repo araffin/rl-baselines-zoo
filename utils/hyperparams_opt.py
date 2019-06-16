@@ -4,8 +4,11 @@ import numpy as np
 import optuna
 from optuna.pruners import SuccessiveHalvingPruner, MedianPruner
 from optuna.samplers import RandomSampler, TPESampler
+from stable_baselines import SAC, DDPG
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
-from stable_baselines.common.vec_env import VecNormalize
+from stable_baselines.common.vec_env import VecNormalize, VecEnv
+from stable_baselines.her import HERGoalEnvWrapper
+from stable_baselines.common.base_class import _UnvecWrapper
 
 
 def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=5000, hyperparams=None,
@@ -47,7 +50,7 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     if pruner_method == 'halving':
         pruner = SuccessiveHalvingPruner(min_resource=1, reduction_factor=4, min_early_stopping_rate=0)
     elif pruner_method == 'median':
-        pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=2)
+        pruner = MedianPruner(n_startup_trials=5, n_warmup_steps=n_evaluations // 3)
     elif pruner_method == 'none':
         # Do not prune
         pruner = MedianPruner(n_startup_trials=n_trials, n_warmup_steps=n_evaluations)
@@ -63,8 +66,13 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
     def objective(trial):
 
         kwargs = hyperparams.copy()
+
+        trial.model_class = None
+        if algo == 'her':
+            trial.model_class = hyperparams['model_class']
+
         # Hack to use DDPG sampler
-        if algo == 'ddpg':
+        if algo == 'ddpg' or trial.model_class == 'ddpg':
             trial.n_actions = env_fn(n_envs=1).action_space.shape[0]
         kwargs.update(algo_sampler(trial))
 
@@ -132,6 +140,13 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
         model = model_fn(**kwargs)
         model.test_env = env_fn(n_envs=1)
         model.trial = trial
+        if algo == 'her':
+            model.model.trial = trial
+            # Wrap the env if need to flatten the dict obs
+            if isinstance(model.test_env, VecEnv):
+                model.test_env = _UnvecWrapper(model.test_env)
+            model.model.test_env = HERGoalEnvWrapper(model.test_env)
+
         try:
             model.learn(n_timesteps, callback=callback)
             # Free memory
@@ -243,13 +258,14 @@ def sample_sac_params(trial):
     """
     gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
     learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
-    batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 128, 256])
+    batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 128, 256, 512])
     buffer_size = trial.suggest_categorical('buffer_size', [int(1e4), int(1e5), int(1e6)])
     learning_starts = trial.suggest_categorical('learning_starts', [0, 1000, 10000, 20000])
-    train_freq = trial.suggest_categorical('train_freq', [1, 100, 300])
+    train_freq = trial.suggest_categorical('train_freq', [1, 10, 100, 300])
     # gradient_steps takes too much time
     # gradient_steps = trial.suggest_categorical('gradient_steps', [1, 100, 300])
-    gradient_steps = 1
+    # gradient_steps = 1
+    gradient_steps = trial.suggest_categorical('gradient_steps', [1, 2, 5])
     ent_coef = trial.suggest_categorical('ent_coef', ['auto', 0.5, 0.1, 0.05, 0.01, 0.0001])
 
     target_entropy = 'auto'
@@ -309,6 +325,7 @@ def sample_ddpg_params(trial):
     gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
     # actor_lr = trial.suggest_loguniform('actor_lr', 1e-5, 1)
     # critic_lr = trial.suggest_loguniform('critic_lr', 1e-5, 1)
+    learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
     batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 128, 256])
     buffer_size = trial.suggest_categorical('memory_limit', [int(1e4), int(1e5), int(1e6)])
     noise_type = trial.suggest_categorical('noise_type', ['ornstein-uhlenbeck', 'normal', 'adaptive-param'])
@@ -318,7 +335,8 @@ def sample_ddpg_params(trial):
 
     hyperparams = {
         'gamma': gamma,
-        # 'actor_lr': actor_lr,
+        'actor_lr': learning_rate,
+        'critic_lr': learning_rate,
         'batch_size': batch_size,
         'memory_limit': buffer_size,
         'normalize_observations': normalize_observations,
@@ -328,6 +346,8 @@ def sample_ddpg_params(trial):
     if noise_type == 'adaptive-param':
         hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std,
                                                             desired_action_stddev=noise_std)
+        # Apply layer normalization when using parameter perturbation
+        hyperparams['policy_kwargs'] = dict(layer_norm=True)
     elif noise_type == 'normal':
         hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(trial.n_actions),
                                                         sigma=noise_std * np.ones(trial.n_actions))
@@ -337,10 +357,29 @@ def sample_ddpg_params(trial):
     return hyperparams
 
 
+def sample_her_params(trial):
+    """
+    Sampler for HER hyperparams.
+
+    :param trial: (optuna.trial)
+    :return: (dict)
+    """
+    if trial.model_class == SAC:
+        hyperparams = sample_sac_params(trial)
+    elif trial.model_class == DDPG:
+        hyperparams = sample_ddpg_params(trial)
+
+    hyperparams['random_exploration'] = trial.suggest_uniform('random_exploration', 0, 1)
+    hyperparams['n_sampled_goal'] = trial.suggest_categorical('n_sampled_goal', [1, 2, 4, 6, 8])
+
+    return hyperparams
+
+
 HYPERPARAMS_SAMPLER = {
     'ppo2': sample_ppo2_params,
     'sac': sample_sac_params,
     'a2c': sample_a2c_params,
     'trpo': sample_trpo_params,
-    'ddpg': sample_ddpg_params
+    'ddpg': sample_ddpg_params,
+    'her': sample_her_params
 }

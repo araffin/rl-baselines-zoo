@@ -1,14 +1,16 @@
-# Not working yet
+# Tuned
 MountainCarContinuous-v0:
-  n_timesteps: !!float 1e6
+  n_timesteps: !!float 60000
   policy: 'MlpPolicy'
-  learning_rate: lin_3e-4
-  buffer_size: 1000000
+  learning_rate: !!float 3e-4
+  buffer_size: 50000
   batch_size: 64
   ent_coef: 'auto'
   train_freq: 1
   gradient_steps: 1
-  learning_starts: 10000
+  learning_starts: 0
+  noise_type: 'ornstein-uhlenbeck'
+  noise_std: 0.5
 
 Pendulum-v0:
   n_timesteps: !!float 60000
@@ -43,29 +45,49 @@ BipedalWalkerHardcore-v2:
   gradient_steps: 1
   learning_starts: 1000
 
+# Tuned
 HalfCheetahBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: !!float 2e6
   policy: 'CustomSACPolicy'
-  learning_rate: lin_3e-4
+  learning_rate: !!float 3e-4
   buffer_size: 1000000
-  batch_size: 64
+  batch_size: 256
+  ent_coef: 'auto'
+  gamma: 0.98
+  train_freq: 1
+  tau: 0.01
+  gradient_steps: 1
+  learning_starts: 10000
+
+HalfCheetah-v2:
+  n_timesteps: !!float 1e6
+  policy: 'CustomSACPolicy'
+  learning_rate: !!float 3e-4
+  buffer_size: 1000000
+  batch_size: 256
   ent_coef: 'auto'
   train_freq: 1
   gradient_steps: 1
   learning_starts: 10000
 
+# Tuned
 AntBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: !!float 2e6
   policy: 'CustomSACPolicy'
-  learning_rate: lin_3e-4
+  learning_rate: !!float 3e-4
   buffer_size: 1000000
   batch_size: 256
-  ent_coef: 0.01
+  ent_coef: 'auto'
+  gamma: 0.98
   train_freq: 1
+  tau: 0.01
   gradient_steps: 1
-  learning_starts: 1000
+  learning_starts: 10000
 
 HopperBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: !!float 2e6
   policy: 'CustomSACPolicy'
   learning_rate: lin_3e-4
@@ -77,6 +99,7 @@ HopperBulletEnv-v0:
   learning_starts: 1000
 
 Walker2DBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: !!float 2e6
   policy: 'CustomSACPolicy'
   learning_rate: lin_3e-4

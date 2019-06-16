@@ -5,7 +5,7 @@ import gym
 import numpy as np
 from stable_baselines.common.vec_env import VecVideoRecorder, VecFrameStack, VecNormalize
 
-from .utils import ALGOS, create_test_env, get_saved_hyperparams
+from .utils import ALGOS, create_test_env, get_saved_hyperparams, get_latest_run_id
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', help='environment ID', type=str, default='CartPole-v1')
@@ -22,6 +22,8 @@ parser.add_argument('--deterministic', action='store_true', default=False,
 parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
 parser.add_argument('--no-render', action='store_true', default=False,
                     help='Do not render the environment (useful for tests)')
+parser.add_argument('--exp-id', help='Experiment ID (default: -1, no exp folder, 0: latest)', default=-1,
+                    type=int)
 args = parser.parse_args()
 
 env_id = args.env
@@ -33,7 +35,15 @@ deterministic = args.deterministic
 video_length = args.n_timesteps
 n_envs = args.n_envs
 
-log_path = os.path.join(folder, algo)
+if args.exp_id == 0:
+    args.exp_id = get_latest_run_id(os.path.join(folder, algo), env_id)
+    print('Loading latest experiment, id={}'.format(args.exp_id))
+# Sanity checks
+if args.exp_id > 0:
+    log_path = os.path.join(folder, algo, '{}_{}'.format(env_id, args.exp_id))
+else:
+    log_path = os.path.join(folder, algo)
+
 model_path = "{}/{}.pkl".format(log_path, env_id)
 
 stats_path = os.path.join(log_path, env_id)

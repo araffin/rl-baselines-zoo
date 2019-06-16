@@ -58,7 +58,7 @@ Note: when training TRPO, you have to use `mpirun` to enable multiprocessing:
 mpirun -n 16 python train.py --algo trpo --env BreakoutNoFrameskip-v4
 ```
 
-## Hyperparameter Optimization
+## Hyperparameter Tuning
 
 We use [Optuna](https://optuna.org/) for optimizing the hyperparameters.
 
@@ -68,7 +68,7 @@ when using SuccessiveHalvingPruner ("halving"), you must specify `--n-jobs > 1`
 Budget of 1000 trials with a maximum of 50000 steps:
 
 ```
-python -m train.py --algo ppo2 --env MountainCar-v0 -n 50000 -optimize --n-trials 1000 --n-jobs 2 \
+python train.py --algo ppo2 --env MountainCar-v0 -n 50000 -optimize --n-trials 1000 --n-jobs 2 \
   --sampler random --pruner median
 ```
 
@@ -120,7 +120,7 @@ Additional Atari Games (to be completed):
 | PPO2     | :heavy_check_mark: | :heavy_check_mark:  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:  |
 | DQN      | :heavy_check_mark: | :heavy_check_mark:  |:heavy_check_mark:| N/A | N/A  |
 | DDPG     |  N/A |  N/A  | N/A| :heavy_check_mark: | :heavy_check_mark:  |
-| SAC      |  N/A |  N/A  | N/A| :heavy_check_mark: |   |
+| SAC      |  N/A |  N/A  | N/A| :heavy_check_mark: | :heavy_check_mark: |
 | TRPO     | :heavy_check_mark: | :heavy_check_mark: |  | :heavy_check_mark: | :heavy_check_mark: |
 
 
@@ -181,13 +181,12 @@ Note that you need to specify --gym-packages gym_minigrid with enjoy.py and trai
 
 ```
 pip install gym-minigrid
-python -m train.py --algo ppo2 --env MiniGrid-DoorKey-5x5-v0 \
-       --gym-packages gym_minigrid
+python train.py --algo ppo2 --env MiniGrid-DoorKey-5x5-v0 --gym-packages gym_minigrid
 ```
 
 This does the same thing as:
 
-```
+```python
 import gym_minigrid
 ```
 

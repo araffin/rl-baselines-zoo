@@ -15,7 +15,7 @@ from stable_baselines.common.policies import register_policy
 from stable_baselines.sac.policies import FeedForwardPolicy as SACPolicy
 from stable_baselines.bench import Monitor
 from stable_baselines import logger
-from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, DDPG, TRPO, SAC
+from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, HER, DDPG, TRPO, SAC
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize, \
     VecFrameStack, SubprocVecEnv
 from stable_baselines.common.cmd_util import make_atari_env
@@ -27,6 +27,7 @@ ALGOS = {
     'acktr': ACKTR,
     'dqn': DQN,
     'ddpg': DDPG,
+    'her': HER,
     'sac': SAC,
     'ppo2': PPO2,
     'trpo': TRPO
@@ -74,18 +75,18 @@ def get_wrapper_class(hyperparams):
     "env_wrapper".
     e.g.
     env_wrapper: gym_minigrid.wrappers.FlatObsWrapper
-    
-    :param hyperparams: (dict) 
+
+    :param hyperparams: (dict)
     :return: a subclass of gym.Wrapper (class object) you can use to
              create another Gym env giving an original env.
     """
-    
+
     def get_module_name(fullname):
         return '.'.join(wrapper_name.split('.')[:-1])
-    
+
     def get_class_name(fullname):
         return wrapper_name.split('.')[-1]
-    
+
     if 'env_wrapper' in hyperparams.keys():
         wrapper_name = hyperparams.get('env_wrapper')
         wrapper_module = importlib.import_module(get_module_name(wrapper_name))
@@ -98,7 +99,7 @@ def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None):
     """
     Helper function to multiprocess training
     and log the progress.
-    
+
     :param env_id: (str)
     :param rank: (int)
     :param seed: (int)
@@ -113,13 +114,13 @@ def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None):
     def _init():
         set_global_seeds(seed + rank)
         env = gym.make(env_id)
-        
+
         # Dict observation space is currently not supported.
         # https://github.com/hill-a/stable-baselines/issues/321
         # We allow a Gym env wrapper (a subclass of gym.Wrapper)
         if wrapper_class:
             env = wrapper_class(env)
-        
+
         env.seed(seed + rank)
         env = Monitor(env, os.path.join(log_dir, str(rank)), allow_early_resets=True)
         return env
@@ -156,7 +157,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
     env_wrapper = get_wrapper_class(hyperparams)
     if 'env_wrapper' in hyperparams.keys():
         del hyperparams['env_wrapper']
-    
+
     if is_atari:
         print("Using Atari wrapper")
         env = make_atari_env(env_id, num_env=n_envs, seed=seed)

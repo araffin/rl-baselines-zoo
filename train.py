@@ -15,6 +15,10 @@ except ImportError:
     pybullet_envs = None
 import numpy as np
 import yaml
+try:
+    import highway_env
+except ImportError:
+    highway_env = None
 from mpi4py import MPI
 
 from stable_baselines.common import set_global_seeds
@@ -45,9 +49,9 @@ if __name__ == '__main__':
                         help='Run hyperparameters search')
     parser.add_argument('--n-jobs', help='Number of parallel jobs when optimizing hyperparameters', type=int, default=1)
     parser.add_argument('--sampler', help='Sampler to use when optimizing hyperparameters', type=str,
-                        default='tpe', choices=['random', 'tpe'])
+                        default='random', choices=['random', 'tpe'])
     parser.add_argument('--pruner', help='Pruner to use when optimizing hyperparameters', type=str,
-                        default='none', choices=['halving', 'median', 'none'])
+                        default='median', choices=['halving', 'median', 'none'])
     parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                         type=int)
     parser.add_argument('--gym-packages', type=str, nargs='+', default=[], help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
@@ -56,7 +60,7 @@ if __name__ == '__main__':
     # Going through custom gym packages to let them register in the global registory
     for env_module in args.gym_packages:
         importlib.import_module(env_module)
-    
+
     env_ids = args.env
     registered_envs = set(gym.envs.registry.env_specs.keys())
 
@@ -84,6 +88,7 @@ if __name__ == '__main__':
         args.seed += rank
         if rank != 0:
             args.verbose = 0
+            args.tensorboard_log = ''
 
     for env_id in env_ids:
         tensorboard_log = None if args.tensorboard_log == '' else os.path.join(args.tensorboard_log, env_id)
@@ -107,6 +112,14 @@ if __name__ == '__main__':
         # Sort hyperparams that will be saved
         saved_hyperparams = OrderedDict([(key, hyperparams[key]) for key in sorted(hyperparams.keys())])
 
+        algo_ = args.algo
+        # HER is only a wrapper around an algo
+        if args.algo == 'her':
+            algo_ = saved_hyperparams['model_class']
+            assert algo_ in {'sac', 'ddpg', 'dqn'}, "{} is not compatible with HER".format(algo_)
+            # Retrieve the model class
+            hyperparams['model_class'] = ALGOS[saved_hyperparams['model_class']]
+
         if args.verbose > 0:
             pprint(saved_hyperparams)
 
@@ -116,7 +129,7 @@ if __name__ == '__main__':
             print("Using {} environments".format(n_envs))
 
         # Create learning rate schedules for ppo2 and sac
-        if args.algo in ["ppo2", "sac"]:
+        if algo_ in ["ppo2", "sac"]:
             for key in ['learning_rate', 'cliprange']:
                 if key not in hyperparams:
                     continue
@@ -159,7 +172,7 @@ if __name__ == '__main__':
         env_wrapper = get_wrapper_class(hyperparams)
         if 'env_wrapper' in hyperparams.keys():
             del hyperparams['env_wrapper']
-        
+
         def create_env(n_envs):
             """
             Create the environment and wrap it if necessary
@@ -174,12 +187,13 @@ if __name__ == '__main__':
                 env = make_atari_env(env_id, num_env=n_envs, seed=args.seed)
                 # Frame-stacking with 4 frames
                 env = VecFrameStack(env, n_stack=4)
-            elif args.algo in ['dqn', 'ddpg']:
+            elif algo_ in ['dqn', 'ddpg']:
                 if hyperparams.get('normalize', False):
                     print("WARNING: normalization not supported yet for DDPG/DQN")
-                # No env_wrapper applied for now as not using make_env()
                 env = gym.make(env_id)
                 env.seed(args.seed)
+                if env_wrapper is not None:
+                    env = env_wrapper(env)
             else:
                 if n_envs == 1:
                     env = DummyVecEnv([make_env(env_id, 0, args.seed, wrapper_class=env_wrapper)])
@@ -189,7 +203,10 @@ if __name__ == '__main__':
                     env = DummyVecEnv([make_env(env_id, i, args.seed, wrapper_class=env_wrapper) for i in range(n_envs)])
                 if normalize:
                     if args.verbose > 0:
-                        print("Normalizing input and return")
+                        if len(normalize_kwargs) > 0:
+                            print("Normalization activated: {}".format(normalize_kwargs))
+                        else:
+                            print("Normalizing input and reward")
                     env = VecNormalize(env, **normalize_kwargs)
             # Optional Frame-stacking
             if hyperparams.get('frame_stack', False):
@@ -205,12 +222,13 @@ if __name__ == '__main__':
         if args.optimize_hyperparameters and n_envs > 1:
             env.close()
 
-        # Parse noise string for DDPG
-        if args.algo == 'ddpg' and hyperparams.get('noise_type') is not None:
+        # Parse noise string for DDPG and SAC
+        if algo_ in ['ddpg', 'sac'] and hyperparams.get('noise_type') is not None:
             noise_type = hyperparams['noise_type'].strip()
             noise_std = hyperparams['noise_std']
             n_actions = env.action_space.shape[0]
             if 'adaptive-param' in noise_type:
+                assert algo_ == 'ddpg', 'Parameter is not supported by SAC'
                 hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std,
                                                                     desired_action_stddev=noise_std)
             elif 'normal' in noise_type:
