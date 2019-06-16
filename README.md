@@ -186,7 +186,7 @@ python train.py --algo ppo2 --env MiniGrid-DoorKey-5x5-v0 --gym-packages gym_min
 
 This does the same thing as:
 
-```
+```python
 import gym_minigrid
 ```
 

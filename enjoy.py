@@ -8,7 +8,10 @@ import importlib
 # For pybullet envs
 warnings.filterwarnings("ignore")
 import gym
-import pybullet_envs
+try:
+    import pybullet_envs
+except ImportError:
+    pybullet_envs = None
 import numpy as np
 try:
     import highway_env
