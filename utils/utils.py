@@ -141,7 +141,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
     :param seed: (int) Seed for random number generator
     :param log_dir: (str) Where to log rewards
     :param should_render: (bool) For Pybullet env, display the GUI
-    :param env_wrapper: (type) A subclass of gym.Wrapper to wrap the orignal
+    :param env_wrapper: (type) A subclass of gym.Wrapper to wrap the original
                         env with
     :param hyperparams: (dict) Additional hyperparams (ex: n_stack)
     :return: (gym.Env)
