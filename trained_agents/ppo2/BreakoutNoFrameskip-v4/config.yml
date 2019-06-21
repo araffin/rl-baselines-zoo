@@ -1,0 +1,12 @@
+!!python/object/apply:collections.OrderedDict
+- - [cliprange, lin_0.1]
+  - [cliprange_vf, -1]
+  - [ent_coef, 0.01]
+  - [learning_rate, lin_2.5e-4]
+  - [n_envs, 8]
+  - [n_steps, 128]
+  - [n_timesteps, 10000000.0]
+  - [nminibatches, 4]
+  - [noptepochs, 4]
+  - [policy, CnnPolicy]
+  - [vf_coef, 0.5]

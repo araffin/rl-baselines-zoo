@@ -130,17 +130,20 @@ if __name__ == '__main__':
 
         # Create learning rate schedules for ppo2 and sac
         if algo_ in ["ppo2", "sac"]:
-            for key in ['learning_rate', 'cliprange']:
+            for key in ['learning_rate', 'cliprange', 'cliprange_vf']:
                 if key not in hyperparams:
                     continue
                 if isinstance(hyperparams[key], str):
                     schedule, initial_value = hyperparams[key].split('_')
                     initial_value = float(initial_value)
                     hyperparams[key] = linear_schedule(initial_value)
-                elif isinstance(hyperparams[key], float):
-                    hyperparams[key] = constfn(hyperparams[key])
+                elif isinstance(hyperparams[key], (float, int)):
+                    # Negative value: ignore (ex: for clipping)
+                    if hyperparams[key] < 0:
+                        continue
+                    hyperparams[key] = constfn(float(hyperparams[key]))
                 else:
-                    raise ValueError('Invalid valid for {}: {}'.format(key, hyperparams[key]))
+                    raise ValueError('Invalid value for {}: {}'.format(key, hyperparams[key]))
 
         # Should we overwrite the number of timesteps?
         if args.n_timesteps > 0:

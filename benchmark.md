@@ -68,7 +68,7 @@
 |ppo2 |BeamRiderNoFrameskip-v4            |   1691.072|   904.484|     149975|        69|
 |ppo2 |BipedalWalker-v2                   |    265.939|    80.994|     149968|       159|
 |ppo2 |BipedalWalkerHardcore-v2           |    166.481|   119.300|     149509|       154|
-|ppo2 |BreakoutNoFrameskip-v4             |    228.594|   141.964|     150921|       101|
+|ppo2 |BreakoutNoFrameskip-v4             |    388.739|    46.497|     150021|        23|
 |ppo2 |CartPole-v1                        |    500.000|     0.000|     150000|       300|
 |ppo2 |EnduroNoFrameskip-v4               |    643.824|   205.988|     149683|        17|
 |ppo2 |HalfCheetahBulletEnv-v0            |   3195.326|   115.730|     150000|       150|
@@ -89,7 +89,7 @@
 |ppo2 |ReacherBulletEnv-v0                |     17.879|     9.780|     150000|      1000|
 |ppo2 |SeaquestNoFrameskip-v4             |   1782.687|    80.883|     150535|        67|
 |ppo2 |SpaceInvadersNoFrameskip-v4        |    689.631|   202.143|     150081|       176|
-|ppo2 |Walker2DBulletEnv-v0               |   1276.848|   504.586|     149959|       179|
+|ppo2 |Walker2DBulletEnv-v0               |   2079.798|   490.527|     149123|       158|
 |sac  |AntBulletEnv-v0                    |   3485.228|    29.964|     150000|       150|
 |sac  |BipedalWalker-v2                   |    307.198|     1.055|     149794|       175|
 |sac  |BipedalWalkerHardcore-v2           |    100.802|   117.769|     148974|        84|
