@@ -99,17 +99,18 @@ LunarLanderContinuous-v2:
 
 # 1 env
 HalfCheetahBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
-  timesteps_per_batch: 256
-  max_kl: 0.001
+  timesteps_per_batch: 1024
+  max_kl: 0.05
   cg_iters: 10
-  cg_damping: 0.057
-  entcoeff: 0.0013
-  gamma: 0.98
-  lam: 1.0
-  vf_iters: 1
-  vf_stepsize: 0.02
+  cg_damping: 0.1
+  entcoeff: 0.0
+  gamma: 0.99
+  lam: 0.95
+  vf_iters: 5
+  vf_stepsize: !!float 1e-3
 
 AntBulletEnv-v0:
   n_timesteps: !!float 1e6
