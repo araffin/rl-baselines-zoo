@@ -97,14 +97,14 @@ LunarLanderContinuous-v2:
   vf_iters: 5
   vf_stepsize: !!float 1e-3
 
-# 1 env
+# Tuned
 HalfCheetahBulletEnv-v0:
   env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
-  timesteps_per_batch: 1024
-  max_kl: 0.05
-  cg_iters: 10
+  timesteps_per_batch: 2048
+  max_kl: 0.01
+  cg_iters: 15
   cg_damping: 0.1
   entcoeff: 0.0
   gamma: 0.99
@@ -112,28 +112,76 @@ HalfCheetahBulletEnv-v0:
   vf_iters: 5
   vf_stepsize: !!float 1e-3
 
+# Tuned
 AntBulletEnv-v0:
-  n_timesteps: !!float 1e6
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
   timesteps_per_batch: 2048
   max_kl: 0.01
-  cg_iters: 20
-  cg_damping: 0.00086
+  cg_iters: 15
+  cg_damping: 0.1
   entcoeff: 0.0
   gamma: 0.99
   lam: 0.95
-  vf_iters: 10
-  vf_stepsize: 0.0014
+  vf_iters: 5
+  vf_stepsize: !!float 1e-3
 
 Walker2DBulletEnv-v0:
-  n_timesteps: !!float 1e6
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
   timesteps_per_batch: 2048
   max_kl: 0.01
-  cg_iters: 20
-  cg_damping: 0.00086
+  cg_iters: 15
+  cg_damping: 0.1
   entcoeff: 0.0
   gamma: 0.99
   lam: 0.95
-  vf_iters: 10
-  vf_stepsize: 0.0014
+  vf_iters: 5
+  vf_stepsize: !!float 1e-3
+
+# To be tuned
+HopperBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  timesteps_per_batch: 2048
+  max_kl: 0.01
+  cg_iters: 15
+  cg_damping: 0.1
+  entcoeff: 0.0
+  gamma: 0.99
+  lam: 0.95
+  vf_iters: 5
+  vf_stepsize: !!float 1e-3
+
+# To be tuned
+BipedalWalker-v2:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  n_timesteps: !!float 5e6
+  policy: 'MlpPolicy'
+  timesteps_per_batch: 2048
+  max_kl: 0.01
+  cg_iters: 15
+  cg_damping: 0.1
+  entcoeff: 0.001
+  gamma: 0.99
+  lam: 0.95
+  vf_iters: 5
+  vf_stepsize: !!float 1e-3
+
+# To be tuned
+BipedalWalkerHardcore-v2:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  n_timesteps: !!float 5e7
+  policy: 'MlpPolicy'
+  timesteps_per_batch: 2048
+  max_kl: 0.01
+  cg_iters: 15
+  cg_damping: 0.1
+  entcoeff: 0.001
+  gamma: 0.99
+  lam: 0.95
+  vf_iters: 5
+  vf_stepsize: !!float 1e-3
