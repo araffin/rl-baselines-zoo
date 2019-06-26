@@ -150,7 +150,7 @@ Note: those environments are derived from [Roboschool](https://github.com/openai
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
 | DDPG     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | | | |
 | SAC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| TRPO     |  | :heavy_check_mark: |  |  |  |  |
+| TRPO     |  | :heavy_check_mark: | :heavy_check_mark: |  |  |  |
 
 PyBullet Envs (Continued)
 

@@ -1,0 +1,13 @@
+!!python/object/apply:collections.OrderedDict
+- - [cg_damping, 0.1]
+  - [cg_iters, 15]
+  - [entcoeff, 0.0]
+  - [env_wrapper, utils.wrappers.TimeFeatureWrapper]
+  - [gamma, 0.99]
+  - [lam, 0.95]
+  - [max_kl, 0.01]
+  - [n_timesteps, 2000000.0]
+  - [policy, MlpPolicy]
+  - [timesteps_per_batch, 2048]
+  - [vf_iters, 5]
+  - [vf_stepsize, 0.001]
