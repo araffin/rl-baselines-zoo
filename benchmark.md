@@ -107,8 +107,10 @@
 |trpo |BipedalWalker-v2                   |    302.025|    67.128|     149373|       166|
 |trpo |CartPole-v1                        |    485.392|    70.505|     149986|       309|
 |trpo |HalfCheetahBulletEnv-v0            |   2908.352|   474.443|     150000|       150|
+|trpo |HopperBulletEnv-v0                 |   2451.903|   443.045|     149179|       156|
 |trpo |LunarLander-v2                     |    149.313|   108.546|     149893|       320|
 |trpo |LunarLanderContinuous-v2           |     64.619|    94.377|     149127|       181|
 |trpo |MountainCar-v0                     |   -144.537|    33.584|     149885|      1037|
 |trpo |MountainCarContinuous-v0           |     93.428|     1.509|     149998|      1067|
 |trpo |Pendulum-v0                        |   -176.951|    97.098|     150000|       750|
+

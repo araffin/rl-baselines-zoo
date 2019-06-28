@@ -111,6 +111,11 @@ with open("{}/benchmark.md".format(args.benchmark_dir), "w") as f:
     writer.write_table()
 print("Results written to:", "{}/benchmark.md".format(args.benchmark_dir))
 
+# Update root benchmark file
+with open("benchmark.md", "w") as f:
+    writer.stream = f
+    writer.write_table()
+
 # Alternatively, to dump as csv file:
 # results_df.to_csv('{}/benchmark.csv'.format(args.benchmark_dir), sep=",", index=False)
 # print("Saved results to {}/benchmark.csv".format(args.benchmark_dir))
