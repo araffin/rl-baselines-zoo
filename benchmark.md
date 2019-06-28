@@ -113,4 +113,5 @@
 |trpo |MountainCar-v0                     |   -144.537|    33.584|     149885|      1037|
 |trpo |MountainCarContinuous-v0           |     93.428|     1.509|     149998|      1067|
 |trpo |Pendulum-v0                        |   -176.951|    97.098|     150000|       750|
+|trpo |Walker2DBulletEnv-v0               |   2148.408|   651.075|     149766|       165|
 
