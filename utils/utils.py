@@ -15,7 +15,7 @@ from stable_baselines.common.policies import register_policy
 from stable_baselines.sac.policies import FeedForwardPolicy as SACPolicy
 from stable_baselines.bench import Monitor
 from stable_baselines import logger
-from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, HER, DDPG, TRPO, SAC
+from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, HER, DDPG, TRPO, SAC, TD3
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize, \
     VecFrameStack, SubprocVecEnv
 from stable_baselines.common.cmd_util import make_atari_env
@@ -30,7 +30,8 @@ ALGOS = {
     'her': HER,
     'sac': SAC,
     'ppo2': PPO2,
-    'trpo': TRPO
+    'trpo': TRPO,
+    'td3': TD3
 }
 
 

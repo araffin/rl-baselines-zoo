@@ -116,7 +116,7 @@ if __name__ == '__main__':
         # HER is only a wrapper around an algo
         if args.algo == 'her':
             algo_ = saved_hyperparams['model_class']
-            assert algo_ in {'sac', 'ddpg', 'dqn'}, "{} is not compatible with HER".format(algo_)
+            assert algo_ in {'sac', 'ddpg', 'dqn', 'td3'}, "{} is not compatible with HER".format(algo_)
             # Retrieve the model class
             hyperparams['model_class'] = ALGOS[saved_hyperparams['model_class']]
 
@@ -129,7 +129,7 @@ if __name__ == '__main__':
             print("Using {} environments".format(n_envs))
 
         # Create learning rate schedules for ppo2 and sac
-        if algo_ in ["ppo2", "sac"]:
+        if algo_ in ["ppo2", "sac", "td3"]:
             for key in ['learning_rate', 'cliprange', 'cliprange_vf']:
                 if key not in hyperparams:
                     continue
@@ -226,7 +226,7 @@ if __name__ == '__main__':
             env.close()
 
         # Parse noise string for DDPG and SAC
-        if algo_ in ['ddpg', 'sac'] and hyperparams.get('noise_type') is not None:
+        if algo_ in ['ddpg', 'sac', 'td3'] and hyperparams.get('noise_type') is not None:
             noise_type = hyperparams['noise_type'].strip()
             noise_std = hyperparams['noise_std']
             n_actions = env.action_space.shape[0]
