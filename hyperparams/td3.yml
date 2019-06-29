@@ -5,12 +5,24 @@ HalfCheetahBulletEnv-v0:
   gamma: 0.99
   buffer_size: 1000000
   noise_type: 'normal'
-  noise_std: 0.2
+  noise_std: 0.1
   learning_starts: 10000
-  # batch_size: 256
-  # tau: 0.01
-  # policy_kwargs: "dict(layers=[256, 256])"
-  # batch_size: 100
-  # learning_rate: !!float 1e-3
-  # train_freq: 1
-  # gradient_steps: 1
+  batch_size: 100
+  learning_rate: !!float 1e-3
+  train_freq: 1000
+  gradient_steps: 1000
+  policy_kwargs: "dict(layers=[400, 300])"
+
+BipedalWalkerHardcore-v2:
+  n_timesteps: !!float 5e7
+  policy: 'MlpPolicy'
+  gamma: 0.99
+  buffer_size: 1000000
+  noise_type: 'normal'
+  noise_std: 0.1
+  learning_starts: 10000
+  batch_size: 100
+  learning_rate: !!float 1e-3
+  train_freq: 1000
+  gradient_steps: 1000
+  policy_kwargs: "dict(layers=[400, 300])"
