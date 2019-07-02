@@ -29,6 +29,8 @@ from stable_baselines.ppo2.ppo2 import constfn
 
 from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class
 from utils.hyperparams_opt import hyperparam_optimization
+from utils.noise import LinearNormalActionNoise
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -235,8 +237,14 @@ if __name__ == '__main__':
                 hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std,
                                                                     desired_action_stddev=noise_std)
             elif 'normal' in noise_type:
-                hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(n_actions),
-                                                                sigma=noise_std * np.ones(n_actions))
+                if 'lin' in noise_type:
+                    hyperparams['action_noise'] = LinearNormalActionNoise(mean=np.zeros(n_actions),
+                                                                          sigma=noise_std * np.ones(n_actions),
+                                                                          final_sigma=hyperparams.get('noise_std_final', 0.0) * np.ones(n_actions),
+                                                                          max_steps=n_timesteps)
+                else:
+                    hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(n_actions),
+                                                                    sigma=noise_std * np.ones(n_actions))
             elif 'ornstein-uhlenbeck' in noise_type:
                 hyperparams['action_noise'] = OrnsteinUhlenbeckActionNoise(mean=np.zeros(n_actions),
                                                                            sigma=noise_std * np.ones(n_actions))
