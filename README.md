@@ -82,7 +82,7 @@ python -m utils.record_video --algo ppo2 --env BipedalWalkerHardcore-v2 -n 1000
 ```
 
 
-## Current Collection: 100+ Trained Agents!
+## Current Collection: 120+ Trained Agents!
 
 Scores can be found in `benchmark.md`. To compute them, simply run `python -m utils.benchmark`.
 
@@ -148,9 +148,9 @@ Note: those environments are derived from [Roboschool](https://github.com/openai
 
 |  RL Algo |  Walker2D | HalfCheetah | Ant | Reacher |  Hopper | Humanoid |
 |----------|-----------|-------------|-----|---------|---------|----------|
-| A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: | | |
+| A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: | |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
-| DDPG     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | | | |
+| DDPG     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | | |
 | SAC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | TD3      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: | |
 | TRPO     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: | |

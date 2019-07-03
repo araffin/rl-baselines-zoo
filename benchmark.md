@@ -103,6 +103,13 @@
 |sac  |Pendulum-v0                        |   -159.669|    86.665|     150000|       750|
 |sac  |ReacherBulletEnv-v0                |     17.529|     9.860|     150000|      1000|
 |sac  |Walker2DBulletEnv-v0               |   2052.646|    13.631|     150000|       150|
+|td3  |AntBulletEnv-v0                    |   3269.021|    60.697|     150000|       150|
+|td3  |HalfCheetahBulletEnv-v0            |   3160.318|    15.284|     150000|       150|
+|td3  |HopperBulletEnv-v0                 |   2743.910|    20.159|     150000|       150|
+|td3  |LunarLanderContinuous-v2           |    228.425|    74.201|     149947|       485|
+|td3  |MountainCarContinuous-v0           |     93.940|     0.235|     149959|      2226|
+|td3  |Pendulum-v0                        |   -148.985|    84.155|     150000|       750|
+|td3  |Walker2DBulletEnv-v0               |   2158.333|     9.240|     150000|       150|
 |trpo |AntBulletEnv-v0                    |   2977.926|    33.105|     150000|       150|
 |trpo |BipedalWalker-v2                   |    302.025|    67.128|     149373|       166|
 |trpo |CartPole-v1                        |    485.392|    70.505|     149986|       309|
