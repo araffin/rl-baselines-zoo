@@ -245,6 +245,7 @@ if __name__ == '__main__':
                 else:
                     hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(n_actions),
                                                                     sigma=noise_std * np.ones(n_actions))
+                print(hyperparams['action_noise'])                                                        
             elif 'ornstein-uhlenbeck' in noise_type:
                 hyperparams['action_noise'] = OrnsteinUhlenbeckActionNoise(mean=np.zeros(n_actions),
                                                                            sigma=noise_std * np.ones(n_actions))
@@ -253,6 +254,8 @@ if __name__ == '__main__':
             print("Applying {} noise with std {}".format(noise_type, noise_std))
             del hyperparams['noise_type']
             del hyperparams['noise_std']
+            if 'noise_std_final' in hyperparams:
+                del hyperparams['noise_std_final']
 
         if args.trained_agent.endswith('.pkl') and os.path.isfile(args.trained_agent):
             # Continue training

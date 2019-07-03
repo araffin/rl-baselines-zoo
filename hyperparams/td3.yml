@@ -1,14 +1,15 @@
 MountainCarContinuous-v0:
-  n_timesteps: 100000
+  n_timesteps: 300000
   policy: 'MlpPolicy'
   noise_type: 'ornstein-uhlenbeck'
   noise_std: 0.5
 
 Pendulum-v0:
-  n_timesteps: 80000
+  n_timesteps: 100000
   policy: 'MlpPolicy'
   noise_type: 'normal'
   noise_std: 0.1
+  learning_starts: 1000
 
 LunarLanderContinuous-v2:
   n_timesteps: !!float 3e5
@@ -48,13 +49,60 @@ HalfCheetahBulletEnv-v0:
   gradient_steps: 1000
   policy_kwargs: "dict(layers=[400, 300])"
 
+# To be tuned
 BipedalWalkerHardcore-v2:
   n_timesteps: !!float 5e7
   policy: 'MlpPolicy'
   gamma: 0.99
   buffer_size: 1000000
   noise_type: 'normal'
+  noise_std: 0.2
+  learning_starts: 10000
+  batch_size: 100
+  learning_rate: 1e-3
+  train_freq: 1000
+  gradient_steps: 1000
+  policy_kwargs: "dict(layers=[400, 300])"
+
+AntBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  gamma: 0.99
+  buffer_size: 1000000
+  noise_type: 'normal'
+  noise_std: 0.2
+  learning_starts: 10000
+  batch_size: 100
+  learning_rate: !!float 1e-3
+  train_freq: 1000
+  gradient_steps: 1000
+  policy_kwargs: "dict(layers=[400, 300])"
+
+HopperBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  gamma: 0.99
+  buffer_size: 1000000
+  noise_type: 'normal'
+  noise_std: 0.2
+  learning_starts: 10000
+  batch_size: 100
+  learning_rate: !!float 1e-3
+  train_freq: 1000
+  gradient_steps: 1000
+  policy_kwargs: "dict(layers=[400, 300])"
+
+Walker2DBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  gamma: 0.99
+  buffer_size: 1000000
+  noise_type: 'normal'
   noise_std: 0.1
+  noise_std_final: 0.05
   learning_starts: 10000
   batch_size: 100
   learning_rate: !!float 1e-3

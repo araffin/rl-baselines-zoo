@@ -1,0 +1,5 @@
+!!python/object/apply:collections.OrderedDict
+- - [n_timesteps, 300000]
+  - [noise_std, 0.5]
+  - [noise_type, ornstein-uhlenbeck]
+  - [policy, MlpPolicy]
