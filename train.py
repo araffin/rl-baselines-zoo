@@ -51,9 +51,9 @@ if __name__ == '__main__':
                         help='Run hyperparameters search')
     parser.add_argument('--n-jobs', help='Number of parallel jobs when optimizing hyperparameters', type=int, default=1)
     parser.add_argument('--sampler', help='Sampler to use when optimizing hyperparameters', type=str,
-                        default='random', choices=['random', 'tpe'])
+                        default='skopt', choices=['random', 'tpe', 'skopt'])
     parser.add_argument('--pruner', help='Pruner to use when optimizing hyperparameters', type=str,
-                        default='median', choices=['halving', 'median', 'none'])
+                        default='none', choices=['halving', 'median', 'none'])
     parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                         type=int)
     parser.add_argument('--gym-packages', type=str, nargs='+', default=[], help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
@@ -245,7 +245,6 @@ if __name__ == '__main__':
                 else:
                     hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(n_actions),
                                                                     sigma=noise_std * np.ones(n_actions))
-                print(hyperparams['action_noise'])                                                        
             elif 'ornstein-uhlenbeck' in noise_type:
                 hyperparams['action_noise'] = OrnsteinUhlenbeckActionNoise(mean=np.zeros(n_actions),
                                                                            sigma=noise_std * np.ones(n_actions))

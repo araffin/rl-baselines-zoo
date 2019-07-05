@@ -4,6 +4,7 @@ import numpy as np
 import optuna
 from optuna.pruners import SuccessiveHalvingPruner, MedianPruner
 from optuna.samplers import RandomSampler, TPESampler
+from optuna.integration.skopt import SkoptSampler
 from stable_baselines import SAC, DDPG
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.common.vec_env import VecNormalize, VecEnv
@@ -44,6 +45,11 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
         sampler = RandomSampler(seed=seed)
     elif sampler_method == 'tpe':
         sampler = TPESampler(n_startup_trials=5, seed=seed)
+    elif sampler_method == 'skopt':
+        # cf https://scikit-optimize.github.io/#skopt.Optimizer
+        # GP: gaussian process
+        # Gradient boosted regression: GBRT
+        sampler = SkoptSampler(skopt_kwargs={'base_estimator': "GP", 'acq_func': 'gp_hedge'})
     else:
         raise ValueError('Unknown sampler: {}'.format(sampler_method))
 
