@@ -15,9 +15,6 @@ N_STEPS = 100
 
 
 trained_models = get_trained_models(FOLDER)
-for key in list(trained_models.keys()):
-    if 'Fetch' in trained_models[key][1]:
-        del trained_models[key]
 
 @pytest.mark.parametrize("trained_model", trained_models.keys())
 def test_enjoy(trained_model):
@@ -29,6 +26,10 @@ def test_enjoy(trained_model):
         '--env', env_id,
         '--no-render'
     ]
+    
+    # Skip mujoco envs
+    if 'Fetch' in trained_model:
+        return
 
     if '-MiniGrid-' in trained_model:
         args = args + ['--gym-packages', 'gym_minigrid']
