@@ -1,0 +1,12 @@
+!!python/object/apply:collections.OrderedDict
+- - [batch_size, 256]
+  - [buffer_size, 1000000]
+  - [ent_coef, auto]
+  - [gamma, 0.95]
+  - [goal_selection_strategy, future]
+  - [learning_rate, 0.001]
+  - [learning_starts, 1000]
+  - [model_class, sac]
+  - [n_sampled_goal, 4]
+  - [n_timesteps, 20000.0]
+  - [policy, MlpPolicy]
