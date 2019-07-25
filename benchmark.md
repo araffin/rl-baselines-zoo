@@ -107,9 +107,12 @@
 |td3  |HalfCheetahBulletEnv-v0            |   3160.318|    15.284|     150000|       150|
 |td3  |HopperBulletEnv-v0                 |   2743.910|    20.159|     150000|       150|
 |td3  |HumanoidBulletEnv-v0               |   1638.081|   801.594|     149453|       182|
+|td3  |InvertedDoublePendulumBulletEnv-v0 |   9357.771|     0.510|     150000|       150|
+|td3  |InvertedPendulumSwingupBulletEnv-v0|    889.315|     1.265|     150000|       150|
 |td3  |LunarLanderContinuous-v2           |    228.425|    74.201|     149947|       485|
 |td3  |MountainCarContinuous-v0           |     93.940|     0.235|     149959|      2226|
 |td3  |Pendulum-v0                        |   -148.985|    84.155|     150000|       750|
+|td3  |ReacherBulletEnv-v0                |     19.299|     9.455|     150000|      1000|
 |td3  |Walker2DBulletEnv-v0               |   2158.333|     9.240|     150000|       150|
 |trpo |AntBulletEnv-v0                    |   2977.926|    33.105|     150000|       150|
 |trpo |BipedalWalker-v2                   |    302.025|    67.128|     149373|       166|
