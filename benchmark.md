@@ -106,6 +106,7 @@
 |td3  |AntBulletEnv-v0                    |   3269.021|    60.697|     150000|       150|
 |td3  |HalfCheetahBulletEnv-v0            |   3160.318|    15.284|     150000|       150|
 |td3  |HopperBulletEnv-v0                 |   2743.910|    20.159|     150000|       150|
+|td3  |HumanoidBulletEnv-v0               |   1638.081|   801.594|     149453|       182|
 |td3  |LunarLanderContinuous-v2           |    228.425|    74.201|     149947|       485|
 |td3  |MountainCarContinuous-v0           |     93.940|     0.235|     149959|      2226|
 |td3  |Pendulum-v0                        |   -148.985|    84.155|     150000|       750|
@@ -116,7 +117,7 @@
 |trpo |HalfCheetahBulletEnv-v0            |   2908.352|   474.443|     150000|       150|
 |trpo |HopperBulletEnv-v0                 |   2451.903|   443.045|     149179|       156|
 |trpo |LunarLander-v2                     |    149.313|   108.546|     149893|       320|
-|trpo |LunarLanderContinuous-v2           |     64.619|    94.377|     149127|       181|
+|trpo |LunarLanderContinuous-v2           |    161.822|   107.484|     149800|       355|
 |trpo |MountainCar-v0                     |   -144.537|    33.584|     149885|      1037|
 |trpo |MountainCarContinuous-v0           |     93.428|     1.509|     149998|      1067|
 |trpo |Pendulum-v0                        |   -176.951|    97.098|     150000|       750|

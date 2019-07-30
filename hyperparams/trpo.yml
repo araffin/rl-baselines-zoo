@@ -4,25 +4,12 @@ atari:
   n_timesteps: !!float 1e7
   policy: 'CnnPolicy'
   timesteps_per_batch: 512
-  max_kl: 0.01
-  cg_iters: 10
-  cg_damping: !!float 1e-3
-  entcoeff: 0.0
-  gamma: 0.99
-  lam: 0.98
-  vf_iters: 3
-  vf_stepsize: !!float 1e-4
-
-BreakoutNoFrameskip-v4:
-  n_timesteps: !!float 1e7
-  policy: 'CnnPolicy'
-  timesteps_per_batch: 128
   max_kl: 0.001
   cg_iters: 10
   cg_damping: !!float 1e-3
   entcoeff: 0.01
-  gamma: 0.99
-  lam: 0.98
+  gamma: 0.98
+  lam: 1
   vf_iters: 3
   vf_stepsize: !!float 1e-4
 
