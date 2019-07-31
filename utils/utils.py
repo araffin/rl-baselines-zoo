@@ -170,7 +170,11 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
     # Pybullet envs does not follow gym.render() interface
     elif "Bullet" in env_id:
         spec = gym.envs.registry.env_specs[env_id]
-        class_ = load(spec._entry_point)
+        try:
+            class_ = load(spec.entry_point)
+        except AttributeError:
+            # Backward compatibility with gym
+            class_ = load(spec._entry_point)
         # HACK: force SubprocVecEnv for Bullet env that does not
         # have a render argument
         render_name = None
