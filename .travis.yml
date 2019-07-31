@@ -12,4 +12,4 @@ install:
   - docker pull araffin/rl-baselines-zoo-cpu
 
 script:
-  - docker run -it --rm --network host --ipc=host --mount src=$(pwd),target=/root/code/stable-baselines,type=bind araffin/rl-baselines-zoo-cpu bash -c "cd /root/code/stable-baselines/ && python -m pytest --cov-config .coveragerc --cov-report term --cov=. -v tests/"
+  - docker run -it --rm --network host --ipc=host --mount src=$(pwd),target=/root/code/stable-baselines,type=bind araffin/rl-baselines-zoo-cpu bash -c "cd /root/code/stable-baselines/ && pip install git+https://github.com/pfnet/optuna.git && python -m pytest --cov-config .coveragerc --cov-report term --cov=. -v tests/"
