@@ -4,6 +4,7 @@ import numpy as np
 import optuna
 from optuna.pruners import SuccessiveHalvingPruner, MedianPruner
 from optuna.samplers import RandomSampler, TPESampler
+from optuna.integration.skopt import SkoptSampler
 from stable_baselines import SAC, DDPG
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.common.vec_env import VecNormalize, VecEnv
@@ -44,6 +45,11 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
         sampler = RandomSampler(seed=seed)
     elif sampler_method == 'tpe':
         sampler = TPESampler(n_startup_trials=5, seed=seed)
+    elif sampler_method == 'skopt':
+        # cf https://scikit-optimize.github.io/#skopt.Optimizer
+        # GP: gaussian process
+        # Gradient boosted regression: GBRT
+        sampler = SkoptSampler(skopt_kwargs={'base_estimator': "GP", 'acq_func': 'gp_hedge'})
     else:
         raise ValueError('Unknown sampler: {}'.format(sampler_method))
 
@@ -293,12 +299,13 @@ def sample_trpo_params(trial):
     :return: (dict)
     """
     gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
-    timesteps_per_batch = trial.suggest_categorical('timesteps_per_batch', [16, 32, 64, 128, 256, 512, 1024, 2048])
-    max_kl = trial.suggest_loguniform('max_kl', 0.00000001, 1)
+    timesteps_per_batch = trial.suggest_categorical('timesteps_per_batch', [16, 32, 64, 128, 256, 512, 1024, 2048, 4096])
+    max_kl = trial.suggest_loguniform('max_kl', 0.000001, 1)
     ent_coef = trial.suggest_loguniform('ent_coef', 0.00000001, 0.1)
     lam = trial.suggest_categorical('lamdba', [0.8, 0.9, 0.92, 0.95, 0.98, 0.99, 1.0])
-    cg_damping = trial.suggest_loguniform('cg_damping', 1e-5, 1)
-    cg_iters = trial.suggest_categorical('cg_iters', [1, 10, 20, 30, 50])
+    # cg_damping = trial.suggest_loguniform('cg_damping', 1e-5, 1)
+    cg_damping = 0.1
+    cg_iters = trial.suggest_categorical('cg_iters', [10, 15, 20, 30])
     vf_stepsize = trial.suggest_loguniform('vf_stepsize', 1e-5, 1)
     vf_iters = trial.suggest_categorical('vf_iters', [1, 3, 5, 10, 20])
 

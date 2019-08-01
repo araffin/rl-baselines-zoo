@@ -78,7 +78,7 @@ def main():
     assert os.path.isdir(log_path), "The {} folder was not found".format(log_path)
     assert os.path.isfile(model_path), "No model found for {} on {}, path: {}".format(algo, env_id, model_path)
 
-    if algo in ['dqn', 'ddpg', 'sac']:
+    if algo in ['dqn', 'ddpg', 'sac', 'td3']:
         args.n_envs = 1
 
     set_global_seeds(args.seed)
@@ -103,7 +103,7 @@ def main():
     obs = env.reset()
 
     # Force deterministic for DQN, DDPG, SAC and HER (that is a wrapper around)
-    deterministic = args.deterministic or algo in ['dqn', 'ddpg', 'sac', 'her'] and not args.stochastic
+    deterministic = args.deterministic or algo in ['dqn', 'ddpg', 'sac', 'her', 'td3'] and not args.stochastic
 
     episode_reward = 0.0
     episode_rewards = []

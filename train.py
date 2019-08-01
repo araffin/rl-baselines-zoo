@@ -29,6 +29,8 @@ from stable_baselines.ppo2.ppo2 import constfn
 
 from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class
 from utils.hyperparams_opt import hyperparam_optimization
+from utils.noise import LinearNormalActionNoise
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -49,9 +51,9 @@ if __name__ == '__main__':
                         help='Run hyperparameters search')
     parser.add_argument('--n-jobs', help='Number of parallel jobs when optimizing hyperparameters', type=int, default=1)
     parser.add_argument('--sampler', help='Sampler to use when optimizing hyperparameters', type=str,
-                        default='random', choices=['random', 'tpe'])
+                        default='skopt', choices=['random', 'tpe', 'skopt'])
     parser.add_argument('--pruner', help='Pruner to use when optimizing hyperparameters', type=str,
-                        default='median', choices=['halving', 'median', 'none'])
+                        default='none', choices=['halving', 'median', 'none'])
     parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                         type=int)
     parser.add_argument('--gym-packages', type=str, nargs='+', default=[], help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
@@ -116,7 +118,7 @@ if __name__ == '__main__':
         # HER is only a wrapper around an algo
         if args.algo == 'her':
             algo_ = saved_hyperparams['model_class']
-            assert algo_ in {'sac', 'ddpg', 'dqn'}, "{} is not compatible with HER".format(algo_)
+            assert algo_ in {'sac', 'ddpg', 'dqn', 'td3'}, "{} is not compatible with HER".format(algo_)
             # Retrieve the model class
             hyperparams['model_class'] = ALGOS[saved_hyperparams['model_class']]
 
@@ -129,18 +131,21 @@ if __name__ == '__main__':
             print("Using {} environments".format(n_envs))
 
         # Create learning rate schedules for ppo2 and sac
-        if algo_ in ["ppo2", "sac"]:
-            for key in ['learning_rate', 'cliprange']:
+        if algo_ in ["ppo2", "sac", "td3"]:
+            for key in ['learning_rate', 'cliprange', 'cliprange_vf']:
                 if key not in hyperparams:
                     continue
                 if isinstance(hyperparams[key], str):
                     schedule, initial_value = hyperparams[key].split('_')
                     initial_value = float(initial_value)
                     hyperparams[key] = linear_schedule(initial_value)
-                elif isinstance(hyperparams[key], float):
-                    hyperparams[key] = constfn(hyperparams[key])
+                elif isinstance(hyperparams[key], (float, int)):
+                    # Negative value: ignore (ex: for clipping)
+                    if hyperparams[key] < 0:
+                        continue
+                    hyperparams[key] = constfn(float(hyperparams[key]))
                 else:
-                    raise ValueError('Invalid valid for {}: {}'.format(key, hyperparams[key]))
+                    raise ValueError('Invalid value for {}: {}'.format(key, hyperparams[key]))
 
         # Should we overwrite the number of timesteps?
         if args.n_timesteps > 0:
@@ -223,7 +228,7 @@ if __name__ == '__main__':
             env.close()
 
         # Parse noise string for DDPG and SAC
-        if algo_ in ['ddpg', 'sac'] and hyperparams.get('noise_type') is not None:
+        if algo_ in ['ddpg', 'sac', 'td3'] and hyperparams.get('noise_type') is not None:
             noise_type = hyperparams['noise_type'].strip()
             noise_std = hyperparams['noise_std']
             n_actions = env.action_space.shape[0]
@@ -232,8 +237,14 @@ if __name__ == '__main__':
                 hyperparams['param_noise'] = AdaptiveParamNoiseSpec(initial_stddev=noise_std,
                                                                     desired_action_stddev=noise_std)
             elif 'normal' in noise_type:
-                hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(n_actions),
-                                                                sigma=noise_std * np.ones(n_actions))
+                if 'lin' in noise_type:
+                    hyperparams['action_noise'] = LinearNormalActionNoise(mean=np.zeros(n_actions),
+                                                                          sigma=noise_std * np.ones(n_actions),
+                                                                          final_sigma=hyperparams.get('noise_std_final', 0.0) * np.ones(n_actions),
+                                                                          max_steps=n_timesteps)
+                else:
+                    hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(n_actions),
+                                                                    sigma=noise_std * np.ones(n_actions))
             elif 'ornstein-uhlenbeck' in noise_type:
                 hyperparams['action_noise'] = OrnsteinUhlenbeckActionNoise(mean=np.zeros(n_actions),
                                                                            sigma=noise_std * np.ones(n_actions))
@@ -242,6 +253,8 @@ if __name__ == '__main__':
             print("Applying {} noise with std {}".format(noise_type, noise_std))
             del hyperparams['noise_type']
             del hyperparams['noise_std']
+            if 'noise_std_final' in hyperparams:
+                del hyperparams['noise_std_final']
 
         if args.trained_agent.endswith('.pkl') and os.path.isfile(args.trained_agent):
             # Continue training
