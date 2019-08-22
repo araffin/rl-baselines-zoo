@@ -1,5 +1,5 @@
 import numpy as np
-from stable_baselines.ddpg.noise import ActionNoise
+from stable_baselines.common.noise import ActionNoise
 
 
 class LinearNormalActionNoise(ActionNoise):
