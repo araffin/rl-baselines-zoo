@@ -48,6 +48,13 @@ for idx, trained_model in enumerate(trained_models.keys()):
     if algo in ['dqn', 'ddpg', 'sac']:
         n_envs = 1
         n_timesteps *= args.n_envs
+
+    # Comment out to becnhmark HER robotics env
+    # this requires a mujoco licence
+    if 'Fetch' in env_id:
+        print("Skipping mujoco env: {}".format(env_id))
+        continue
+
     reward_log = '{}/{}/'.format(args.benchmark_dir, trained_model)
     arguments = [
         '-n', str(n_timesteps),
