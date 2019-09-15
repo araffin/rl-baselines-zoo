@@ -6,7 +6,10 @@ import yaml
 import importlib
 
 import gym
-import pybullet_envs
+try:
+    import pybullet_envs
+except ImportError:
+    pybullet_envs = None
 from gym.envs.registration import load
 
 from stable_baselines.deepq.policies import FeedForwardPolicy
