@@ -63,7 +63,5 @@ HalfCheetahBulletEnv-v0:
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
   ent_coef: 0.0
-  n_steps: 256
   lr_schedule: 'linear'
   gamma: 0.99
-  learning_rate: 0.002
