@@ -32,3 +32,38 @@ Acrobot-v1:
   n_timesteps: !!float 5e5
   policy: 'MlpPolicy'
   ent_coef: 0.0
+
+Pendulum-v0:
+  n_envs: 8
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+  gamma: 0.95
+
+LunarLanderContinuous-v2:
+  normalize: true
+  n_envs: 16
+  n_timesteps: !!float 5e6
+  policy: 'MlpPolicy'
+  gamma: 0.999
+  ent_coef: 0.001
+  lr_schedule: 'linear'
+
+MountainCarContinuous-v0:
+  normalize: true
+  n_envs: 16
+  n_timesteps: !!float 1e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+
+HalfCheetahBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  normalize: true
+  n_envs: 4
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+  n_steps: 256
+  lr_schedule: 'linear'
+  gamma: 0.99
+  learning_rate: 0.002
