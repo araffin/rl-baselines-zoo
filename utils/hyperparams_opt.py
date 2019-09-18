@@ -254,6 +254,29 @@ def sample_a2c_params(trial):
         'vf_coef': vf_coef
     }
 
+def sample_acktr_params(trial):
+    """
+    Sampler for ACKTR hyperparams.
+
+    :param trial: (optuna.trial)
+    :return: (dict)
+    """
+    gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
+    n_steps = trial.suggest_categorical('n_steps', [64, 128, 256, 512, 1024, 2048])
+    lr_schedule = trial.suggest_categorical('lr_schedule', ['linear', 'constant'])
+    learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
+    ent_coef = trial.suggest_loguniform('ent_coef', 0.00000001, 0.1)
+    vf_coef = trial.suggest_uniform('vf_coef', 0, 1)
+
+    return {
+        'n_steps': n_steps,
+        'gamma': gamma,
+        'learning_rate': learning_rate,
+        'lr_schedule': lr_schedule,
+        'ent_coef': ent_coef,
+        'vf_coef': vf_coef
+    }
+
 
 def sample_sac_params(trial):
     """
@@ -388,5 +411,6 @@ HYPERPARAMS_SAMPLER = {
     'a2c': sample_a2c_params,
     'trpo': sample_trpo_params,
     'ddpg': sample_ddpg_params,
-    'her': sample_her_params
+    'her': sample_her_params,
+    'acktr': sample_acktr_params
 }
