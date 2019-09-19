@@ -73,10 +73,18 @@ def main():
     else:
         log_path = os.path.join(folder, algo)
 
-    model_path = "{}/{}.pkl".format(log_path, env_id)
 
     assert os.path.isdir(log_path), "The {} folder was not found".format(log_path)
-    assert os.path.isfile(model_path), "No model found for {} on {}, path: {}".format(algo, env_id, model_path)
+
+    found = False
+    for ext in ['pkl', 'zip']:
+        model_path = "{}/{}.{}".format(log_path, env_id, ext)
+        found = os.path.isfile(model_path)
+        if found:
+            break
+
+    if not found:
+        raise ValueError("No model found for {} on {}, path: {}".format(algo, env_id, model_path))
 
     if algo in ['dqn', 'ddpg', 'sac', 'td3']:
         args.n_envs = 1
