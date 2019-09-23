@@ -45,7 +45,7 @@ for idx, trained_model in enumerate(trained_models.keys()):
     algo, env_id = trained_models[trained_model]
     n_envs = args.n_envs
     n_timesteps = args.n_timesteps
-    if algo in ['dqn', 'ddpg', 'sac']:
+    if algo in ['dqn', 'ddpg', 'sac', 'td3']:
         n_envs = 1
         n_timesteps *= args.n_envs
 

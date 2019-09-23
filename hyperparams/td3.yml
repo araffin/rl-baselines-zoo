@@ -65,7 +65,7 @@ BipedalWalker-v2:
 
 # To be tuned
 BipedalWalkerHardcore-v2:
-  n_timesteps: !!float 1e6
+  n_timesteps: !!float 5e7
   policy: 'MlpPolicy'
   gamma: 0.99
   buffer_size: 1000000
