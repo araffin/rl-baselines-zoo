@@ -62,14 +62,14 @@ mpirun -n 16 python train.py --algo trpo --env BreakoutNoFrameskip-v4
 
 We use [Optuna](https://optuna.org/) for optimizing the hyperparameters.
 
-Note: hyperparameters search is only implemented for PPO2/A2C/ACKTR/SAC/TRPO/DDPG for now.
+Note: hyperparameters search is not implemented for ACER and DQN for now.
 when using SuccessiveHalvingPruner ("halving"), you must specify `--n-jobs > 1`
 
 Budget of 1000 trials with a maximum of 50000 steps:
 
 ```
 python train.py --algo ppo2 --env MountainCar-v0 -n 50000 -optimize --n-trials 1000 --n-jobs 2 \
-  --sampler random --pruner median
+  --sampler tpe --pruner median
 ```
 
 

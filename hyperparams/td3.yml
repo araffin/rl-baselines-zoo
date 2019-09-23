@@ -49,9 +49,23 @@ HalfCheetahBulletEnv-v0:
   gradient_steps: 1000
   policy_kwargs: "dict(layers=[400, 300])"
 
+BipedalWalker-v2:
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  gamma: 0.99
+  buffer_size: 1000000
+  noise_type: 'normal'
+  noise_std: 0.1
+  learning_starts: 10000
+  batch_size: 100
+  learning_rate: !!float 1e-3
+  train_freq: 1000
+  gradient_steps: 1000
+  policy_kwargs: "dict(layers=[400, 300])"
+
 # To be tuned
 BipedalWalkerHardcore-v2:
-  n_timesteps: !!float 5e7
+  n_timesteps: !!float 1e6
   policy: 'MlpPolicy'
   gamma: 0.99
   buffer_size: 1000000
@@ -59,7 +73,7 @@ BipedalWalkerHardcore-v2:
   noise_std: 0.2
   learning_starts: 10000
   batch_size: 100
-  learning_rate: 1e-3
+  learning_rate: !!float 1e-3
   train_freq: 1000
   gradient_steps: 1000
   policy_kwargs: "dict(layers=[400, 300])"
