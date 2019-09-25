@@ -73,9 +73,25 @@ HalfCheetahBulletEnv-v0:
   learning_rate: 0.0217
   n_steps: 128
   nprocs: 4
-  max_grad_norm: 10
+  max_grad_norm: 0.5
   gamma: 0.98
   vf_coef: 0.946
+
+# TO BE tuned
+Walker2DBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  normalize: True
+  n_envs: 1
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+  # lr_schedule: 'constant'
+  # learning_rate: 0.0217
+  n_steps: 128
+  nprocs: 4
+  gamma: 0.99
+  vf_coef: 0.946
+
 
 HalfCheetah-v2:
   env_wrapper: utils.wrappers.TimeFeatureWrapper

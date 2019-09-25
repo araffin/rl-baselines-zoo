@@ -131,13 +131,13 @@ Additional Atari Games (to be completed):
 |----------|--------------|----------------|------------|--------------|--------------------------|
 | A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
 | ACER     | N/A | :heavy_check_mark: | N/A | N/A | N/A |
-| ACKTR    | :heavy_check_mark: | :heavy_check_mark: | N/A | :heavy_check_mark: | |
+| ACKTR    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
 | DQN      | N/A | :heavy_check_mark: | N/A | N/A | N/A |
 | DDPG     | :heavy_check_mark: | N/A | :heavy_check_mark: | | |
 | SAC      | :heavy_check_mark: | N/A | :heavy_check_mark: | :heavy_check_mark: | |
-| TD3      | | N/A | :heavy_check_mark: | | |
-| TRPO     | | :heavy_check_mark: | :heavy_check_mark: | | |
+| TD3      | :heavy_check_mark: | N/A | :heavy_check_mark: | | |
+| TRPO     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | |
 
 ### PyBullet Environments
 
@@ -149,6 +149,7 @@ Note: those environments are derived from [Roboschool](https://github.com/openai
 |  RL Algo |  Walker2D | HalfCheetah | Ant | Reacher |  Hopper | Humanoid |
 |----------|-----------|-------------|-----|---------|---------|----------|
 | A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: | |
+| ACKTR    | | :heavy_check_mark: | | | | |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | DDPG     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | | |
 | SAC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
@@ -160,6 +161,7 @@ PyBullet Envs (Continued)
 |  RL Algo |  Minitaur | MinitaurDuck | InvertedDoublePendulum | InvertedPendulumSwingup |
 |----------|-----------|-------------|-----|---------|
 | A2C      | | | | |
+| ACKTR    | | | | |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | DDPG     | | | | |
 | SAC      | | | :heavy_check_mark: | :heavy_check_mark: |

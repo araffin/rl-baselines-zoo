@@ -39,7 +39,9 @@
 |acktr|BreakoutNoFrameskip-v4             |    448.514|    88.882|     143118|        37|
 |acktr|CartPole-v1                        |    487.573|    63.866|     149685|       307|
 |acktr|EnduroNoFrameskip-v4               |      0.000|     0.000|     149574|        45|
+|acktr|HalfCheetahBulletEnv-v0            |   2535.255|   110.368|     150000|       150|
 |acktr|LunarLander-v2                     |     96.822|    64.020|     149905|       176|
+|acktr|LunarLanderContinuous-v2           |    239.953|    58.406|     149825|       480|
 |acktr|MountainCar-v0                     |   -111.917|    21.422|     149969|      1340|
 |acktr|MountainCarContinuous-v0           |     93.779|     0.115|     149993|      2265|
 |acktr|MsPacmanNoFrameskip-v4             |   1598.776|   264.338|     149588|       147|
