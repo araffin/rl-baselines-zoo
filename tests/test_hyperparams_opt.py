@@ -13,9 +13,9 @@ N_STEPS = 100
 N_TRIALS = 2
 N_JOBS = 1
 
-ALGOS = ('ppo2', 'a2c', 'trpo')
+ALGOS = ('ppo2', 'a2c', 'trpo', 'acktr', 'td3')
 # Not yet supported:
-# ALGOS = ('acer', 'acktr', 'dqn')
+# ALGOS = ('acer', 'dqn')
 ENV_IDS = ('CartPole-v1',)
 LOG_FOLDER = 'logs/tests_optimize/'
 

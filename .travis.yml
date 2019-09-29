@@ -16,4 +16,17 @@ install:
   - docker pull ${DOCKER_IMAGE}
 
 script:
-  - docker run -it --rm --network host --ipc=host --mount src=$(pwd),target=/root/code/stable-baselines,type=bind ${DOCKER_IMAGE} bash -c "cd /root/code/stable-baselines/ && python -m pytest --cov-config .coveragerc --cov-report term --cov=. -v tests/"
+  - ./scripts/run_tests_travis.sh "${TEST_GLOB}"
+
+jobs:
+  include:
+    # Split test suite to avoid exceeding travis limit
+    - stage: Test
+      name: "Unit Tests Train"
+      env: TEST_GLOB="train.py"
+
+    - name: "Unit Tests Enjoy"
+      env: TEST_GLOB="enjoy.py"
+
+    - name: "Unit Tests Hyperparams opt"
+      env: TEST_GLOB="hyperparams_opt.py"
