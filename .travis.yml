@@ -5,11 +5,15 @@ python:
 notifications:
   email: false
 
+env:
+  global:
+    - DOCKER_IMAGE=araffin/rl-baselines-zoo-cpu:v2.8.0
+
 services:
   - docker
 
 install:
-  - docker pull araffin/rl-baselines-zoo-cpu
+  - docker pull ${DOCKER_IMAGE}
 
 script:
-  - docker run -it --rm --network host --ipc=host --mount src=$(pwd),target=/root/code/stable-baselines,type=bind araffin/rl-baselines-zoo-cpu bash -c "cd /root/code/stable-baselines/ && pip install --upgrade git+https://github.com/pfnet/optuna.git && python -m pytest --cov-config .coveragerc --cov-report term --cov=. -v tests/"
+  - docker run -it --rm --network host --ipc=host --mount src=$(pwd),target=/root/code/stable-baselines,type=bind ${DOCKER_IMAGE} bash -c "cd /root/code/stable-baselines/ && python -m pytest --cov-config .coveragerc --cov-report term --cov=. -v tests/"
