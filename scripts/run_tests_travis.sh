@@ -20,4 +20,4 @@ set -e  # exit immediately on any error
 
 ${DOCKER_CMD} ${DOCKER_IMAGE} \
     bash -c "${BASH_CMD} && \
-             pytest --cov-config .coveragerc --cov-report term --cov=. -v tests/test_${TEST_GLOB}"
+             python -m pytest --cov-config .coveragerc --cov-report term --cov=. -v tests/test_${TEST_GLOB}"
