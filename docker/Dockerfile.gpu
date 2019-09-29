@@ -22,7 +22,7 @@ RUN \
     pip install pyyaml && \
     pip install box2d-py==2.3.5 && \
     pip install tensorflow-gpu==1.8.0 && \
-    pip install stable-baselines[mpi] && \
+    pip install stable-baselines[mpi]==2.8.0 && \
     pip install pybullet && \
     pip install gym-minigrid && \
     pip install scikit-optimize && \
