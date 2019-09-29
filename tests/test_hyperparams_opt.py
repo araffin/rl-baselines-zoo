@@ -13,9 +13,9 @@ N_STEPS = 100
 N_TRIALS = 2
 N_JOBS = 1
 
-ALGOS = ('ppo2', 'a2c', 'trpo')
+ALGOS = ('ppo2', 'a2c', 'trpo', 'acktr')
 # Not yet supported:
-# ALGOS = ('acer', 'acktr', 'dqn')
+# ALGOS = ('acer', 'dqn')
 ENV_IDS = ('CartPole-v1',)
 LOG_FOLDER = 'logs/tests_optimize/'
 
@@ -29,6 +29,8 @@ for algo in ALGOS:
 experiments['ddpg-MountainCarContinuous-v0'] = ('ddpg', 'MountainCarContinuous-v0')
 # Test for SAC
 experiments['sac-Pendulum-v0'] = ('sac', 'Pendulum-v0')
+# Test for TD3
+experiments['td3-Pendulum-v0'] = ('td3', 'Pendulum-v0')
 
 # Clean up
 if os.path.isdir(LOG_FOLDER):

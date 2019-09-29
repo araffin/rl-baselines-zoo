@@ -32,3 +32,105 @@ Acrobot-v1:
   n_timesteps: !!float 5e5
   policy: 'MlpPolicy'
   ent_coef: 0.0
+
+Pendulum-v0:
+  n_envs: 4
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+  gamma: 0.99
+  n_steps: 16
+  learning_rate: 0.06
+  lr_schedule: 'constant'
+
+LunarLanderContinuous-v2:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 5e6
+  policy: 'MlpPolicy'
+  gamma: 0.99
+  n_steps: 16
+  ent_coef: 0.0
+  learning_rate: 0.06
+  lr_schedule: 'constant'
+
+MountainCarContinuous-v0:
+  normalize: true
+  n_envs: 16
+  n_timesteps: !!float 3e5
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+
+# Tuned
+HalfCheetahBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  normalize: True
+  n_envs: 1
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+  lr_schedule: 'constant'
+  learning_rate: 0.0217
+  n_steps: 128
+  nprocs: 4
+  max_grad_norm: 0.5
+  gamma: 0.98
+  vf_coef: 0.946
+
+# TO BE tuned
+Walker2DBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  normalize: True
+  n_envs: 1
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+  # lr_schedule: 'constant'
+  # learning_rate: 0.0217
+  n_steps: 128
+  nprocs: 4
+  gamma: 0.99
+  vf_coef: 0.946
+
+
+HalfCheetah-v2:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
+  normalize: True
+  n_envs: 1
+  n_timesteps: !!float 1e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+  lr_schedule: 'constant'
+  learning_rate: 0.2
+  n_steps: 2048
+  nprocs: 4
+  max_grad_norm: 10
+  gamma: 0.99
+  vf_coef: 0.5
+  policy_kwargs: "dict(net_arch=[256, 256])"
+
+# Tuned
+BipedalWalkerHardcore-v2:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 10e7
+  policy: 'MlpPolicy'
+  ent_coef: 0.000125
+  lr_schedule: 'constant'
+  learning_rate: 0.0675
+  n_steps: 16
+  gamma: 0.9999
+  vf_coef: 0.51
+
+# Tuned
+BipedalWalker-v2:
+  normalize: true
+  n_envs: 8
+  n_timesteps: !!float 5e6
+  policy: 'MlpPolicy'
+  ent_coef: 0.0
+  lr_schedule: 'constant'
+  learning_rate: 0.298
+  n_steps: 32
+  gamma: 0.98
+  vf_coef: 0.38

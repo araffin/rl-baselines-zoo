@@ -251,10 +251,11 @@ def get_trained_models(log_folder):
     algos = os.listdir(log_folder)
     trained_models = {}
     for algo in algos:
-        for env_id in glob.glob('{}/{}/*.pkl'.format(log_folder, algo)):
-            # Retrieve env name
-            env_id = env_id.split('/')[-1].split('.pkl')[0]
-            trained_models['{}-{}'.format(algo, env_id)] = (algo, env_id)
+        for ext in ['zip', 'pkl']:
+            for env_id in glob.glob('{}/{}/*.{}'.format(log_folder, algo, ext)):
+                # Retrieve env name
+                env_id = env_id.split('/')[-1].split('.{}'.format(ext))[0]
+                trained_models['{}-{}'.format(algo, env_id)] = (algo, env_id)
     return trained_models
 
 

@@ -5,7 +5,7 @@ import optuna
 from optuna.pruners import SuccessiveHalvingPruner, MedianPruner
 from optuna.samplers import RandomSampler, TPESampler
 from optuna.integration.skopt import SkoptSampler
-from stable_baselines import SAC, DDPG
+from stable_baselines import SAC, DDPG, TD3
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.common.vec_env import VecNormalize, VecEnv
 from stable_baselines.her import HERGoalEnvWrapper
@@ -77,8 +77,8 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
         if algo == 'her':
             trial.model_class = hyperparams['model_class']
 
-        # Hack to use DDPG sampler
-        if algo == 'ddpg' or trial.model_class == 'ddpg':
+        # Hack to use DDPG/TD3 noise sampler
+        if algo in ['ddpg', 'td3'] or trial.model_class in ['ddpg', 'td3']:
             trial.n_actions = env_fn(n_envs=1).action_space.shape[0]
         kwargs.update(algo_sampler(trial))
 
@@ -237,13 +237,36 @@ def sample_a2c_params(trial):
     :return: (dict)
     """
     gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
-    n_steps = trial.suggest_categorical('n_steps', [5, 16, 32, 64, 128, 256])
+    n_steps = trial.suggest_categorical('n_steps', [8, 16, 32, 64, 128, 256, 512, 1024, 2048])
     lr_schedule = trial.suggest_categorical('lr_schedule', ['linear', 'constant'])
     learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
     ent_coef = trial.suggest_loguniform('ent_coef', 0.00000001, 0.1)
     vf_coef = trial.suggest_uniform('vf_coef', 0, 1)
     # normalize = trial.suggest_categorical('normalize', [True, False])
     # TODO: take into account the normalization (also for the test env)
+
+    return {
+        'n_steps': n_steps,
+        'gamma': gamma,
+        'learning_rate': learning_rate,
+        'lr_schedule': lr_schedule,
+        'ent_coef': ent_coef,
+        'vf_coef': vf_coef
+    }
+
+def sample_acktr_params(trial):
+    """
+    Sampler for ACKTR hyperparams.
+
+    :param trial: (optuna.trial)
+    :return: (dict)
+    """
+    gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
+    n_steps = trial.suggest_categorical('n_steps', [16, 32, 64, 128, 256, 512, 1024, 2048])
+    lr_schedule = trial.suggest_categorical('lr_schedule', ['linear', 'constant'])
+    learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
+    ent_coef = trial.suggest_loguniform('ent_coef', 0.00000001, 0.1)
+    vf_coef = trial.suggest_uniform('vf_coef', 0, 1)
 
     return {
         'n_steps': n_steps,
@@ -270,8 +293,7 @@ def sample_sac_params(trial):
     train_freq = trial.suggest_categorical('train_freq', [1, 10, 100, 300])
     # gradient_steps takes too much time
     # gradient_steps = trial.suggest_categorical('gradient_steps', [1, 100, 300])
-    # gradient_steps = 1
-    gradient_steps = trial.suggest_categorical('gradient_steps', [1, 2, 5])
+    gradient_steps = train_freq
     ent_coef = trial.suggest_categorical('ent_coef', ['auto', 0.5, 0.1, 0.05, 0.01, 0.0001])
 
     target_entropy = 'auto'
@@ -290,6 +312,39 @@ def sample_sac_params(trial):
         'target_entropy': target_entropy
     }
 
+def sample_td3_params(trial):
+    """
+    Sampler for TD3 hyperparams.
+
+    :param trial: (optuna.trial)
+    :return: (dict)
+    """
+    gamma = trial.suggest_categorical('gamma', [0.9, 0.95, 0.98, 0.99, 0.995, 0.999, 0.9999])
+    learning_rate = trial.suggest_loguniform('lr', 1e-5, 1)
+    batch_size = trial.suggest_categorical('batch_size', [16, 32, 64, 100, 128, 256, 512])
+    buffer_size = trial.suggest_categorical('buffer_size', [int(1e4), int(1e5), int(1e6)])
+    train_freq = trial.suggest_categorical('train_freq', [1, 10, 100, 1000, 2000])
+    gradient_steps = train_freq
+    noise_type = trial.suggest_categorical('noise_type', ['ornstein-uhlenbeck', 'normal'])
+    noise_std = trial.suggest_uniform('noise_std', 0, 1)
+
+    hyperparams = {
+        'gamma': gamma,
+        'learning_rate': learning_rate,
+        'batch_size': batch_size,
+        'buffer_size': buffer_size,
+        'train_freq': train_freq,
+        'gradient_steps': gradient_steps,
+    }
+
+    if noise_type == 'normal':
+        hyperparams['action_noise'] = NormalActionNoise(mean=np.zeros(trial.n_actions),
+                                                        sigma=noise_std * np.ones(trial.n_actions))
+    elif noise_type == 'ornstein-uhlenbeck':
+        hyperparams['action_noise'] = OrnsteinUhlenbeckActionNoise(mean=np.zeros(trial.n_actions),
+                                                                   sigma=noise_std * np.ones(trial.n_actions))
+
+    return hyperparams
 
 def sample_trpo_params(trial):
     """
@@ -375,6 +430,8 @@ def sample_her_params(trial):
         hyperparams = sample_sac_params(trial)
     elif trial.model_class == DDPG:
         hyperparams = sample_ddpg_params(trial)
+    elif trial.model_class == TD3:
+        hyperparams = sample_td3_params(trial)
 
     hyperparams['random_exploration'] = trial.suggest_uniform('random_exploration', 0, 1)
     hyperparams['n_sampled_goal'] = trial.suggest_categorical('n_sampled_goal', [1, 2, 4, 6, 8])
@@ -388,5 +445,7 @@ HYPERPARAMS_SAMPLER = {
     'a2c': sample_a2c_params,
     'trpo': sample_trpo_params,
     'ddpg': sample_ddpg_params,
-    'her': sample_her_params
+    'her': sample_her_params,
+    'acktr': sample_acktr_params,
+    'td3': sample_td3_params
 }

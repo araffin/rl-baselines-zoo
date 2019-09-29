@@ -62,14 +62,14 @@ mpirun -n 16 python train.py --algo trpo --env BreakoutNoFrameskip-v4
 
 We use [Optuna](https://optuna.org/) for optimizing the hyperparameters.
 
-Note: hyperparameters search is only implemented for PPO2/A2C/SAC/TRPO/DDPG for now.
+Note: hyperparameters search is not implemented for ACER and DQN for now.
 when using SuccessiveHalvingPruner ("halving"), you must specify `--n-jobs > 1`
 
 Budget of 1000 trials with a maximum of 50000 steps:
 
 ```
 python train.py --algo ppo2 --env MountainCar-v0 -n 50000 -optimize --n-trials 1000 --n-jobs 2 \
-  --sampler random --pruner median
+  --sampler tpe --pruner median
 ```
 
 
@@ -116,7 +116,7 @@ Additional Atari Games (to be completed):
 |----------|--------------|----------------|------------|--------------|--------------------------|
 | A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | ACER     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | N/A | N/A |
-| ACKTR    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | N/A | N/A |
+| ACKTR    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | DQN      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | N/A | N/A |
 | DDPG     |  N/A |  N/A  | N/A | :heavy_check_mark: | :heavy_check_mark: |
@@ -129,15 +129,15 @@ Additional Atari Games (to be completed):
 
 |  RL Algo |  BipedalWalker-v2 | LunarLander-v2 | LunarLanderContinuous-v2 |  BipedalWalkerHardcore-v2 | CarRacing-v0 |
 |----------|--------------|----------------|------------|--------------|--------------------------|
-| A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                   |
+| A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
 | ACER     | N/A | :heavy_check_mark: | N/A | N/A | N/A |
-| ACKTR    | N/A | :heavy_check_mark: | N/A | N/A | N/A |
-| PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |   |
+| ACKTR    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
+| PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | |
 | DQN      | N/A | :heavy_check_mark: | N/A | N/A | N/A |
-| DDPG     | :heavy_check_mark: | N/A | :heavy_check_mark: | |  |
+| DDPG     | :heavy_check_mark: | N/A | :heavy_check_mark: | | |
 | SAC      | :heavy_check_mark: | N/A | :heavy_check_mark: | :heavy_check_mark: | |
-| TD3      | | N/A | :heavy_check_mark: | | |
-| TRPO     | | :heavy_check_mark: | :heavy_check_mark: | | |
+| TD3      | :heavy_check_mark: | N/A | :heavy_check_mark: | | |
+| TRPO     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | |
 
 ### PyBullet Environments
 
@@ -149,6 +149,7 @@ Note: those environments are derived from [Roboschool](https://github.com/openai
 |  RL Algo |  Walker2D | HalfCheetah | Ant | Reacher |  Hopper | Humanoid |
 |----------|-----------|-------------|-----|---------|---------|----------|
 | A2C      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | :heavy_check_mark: | |
+| ACKTR    | | :heavy_check_mark: | | | | |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | DDPG     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | | | |
 | SAC      | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
@@ -160,6 +161,7 @@ PyBullet Envs (Continued)
 |  RL Algo |  Minitaur | MinitaurDuck | InvertedDoublePendulum | InvertedPendulumSwingup |
 |----------|-----------|-------------|-----|---------|
 | A2C      | | | | |
+| ACKTR    | | | | |
 | PPO2     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | DDPG     | | | | |
 | SAC      | | | :heavy_check_mark: | :heavy_check_mark: |
@@ -209,11 +211,11 @@ You can train agents online using [colab notebook](https://colab.research.google
 
 ### Stable-Baselines PyPi Package
 
-Min version: stable-baselines >= 2.7.0
+Min version: stable-baselines[mpi] >= 2.8.0
 
 ```
 apt-get install swig cmake libopenmpi-dev zlib1g-dev ffmpeg
-pip install stable-baselines box2d box2d-kengz pyyaml pybullet optuna pytablewriter scikit-optimize
+pip install stable-baselines[mpi] box2d box2d-kengz pyyaml pybullet optuna pytablewriter scikit-optimize
 ```
 
 Please see [Stable Baselines README](https://github.com/hill-a/stable-baselines) for alternatives.

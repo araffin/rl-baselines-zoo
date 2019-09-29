@@ -34,12 +34,18 @@
 |acer |SpaceInvadersNoFrameskip-v4        |    542.556|   172.332|     150374|       133|
 |acktr|Acrobot-v1                         |    -91.284|    32.515|     149959|      1625|
 |acktr|BeamRiderNoFrameskip-v4            |   3760.976|  1826.059|     147414|        41|
+|acktr|BipedalWalker-v2                   |    292.419|    54.373|     149881|       216|
+|acktr|BipedalWalkerHardcore-v2           |     44.796|   113.898|     149216|       129|
 |acktr|BreakoutNoFrameskip-v4             |    448.514|    88.882|     143118|        37|
 |acktr|CartPole-v1                        |    487.573|    63.866|     149685|       307|
 |acktr|EnduroNoFrameskip-v4               |      0.000|     0.000|     149574|        45|
+|acktr|HalfCheetahBulletEnv-v0            |   2535.255|   110.368|     150000|       150|
 |acktr|LunarLander-v2                     |     96.822|    64.020|     149905|       176|
+|acktr|LunarLanderContinuous-v2           |    239.953|    58.406|     149825|       480|
 |acktr|MountainCar-v0                     |   -111.917|    21.422|     149969|      1340|
+|acktr|MountainCarContinuous-v0           |     93.779|     0.115|     149993|      2265|
 |acktr|MsPacmanNoFrameskip-v4             |   1598.776|   264.338|     149588|       147|
+|acktr|Pendulum-v0                        |   -213.831|   137.857|     150000|       750|
 |acktr|PongNoFrameskip-v4                 |     19.224|     3.697|     147753|        67|
 |acktr|QbertNoFrameskip-v4                |   9569.575|  3980.468|     150896|       106|
 |acktr|SeaquestNoFrameskip-v4             |   1672.239|   105.092|     149148|        67|
@@ -104,6 +110,7 @@
 |sac  |ReacherBulletEnv-v0                |     17.529|     9.860|     150000|      1000|
 |sac  |Walker2DBulletEnv-v0               |   2052.646|    13.631|     150000|       150|
 |td3  |AntBulletEnv-v0                    |   3269.021|    60.697|     150000|       150|
+|td3  |BipedalWalker-v2                   |    308.793|    23.750|     149713|       228|
 |td3  |HalfCheetahBulletEnv-v0            |   3160.318|    15.284|     150000|       150|
 |td3  |HopperBulletEnv-v0                 |   2743.910|    20.159|     150000|       150|
 |td3  |HumanoidBulletEnv-v0               |   1638.081|   801.594|     149453|       182|

@@ -1,0 +1,11 @@
+!!python/object/apply:collections.OrderedDict
+- - [ent_coef, 0.0]
+  - [gamma, 0.98]
+  - [learning_rate, 0.298]
+  - [lr_schedule, constant]
+  - [n_envs, 8]
+  - [n_steps, 32]
+  - [n_timesteps, 5000000.0]
+  - [normalize, true]
+  - [policy, MlpPolicy]
+  - [vf_coef, 0.38]
