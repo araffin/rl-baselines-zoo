@@ -44,7 +44,13 @@ if args.exp_id > 0:
 else:
     log_path = os.path.join(folder, algo)
 
-model_path = "{}/{}.pkl".format(log_path, env_id)
+found = False
+# Backward compatibility
+for ext in ['pkl', 'zip']:
+    model_path = "{}/{}.{}".format(log_path, env_id, ext)
+    found = os.path.isfile(model_path)
+    if found:
+        break
 
 stats_path = os.path.join(log_path, env_id)
 hyperparams, stats_path = get_saved_hyperparams(stats_path)
