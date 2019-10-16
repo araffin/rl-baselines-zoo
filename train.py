@@ -78,8 +78,9 @@ if __name__ == '__main__':
     set_global_seeds(args.seed)
 
     if args.trained_agent != "":
-        assert args.trained_agent.endswith('.pkl') and os.path.isfile(args.trained_agent), \
-            "The trained_agent must be a valid path to a .pkl file"
+        valid_extension = args.trained_agent.endswith('.pkl') or args.trained_agent.endswith('.zip')
+        assert valid_extension and os.path.isfile(args.trained_agent), \
+            "The trained_agent must be a valid path to a .zip/.pkl file"
 
     rank = 0
     if MPI.COMM_WORLD.Get_size() > 1:
@@ -256,7 +257,7 @@ if __name__ == '__main__':
             if 'noise_std_final' in hyperparams:
                 del hyperparams['noise_std_final']
 
-        if args.trained_agent.endswith('.pkl') and os.path.isfile(args.trained_agent):
+        if os.path.isfile(args.trained_agent):
             # Continue training
             print("Loading pretrained agent")
             # Policy should not be changed
