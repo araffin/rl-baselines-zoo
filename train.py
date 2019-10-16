@@ -266,7 +266,7 @@ if __name__ == '__main__':
             model = ALGOS[args.algo].load(args.trained_agent, env=env,
                                           tensorboard_log=tensorboard_log, verbose=args.verbose, **hyperparams)
 
-            exp_folder = args.trained_agent.split('.pkl')[0]
+            exp_folder = args.trained_agent[:-4]
             if normalize:
                 print("Loading saved running average")
                 env.load_running_average(exp_folder)
