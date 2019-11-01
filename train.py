@@ -57,6 +57,8 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                         type=int)
     parser.add_argument('--gym-packages', type=str, nargs='+', default=[], help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
+    parser.add_argument('-tba', '--tensorboard-log-auto', action='store_true', default=False,
+                        help='Enable tensorboard with logs stored at same path as specified in --log folder. If using this option then do not use --tensorboard-log.')
     args = parser.parse_args()
 
     # Going through custom gym packages to let them register in the global registory
@@ -98,7 +100,14 @@ if __name__ == '__main__':
             args.tensorboard_log = ''
 
     for env_id in env_ids:
-        tensorboard_log = None if args.tensorboard_log == '' else os.path.join(args.tensorboard_log, env_id)
+        log_path = "{}/{}/".format(args.log_folder, args.algo)
+        save_path = os.path.join(log_path, "{}_{}".format(env_id, get_latest_run_id(log_path, env_id) + 1))    
+        if args.tensorboard_log == '' and not args.tensorboard_log_auto:    
+            tensorboard_log = None  
+        else:
+            tensorboard_log = args.tensorboard_log or save_path
+            print("Saving tensorboard log to {}".format(tensorboard_log))
+            os.makedirs(tensorboard_log, exist_ok=True)
 
         # if this is atari environment, we will use atari wrapper and common hyper params
         is_atari = False
@@ -320,20 +329,14 @@ if __name__ == '__main__':
 
         model.learn(n_timesteps, **kwargs)
 
-        # Save trained model
-        log_path = "{}/{}/".format(args.log_folder, args.algo)
-        save_path = os.path.join(log_path, "{}_{}".format(env_id, get_latest_run_id(log_path, env_id) + 1))
-        params_path = "{}/{}".format(save_path, env_id)
-        os.makedirs(params_path, exist_ok=True)
-
         # Only save worker of rank 0 when using mpi
         if rank == 0:
-            model_path = "{}/{}".format(save_path, env_id)
-            print("Saving model to {}".format(model_path))
-            model.save(model_path)
+            os.makedirs(save_path, exist_ok=True)
+            print("Saving model to {}".format(save_path))
+            model.save(save_path)
 
             # Save hyperparams
-            hyperparams_path = os.path.join(params_path, 'config.yml')
+            hyperparams_path = os.path.join(save_path, 'config.yml')
             print("Saving hyperparams to {}".format(hyperparams_path))
             with open(hyperparams_path, 'w') as f:
                 yaml.dump(saved_hyperparams, f)
@@ -343,5 +346,5 @@ if __name__ == '__main__':
                 if isinstance(env, VecFrameStack):
                     env = env.venv
                 # Important: save the running average, for testing the agent we need that normalization
-                print("Saving running average to {}".format(params_path))
-                env.save_running_average(params_path)
+                print("Saving running average to {}".format(save_path))
+                env.save_running_average(save_path)
