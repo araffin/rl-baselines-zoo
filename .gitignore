@@ -4,5 +4,6 @@ logs/
 .coverage
 .coverage.*
 .idea/
+.vscode/
 cluster_sbatch.sh
 cluster_sbatch_mpi.sh

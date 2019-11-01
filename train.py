@@ -66,6 +66,7 @@ if __name__ == '__main__':
     env_ids = args.env
     registered_envs = set(gym.envs.registry.env_specs.keys())
 
+    # validate env_ids
     for env_id in env_ids:
         # If the environment is not found, suggest the closest match
         if env_id not in registered_envs:
@@ -77,18 +78,21 @@ if __name__ == '__main__':
 
     set_global_seeds(args.seed)
 
+    # load previously trained agent if specified
     if args.trained_agent != "":
         valid_extension = args.trained_agent.endswith('.pkl') or args.trained_agent.endswith('.zip')
         assert valid_extension and os.path.isfile(args.trained_agent), \
             "The trained_agent must be a valid path to a .zip/.pkl file"
 
-    rank = 0
+    rank = 0 # rank of this machine in case if we were using multiple
+    # do we have more than one machine in this MPI collection?
     if MPI.COMM_WORLD.Get_size() > 1:
         print("Using MPI for multiprocessing with {} workers".format(MPI.COMM_WORLD.Get_size()))
         rank = MPI.COMM_WORLD.Get_rank()
-        print("Worker rank: {}".format(rank))
+        args.seed += rank        
+        print("Worker rank, seed: {}, {}".format(rank, args.seed))
 
-        args.seed += rank
+        # disable logging except for rank 0 machine
         if rank != 0:
             args.verbose = 0
             args.tensorboard_log = ''
@@ -96,6 +100,7 @@ if __name__ == '__main__':
     for env_id in env_ids:
         tensorboard_log = None if args.tensorboard_log == '' else os.path.join(args.tensorboard_log, env_id)
 
+        # if this is atari environment, we will use atari wrapper and common hyper params
         is_atari = False
         if 'NoFrameskip' in env_id:
             is_atari = True
@@ -107,7 +112,7 @@ if __name__ == '__main__':
             hyperparams_dict = yaml.load(f)
             if env_id in list(hyperparams_dict.keys()):
                 hyperparams = hyperparams_dict[env_id]
-            elif is_atari:
+            elif is_atari: # use common hyper params for atari
                 hyperparams = hyperparams_dict['atari']
             else:
                 raise ValueError("Hyperparameters not found for {}-{}".format(args.algo, env_id))
@@ -126,6 +131,7 @@ if __name__ == '__main__':
         if args.verbose > 0:
             pprint(saved_hyperparams)
 
+        # how many parallel environment we should create to generate data
         n_envs = hyperparams.get('n_envs', 1)
 
         if args.verbose > 0:
@@ -187,12 +193,15 @@ if __name__ == '__main__':
             """
             global hyperparams
 
+            custom_frame_stack = hyperparams.get('frame_stack', False)
+
             if is_atari:
                 if args.verbose > 0:
                     print("Using Atari wrapper")
                 env = make_atari_env(env_id, num_env=n_envs, seed=args.seed)
-                # Frame-stacking with 4 frames
-                env = VecFrameStack(env, n_stack=4)
+                if not custom_frame_stack:
+                    # Frame-stacking with 4 frames
+                    env = VecFrameStack(env, n_stack=4)
             elif algo_ in ['dqn', 'ddpg']:
                 if hyperparams.get('normalize', False):
                     print("WARNING: normalization not supported yet for DDPG/DQN")
@@ -215,7 +224,7 @@ if __name__ == '__main__':
                             print("Normalizing input and reward")
                     env = VecNormalize(env, **normalize_kwargs)
             # Optional Frame-stacking
-            if hyperparams.get('frame_stack', False):
+            if custom_frame_stack:
                 n_stack = hyperparams['frame_stack']
                 env = VecFrameStack(env, n_stack)
                 print("Stacking {} frames".format(n_stack))
@@ -295,9 +304,8 @@ if __name__ == '__main__':
                                                                     args.sampler, args.pruner)
 
             log_path = os.path.join(args.log_folder, args.algo, report_name)
-
-            if args.verbose:
-                print("Writing report to {}".format(log_path))
+            # user should always know actual log path we ultimately make
+            print("Writing report to {}".format(log_path))
 
             os.makedirs(os.path.dirname(log_path), exist_ok=True)
             data_frame.to_csv(log_path)
@@ -320,11 +328,14 @@ if __name__ == '__main__':
 
         # Only save worker of rank 0 when using mpi
         if rank == 0:
-            print("Saving to {}".format(save_path))
+            model_path = "{}/{}".format(save_path, env_id)
+            print("Saving model to {}".format(model_path))
+            model.save(model_path)
 
-            model.save("{}/{}".format(save_path, env_id))
             # Save hyperparams
-            with open(os.path.join(params_path, 'config.yml'), 'w') as f:
+            hyperparams_path = os.path.join(params_path, 'config.yml')
+            print("Saving hyperparams to {}".format(hyperparams_path))
+            with open(hyperparams_path, 'w') as f:
                 yaml.dump(saved_hyperparams, f)
 
             if normalize:
@@ -332,4 +343,5 @@ if __name__ == '__main__':
                 if isinstance(env, VecFrameStack):
                     env = env.venv
                 # Important: save the running average, for testing the agent we need that normalization
+                print("Saving running average to {}".format(params_path))
                 env.save_running_average(params_path)
