@@ -26,6 +26,7 @@ from stable_baselines.common.cmd_util import make_atari_env
 from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
 from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.ppo2.ppo2 import constfn
+from stable_baselines import logger
 
 from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class
 from utils.hyperparams_opt import hyperparam_optimization
@@ -100,12 +101,16 @@ if __name__ == '__main__':
             args.tensorboard_log = ''
 
     for env_id in env_ids:
-        log_path = "{}/{}/".format(args.log_folder, args.algo)
-        save_path = os.path.join(log_path, "{}_{}".format(env_id, get_latest_run_id(log_path, env_id) + 1))    
+        algo_log_path = "{}/{}/".format(args.log_folder, args.algo)
+        env_save_path = os.path.join(algo_log_path, "{}_{}".format(env_id, get_latest_run_id(algo_log_path, env_id) + 1))
+        os.makedirs(env_save_path, exist_ok=True)
+        logger.configure(dir=env_save_path, format_strs=['stdout','log','csv'])
+
+        # get path where TensorBoard logs will be saved
         if args.tensorboard_log == '' and not args.tensorboard_log_auto:    
             tensorboard_log = None  
         else:
-            tensorboard_log = args.tensorboard_log or save_path
+            tensorboard_log = args.tensorboard_log or env_save_path
             print("Saving tensorboard log to {}".format(tensorboard_log))
             os.makedirs(tensorboard_log, exist_ok=True)
 
@@ -331,12 +336,11 @@ if __name__ == '__main__':
 
         # Only save worker of rank 0 when using mpi
         if rank == 0:
-            os.makedirs(save_path, exist_ok=True)
-            print("Saving model to {}".format(save_path))
-            model.save(save_path)
+            print("Saving model to {}".format(env_save_path))
+            model.save(env_save_path)
 
             # Save hyperparams
-            hyperparams_path = os.path.join(save_path, 'config.yml')
+            hyperparams_path = os.path.join(env_save_path, 'config.yml')
             print("Saving hyperparams to {}".format(hyperparams_path))
             with open(hyperparams_path, 'w') as f:
                 yaml.dump(saved_hyperparams, f)
@@ -346,5 +350,5 @@ if __name__ == '__main__':
                 if isinstance(env, VecFrameStack):
                     env = env.venv
                 # Important: save the running average, for testing the agent we need that normalization
-                print("Saving running average to {}".format(save_path))
-                env.save_running_average(save_path)
+                print("Saving running average to {}".format(env_save_path))
+                env.save_running_average(env_save_path)
