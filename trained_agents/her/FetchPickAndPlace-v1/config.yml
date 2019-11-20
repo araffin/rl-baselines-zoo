@@ -1,0 +1,23 @@
+!!python/object/apply:collections.OrderedDict
+- - - buffer_size
+    - 1000000
+  - - ent_coef
+    - auto
+  - - env_wrapper
+    - utils.wrappers.DoneOnSuccessWrapper
+  - - gamma
+    - 0.95
+  - - goal_selection_strategy
+    - future
+  - - learning_starts
+    - 1000
+  - - model_class
+    - sac
+  - - n_sampled_goal
+    - 4
+  - - n_timesteps
+    - 4000000.0
+  - - policy
+    - MlpPolicy
+  - - train_freq
+    - 1

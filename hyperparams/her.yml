@@ -88,6 +88,21 @@ FetchPush-v1:
   learning_starts: 1000
   train_freq: 1
 
+FetchPickAndPlace-v1:
+  env_wrapper: utils.wrappers.DoneOnSuccessWrapper
+  n_timesteps: !!float 4e6
+  policy: 'MlpPolicy'
+  model_class: 'sac'
+  n_sampled_goal: 4
+  goal_selection_strategy: 'future'
+  buffer_size: 1000000
+  ent_coef: 'auto'
+  # batch_size: 256
+  gamma: 0.95
+  # learning_rate: !!float 1e-3
+  learning_starts: 1000
+  train_freq: 1
+
 # SAC hyperparams
 FetchReach-v1:
   n_timesteps: !!float 20000
