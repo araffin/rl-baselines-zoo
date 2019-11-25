@@ -158,6 +158,9 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
         os.makedirs(log_dir, exist_ok=True)
         logger.configure()
 
+    if hyperparams is None:
+        hyperparams = {}
+
     # Create the environment and wrap it if necessary
     env_wrapper = get_wrapper_class(hyperparams)
     if 'env_wrapper' in hyperparams.keys():
