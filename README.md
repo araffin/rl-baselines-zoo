@@ -205,7 +205,7 @@ MiniGrid-DoorKey-5x5-v0:
 
 ## Colab Notebook: Try it Online!
 
-You can train agents online using [colab notebook](https://colab.research.google.com/drive/1cPGK3XrCqEs3QLqiijsfib9OFht3kObX).
+You can train agents online using [colab notebook](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/master/rl-baselines-zoo.ipynb).
 
 ## Installation
 
