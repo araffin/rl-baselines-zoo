@@ -21,6 +21,7 @@ except ImportError:
     highway_env = None
 
 try:
+    import mpi4py
     from mpi4py import MPI
 except ImportError:
     mpi4py = None

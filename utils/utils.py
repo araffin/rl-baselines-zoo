@@ -12,7 +12,7 @@ try:
 except ImportError:
     pybullet_envs = None
 try:
-    from mpi4py import MPI
+    import mpi4py
 except ImportError:
     mpi4py = None
 
