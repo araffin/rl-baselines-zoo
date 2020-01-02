@@ -211,7 +211,7 @@ You can train agents online using [colab notebook](https://colab.research.google
 
 ### Stable-Baselines PyPi Package
 
-Min version: stable-baselines[mpi] >= 2.8.0
+Min version: stable-baselines[mpi] >= 2.9.0
 
 ```
 apt-get install swig cmake libopenmpi-dev zlib1g-dev ffmpeg
