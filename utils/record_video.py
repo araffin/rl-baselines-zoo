@@ -5,7 +5,7 @@ import gym
 import numpy as np
 from stable_baselines.common.vec_env import VecVideoRecorder, VecFrameStack, VecNormalize
 
-from .utils import ALGOS, create_test_env, get_saved_hyperparams, get_latest_run_id
+from .utils import ALGOS, create_test_env, get_saved_hyperparams, get_latest_run_id, find_saved_model
 
 if __name__ == '__main__':
 
@@ -46,13 +46,7 @@ if __name__ == '__main__':
     else:
         log_path = os.path.join(folder, algo)
 
-    found = False
-    # Backward compatibility
-    for ext in ['pkl', 'zip']:
-        model_path = "{}/{}.{}".format(log_path, env_id, ext)
-        found = os.path.isfile(model_path)
-        if found:
-            break
+    model_path = find_saved_model(algo, log_path, env_id)
 
     stats_path = os.path.join(log_path, env_id)
     hyperparams, stats_path = get_saved_hyperparams(stats_path)
