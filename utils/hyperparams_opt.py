@@ -173,7 +173,11 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
         del model
 
         if is_pruned:
-            raise optuna.structs.TrialPruned()
+            try:
+                # Optuna >= 0.19.0
+                raise optuna.exceptions.TrialPruned()
+            except AttributeError:
+                raise optuna.structs.TrialPruned()
 
         return cost
 
