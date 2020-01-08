@@ -48,8 +48,8 @@ CartPoleBulletEnv-v1:
   gamma: 0.98
   noptepochs: 20
   ent_coef: 0.0
-  learning_rate: lin_0.001
-  cliprange: lin_0.2
+  learning_rate: 0.0003
+  cliprange: 0.1
 
 CartPoleContinuousBulletEnv-v0:
   n_envs: 8
