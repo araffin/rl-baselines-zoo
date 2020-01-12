@@ -1,33 +1,38 @@
-import argparse
-import difflib
 import os
-from collections import OrderedDict
-from pprint import pprint
-import warnings
+import time
+import difflib
+import argparse
 import importlib
+from pprint import pprint
+from collections import OrderedDict
 
-# For pybullet envs
-warnings.filterwarnings("ignore")
+
 import gym
+import numpy as np
+import yaml
+# Optional dependencies
 try:
     import pybullet_envs
 except ImportError:
     pybullet_envs = None
-import numpy as np
-import yaml
 try:
     import highway_env
 except ImportError:
     highway_env = None
-from mpi4py import MPI
+
+try:
+    import mpi4py
+    from mpi4py import MPI
+except ImportError:
+    mpi4py = None
 
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.cmd_util import make_atari_env
 from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
-from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
+from stable_baselines.common.noise import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.ppo2.ppo2 import constfn
 
-from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class
+from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class, find_saved_model
 from utils.hyperparams_opt import hyperparam_optimization
 from utils.noise import LinearNormalActionNoise
 
@@ -83,7 +88,7 @@ if __name__ == '__main__':
             "The trained_agent must be a valid path to a .zip/.pkl file"
 
     rank = 0
-    if MPI.COMM_WORLD.Get_size() > 1:
+    if mpi4py is not None and MPI.COMM_WORLD.Get_size() > 1:
         print("Using MPI for multiprocessing with {} workers".format(MPI.COMM_WORLD.Get_size()))
         rank = MPI.COMM_WORLD.Get_rank()
         print("Worker rank: {}".format(rank))
@@ -122,6 +127,8 @@ if __name__ == '__main__':
             assert algo_ in {'sac', 'ddpg', 'dqn', 'td3'}, "{} is not compatible with HER".format(algo_)
             # Retrieve the model class
             hyperparams['model_class'] = ALGOS[saved_hyperparams['model_class']]
+            if hyperparams['model_class'] is None:
+                raise ValueError('{} requires MPI to be installed'.format(algo_))
 
         if args.verbose > 0:
             pprint(saved_hyperparams)
@@ -257,6 +264,9 @@ if __name__ == '__main__':
             if 'noise_std_final' in hyperparams:
                 del hyperparams['noise_std_final']
 
+        if ALGOS[args.algo] is None:
+            raise ValueError('{} requires MPI to be installed'.format(args.algo))
+
         if os.path.isfile(args.trained_agent):
             # Continue training
             print("Loading pretrained agent")
@@ -291,8 +301,8 @@ if __name__ == '__main__':
                                                  sampler_method=args.sampler, pruner_method=args.pruner,
                                                  verbose=args.verbose)
 
-            report_name = "report_{}_{}-trials-{}-{}-{}.csv".format(env_id, args.n_trials, n_timesteps,
-                                                                    args.sampler, args.pruner)
+            report_name = "report_{}_{}-trials-{}-{}-{}_{}.csv".format(env_id, args.n_trials, n_timesteps,
+                                                                    args.sampler, args.pruner, int(time.time()))
 
             log_path = os.path.join(args.log_folder, args.algo, report_name)
 

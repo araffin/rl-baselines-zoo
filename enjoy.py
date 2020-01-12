@@ -1,12 +1,9 @@
-import argparse
 import os
-import warnings
 import sys
+import argparse
 import pkg_resources
 import importlib
 
-# For pybullet envs
-warnings.filterwarnings("ignore")
 import gym
 try:
     import pybullet_envs
@@ -21,7 +18,7 @@ import stable_baselines
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.vec_env import VecNormalize, VecFrameStack, VecEnv
 
-from utils import ALGOS, create_test_env, get_latest_run_id, get_saved_hyperparams
+from utils import ALGOS, create_test_env, get_latest_run_id, get_saved_hyperparams, find_saved_model
 
 # Fix for breaking change in v2.6.0
 if pkg_resources.get_distribution("stable_baselines").version >= "2.6.0":
@@ -76,15 +73,7 @@ def main():
 
     assert os.path.isdir(log_path), "The {} folder was not found".format(log_path)
 
-    found = False
-    for ext in ['pkl', 'zip']:
-        model_path = "{}/{}.{}".format(log_path, env_id, ext)
-        found = os.path.isfile(model_path)
-        if found:
-            break
-
-    if not found:
-        raise ValueError("No model found for {} on {}, path: {}".format(algo, env_id, model_path))
+    model_path = find_saved_model(algo, log_path, env_id)
 
     if algo in ['dqn', 'ddpg', 'sac', 'td3']:
         args.n_envs = 1

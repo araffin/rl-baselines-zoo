@@ -1,10 +1,6 @@
 import numpy as np
-# TODO: remove when stable-baselines > 2.8.0 is out
-try:
-    # The base noise class was moved to the common folder
-    from stable_baselines.common.noise import ActionNoise
-except ImportError:
-    from stable_baselines.ddpg.noise import ActionNoise
+
+from stable_baselines.common.noise import ActionNoise
 
 
 class LinearNormalActionNoise(ActionNoise):

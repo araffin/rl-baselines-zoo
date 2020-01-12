@@ -211,7 +211,7 @@ You can train agents online using [colab notebook](https://colab.research.google
 
 ### Stable-Baselines PyPi Package
 
-Min version: stable-baselines[mpi] >= 2.8.0
+Min version: stable-baselines[mpi] >= 2.9.0
 
 ```
 apt-get install swig cmake libopenmpi-dev zlib1g-dev ffmpeg
@@ -224,28 +224,28 @@ Please see [Stable Baselines README](https://github.com/hill-a/stable-baselines)
 
 Build docker image (CPU):
 ```
-docker build . -f docker/Dockerfile.cpu -t rl-baselines-zoo-cpu
+./scripts/build_docker.sh
 ```
 
 GPU:
 ```
-docker build . -f docker/Dockerfile.gpu -t rl-baselines-zoo
+USE_GPU=True ./scripts/build_docker.sh
 ```
 
 Pull built docker image (CPU):
 ```
-docker pull araffin/rl-baselines-zoo-cpu
+docker pull stablebaselines/rl-baselines-zoo-cpu
 ```
 
 GPU image:
 ```
-docker pull araffin/rl-baselines-zoo
+docker pull stablebaselines/rl-baselines-zoo
 ```
 
 Run script in the docker image:
 
 ```
-./run_docker_cpu.sh python train.py --algo ppo2 --env CartPole-v1
+./scripts/run_docker_cpu.sh python train.py --algo ppo2 --env CartPole-v1
 ```
 
 ## Tests
