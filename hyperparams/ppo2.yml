@@ -38,6 +38,33 @@ CartPole-v1:
   learning_rate: lin_0.001
   cliprange: lin_0.2
 
+CartPoleBulletEnv-v1:
+  n_envs: 8
+  n_timesteps: !!float 1e5
+  policy: 'MlpPolicy'
+  n_steps: 32
+  nminibatches: 1
+  lam: 0.8
+  gamma: 0.98
+  noptepochs: 20
+  ent_coef: 0.0
+  learning_rate: 0.0003
+  cliprange: 0.1
+
+CartPoleContinuousBulletEnv-v0:
+  n_envs: 8
+  n_timesteps: !!float 1e5
+  policy: 'MlpPolicy'
+  n_steps: 32
+  nminibatches: 1
+  lam: 0.8
+  gamma: 0.98
+  noptepochs: 20
+  ent_coef: 0.0
+  learning_rate: lin_0.001
+  cliprange: lin_0.2
+
+
 MountainCar-v0:
   normalize: true
   n_envs: 16
