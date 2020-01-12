@@ -6,12 +6,15 @@ import yaml
 import importlib
 
 import gym
+from gym.envs.registration import load
 try:
     import pybullet_envs
 except ImportError:
     pybullet_envs = None
-
-from gym.envs.registration import load
+try:
+    import mpi4py
+except ImportError:
+    mpi4py = None
 
 from stable_baselines.deepq.policies import FeedForwardPolicy
 from stable_baselines.common.policies import FeedForwardPolicy as BasePolicy
@@ -19,7 +22,13 @@ from stable_baselines.common.policies import register_policy
 from stable_baselines.sac.policies import FeedForwardPolicy as SACPolicy
 from stable_baselines.bench import Monitor
 from stable_baselines import logger
-from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, HER, DDPG, TRPO, SAC, TD3
+from stable_baselines import PPO2, A2C, ACER, ACKTR, DQN, HER, SAC, TD3
+# DDPG and TRPO require MPI to be installed
+if mpi4py is None:
+    DDPG, TRPO = None, None
+else:
+    from stable_baselines import DDPG, TRPO
+
 from stable_baselines.common.vec_env import DummyVecEnv, VecNormalize, \
     VecFrameStack, SubprocVecEnv
 from stable_baselines.common.cmd_util import make_atari_env
@@ -311,3 +320,22 @@ def get_saved_hyperparams(stats_path, norm_reward=False, test_mode=False):
                 normalize_kwargs = {'norm_obs': hyperparams['normalize'], 'norm_reward': norm_reward}
             hyperparams['normalize_kwargs'] = normalize_kwargs
     return hyperparams, stats_path
+
+
+def find_saved_model(algo, log_path, env_id):
+    """
+    :param algo: (str)
+    :param log_path: (str) Path to the directory with the saved model
+    :param env_id: (str)
+    :return: (str) Path to the saved model
+    """
+    model_path, found = None, False
+    for ext in ['pkl', 'zip']:
+        model_path = "{}/{}.{}".format(log_path, env_id, ext)
+        found = os.path.isfile(model_path)
+        if found:
+            break
+
+    if not found:
+        raise ValueError("No model found for {} on {}, path: {}".format(algo, env_id, model_path))
+    return model_path

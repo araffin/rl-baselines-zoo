@@ -173,7 +173,11 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
         del model
 
         if is_pruned:
-            raise optuna.structs.TrialPruned()
+            try:
+                # Optuna >= 0.19.0
+                raise optuna.exceptions.TrialPruned()
+            except AttributeError:
+                raise optuna.structs.TrialPruned()
 
         return cost
 
@@ -295,6 +299,13 @@ def sample_sac_params(trial):
     # gradient_steps = trial.suggest_categorical('gradient_steps', [1, 100, 300])
     gradient_steps = train_freq
     ent_coef = trial.suggest_categorical('ent_coef', ['auto', 0.5, 0.1, 0.05, 0.01, 0.0001])
+    net_arch = trial.suggest_categorical('net_arch', ["small", "medium", "big"])
+
+    net_arch = {
+        'small': [64, 64],
+        'medium': [256, 256],
+        'big': [400, 300],
+    }[net_arch]
 
     target_entropy = 'auto'
     if ent_coef == 'auto':
@@ -309,7 +320,8 @@ def sample_sac_params(trial):
         'train_freq': train_freq,
         'gradient_steps': gradient_steps,
         'ent_coef': ent_coef,
-        'target_entropy': target_entropy
+        'target_entropy': target_entropy,
+        'policy_kwargs': dict(layers=net_arch)
     }
 
 def sample_td3_params(trial):
