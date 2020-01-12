@@ -7,7 +7,7 @@ notifications:
 
 env:
   global:
-    - DOCKER_IMAGE=araffin/rl-baselines-zoo-cpu:v2.8.0
+    - DOCKER_IMAGE=stablebaselines/rl-baselines-zoo-cpu:v2.9.0
 
 services:
   - docker
