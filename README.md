@@ -255,6 +255,21 @@ To run tests, first install pytest, then:
 python -m pytest -v tests/
 ```
 
+## Citing the Project
+
+To cite this repository in publications:
+
+```
+@misc{rl-zoo,
+  author = {Raffin, Antonin},
+  title = {RL Baselines Zoo},
+  year = {2018},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/araffin/rl-baselines-zoo}},
+}
+```
+
 ## Contributing
 
 If you trained an agent that is not present in the rl zoo, please submit a Pull Request (containing the hyperparameters and the score too).
