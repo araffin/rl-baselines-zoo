@@ -3,9 +3,13 @@ import time
 import difflib
 import argparse
 import importlib
+import warnings
 from pprint import pprint
 from collections import OrderedDict
 
+# numpy warnings because of tensorflow
+warnings.filterwarnings("ignore", category=FutureWarning, module='tensorflow')
+warnings.filterwarnings("ignore", category=UserWarning, module='gym')
 
 import gym
 import numpy as np
@@ -109,7 +113,7 @@ if __name__ == '__main__':
 
         # Load hyperparameters from yaml file
         with open('hyperparams/{}.yml'.format(args.algo), 'r') as f:
-            hyperparams_dict = yaml.load(f)
+            hyperparams_dict = yaml.safe_load(f)
             if env_id in list(hyperparams_dict.keys()):
                 hyperparams = hyperparams_dict[env_id]
             elif is_atari:

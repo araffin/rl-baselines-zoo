@@ -203,6 +203,27 @@ MiniGrid-DoorKey-5x5-v0:
   env_wrapper: gym_minigrid.wrappers.FlatObsWrapper
 ```
 
+## Env Wrappers
+
+You can specify in the hyperparameter config one or more wrapper to use around the environment:
+
+for one wrapper:
+```
+env_wrapper: gym_minigrid.wrappers.FlatObsWrapper
+```
+
+for multiple, specify a list:
+
+```
+env_wrapper:
+    - utils.wrappers.DoneOnSuccessWrapper:
+        reward_offset: 1.0
+    - utils.wrappers.TimeFeatureWrapper
+```
+
+Note that you can easily specify parameters too.
+
+
 ## Colab Notebook: Try it Online!
 
 You can train agents online using [colab notebook](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/master/rl-baselines-zoo.ipynb).
