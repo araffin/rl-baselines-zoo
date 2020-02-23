@@ -28,6 +28,12 @@ For example, enjoy A2C on Breakout during 5000 timesteps:
 python enjoy.py --algo a2c --env BreakoutNoFrameskip-v4 --folder trained_agents/ -n 5000
 ```
 
+If you have trained an agent yourself, you need to do:
+```
+# exp-id 0 corresponds to the last experiment, otherwise, you can specify another ID
+python enjoy.py --algo algo_name --env env_id -f logs/ --exp-id 0
+```
+
 ## Train an Agent
 
 The hyperparameters for each environment are defined in `hyperparameters/algo_name.yml`.
@@ -40,11 +46,6 @@ python train.py --algo algo_name --env env_id
 For example (with tensorboard support):
 ```
 python train.py --algo ppo2 --env CartPole-v1 --tensorboard-log /tmp/stable-baselines/
-```
-
-Train for multiple environments (with one call) and with tensorboard logging:
-```
-python train.py --algo a2c --env MountainCar-v0 CartPole-v1 --tensorboard-log /tmp/stable-baselines/
 ```
 
 Continue training (here, load pretrained agent for Breakout and continue training for 5000 steps):

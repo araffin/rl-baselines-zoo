@@ -158,9 +158,8 @@ def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None):
     :param wrapper: (type) a subclass of gym.Wrapper to wrap the original
                     env with
     """
-    if log_dir is None and log_dir != '':
-        log_dir = "/tmp/gym/{}/".format(int(time.time()))
-    os.makedirs(log_dir, exist_ok=True)
+    if log_dir is not None:
+        os.makedirs(log_dir, exist_ok=True)
 
     def _init():
         set_global_seeds(seed + rank)
@@ -173,7 +172,8 @@ def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None):
             env = wrapper_class(env)
 
         env.seed(seed + rank)
-        env = Monitor(env, os.path.join(log_dir, str(rank)), allow_early_resets=True)
+        log_file = os.path.join(log_dir, str(rank)) if log_dir is not None else None
+        env = Monitor(env, log_file)
         return env
 
     return _init
@@ -262,7 +262,15 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
             print("Loading running average")
             print("with params: {}".format(hyperparams['normalize_kwargs']))
             env = VecNormalize(env, training=False, **hyperparams['normalize_kwargs'])
-            env.load_running_average(stats_path)
+
+            if os.path.exists(os.path.join(stats_path, 'vecnormalize.pkl')):
+                env = VecNormalize.load(os.path.join(stats_path, 'vecnormalize.pkl'), env)
+                # Deactivate training and reward normalization
+                env.training = False
+                env.norm_reward = False
+            else:
+                # Legacy:
+                env.load_running_average(stats_path)
 
         n_stack = hyperparams.get('frame_stack', 0)
         if n_stack > 0:

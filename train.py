@@ -108,6 +108,7 @@ if __name__ == '__main__':
         is_atari = True
 
     print("=" * 10, env_id, "=" * 10)
+    print("Seed: {}".format(args.seed))
 
     # Load hyperparameters from yaml file
     with open('hyperparams/{}.yml'.format(args.algo), 'r') as f:
@@ -188,13 +189,23 @@ if __name__ == '__main__':
     if 'env_wrapper' in hyperparams.keys():
         del hyperparams['env_wrapper']
 
-    def create_env(n_envs):
+    log_path = "{}/{}/".format(args.log_folder, args.algo)
+    save_path = os.path.join(log_path, "{}_{}".format(env_id, get_latest_run_id(log_path, env_id) + 1))
+    params_path = "{}/{}".format(save_path, env_id)
+    os.makedirs(params_path, exist_ok=True)
+
+    def create_env(n_envs, eval_env=False):
         """
         Create the environment and wrap it if necessary
         :param n_envs: (int)
+        :param eval_env: (bool) Whether is it an environment used for evaluation or not
+        :return: (Union[gym.Env, VecEnv])
         :return: (gym.Env)
         """
         global hyperparams
+
+        # Do not log eval env (issue with writing the same file)
+        log_dir = None if eval_env else save_path
 
         if is_atari:
             if args.verbose > 0:
@@ -211,11 +222,12 @@ if __name__ == '__main__':
                 env = env_wrapper(env)
         else:
             if n_envs == 1:
-                env = DummyVecEnv([make_env(env_id, 0, args.seed, wrapper_class=env_wrapper)])
+                env = DummyVecEnv([make_env(env_id, 0, args.seed, wrapper_class=env_wrapper, log_dir=log_dir)])
             else:
                 # env = SubprocVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
                 # On most env, SubprocVecEnv does not help and is quite memory hungry
-                env = DummyVecEnv([make_env(env_id, i, args.seed, wrapper_class=env_wrapper) for i in range(n_envs)])
+                env = DummyVecEnv([make_env(env_id, i, args.seed, log_dir=log_dir,
+                                            wrapper_class=env_wrapper) for i in range(n_envs)])
             if normalize:
                 if args.verbose > 0:
                     if len(normalize_kwargs) > 0:
@@ -281,7 +293,12 @@ if __name__ == '__main__':
         exp_folder = args.trained_agent[:-4]
         if normalize:
             print("Loading saved running average")
-            env.load_running_average(exp_folder)
+            stats_path = os.path.join(exp_folder, env_id)
+            if os.path.exists(os.path.join(stats_path, 'vecnormalize.pkl')):
+                env = VecNormalize.load(os.path.join(stats_path, 'vecnormalize.pkl'), env)
+            else:
+                # Legacy:
+                env.load_running_average(exp_folder)
 
     elif args.optimize_hyperparameters:
 
@@ -322,26 +339,30 @@ if __name__ == '__main__':
     if args.log_interval > -1:
         kwargs = {'log_interval': args.log_interval}
 
-    model.learn(n_timesteps, **kwargs)
+    # Save hyperparams
+    with open(os.path.join(params_path, 'config.yml'), 'w') as f:
+        yaml.dump(saved_hyperparams, f)
 
-    # Save trained model
-    log_path = "{}/{}/".format(args.log_folder, args.algo)
-    save_path = os.path.join(log_path, "{}_{}".format(env_id, get_latest_run_id(log_path, env_id) + 1))
-    params_path = "{}/{}".format(save_path, env_id)
-    os.makedirs(params_path, exist_ok=True)
+    print("Log path: {}".format(save_path))
+
+    try:
+        model.learn(n_timesteps, **kwargs)
+    except KeyboardInterrupt:
+        pass
+
 
     # Only save worker of rank 0 when using mpi
     if rank == 0:
         print("Saving to {}".format(save_path))
 
         model.save("{}/{}".format(save_path, env_id))
-        # Save hyperparams
-        with open(os.path.join(params_path, 'config.yml'), 'w') as f:
-            yaml.dump(saved_hyperparams, f)
 
         if normalize:
+            # TODO: use unwrap_vec_normalize()
             # Unwrap
             if isinstance(env, VecFrameStack):
                 env = env.venv
             # Important: save the running average, for testing the agent we need that normalization
-            env.save_running_average(params_path)
+            env.save(os.path.join(params_path, 'vecnormalize.pkl'))
+            # Deprecated saving:
+            # env.save_running_average(params_path)
