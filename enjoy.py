@@ -3,6 +3,11 @@ import sys
 import argparse
 import pkg_resources
 import importlib
+import warnings
+
+# numpy warnings because of tensorflow
+warnings.filterwarnings("ignore", category=FutureWarning, module='tensorflow')
+warnings.filterwarnings("ignore", category=UserWarning, module='gym')
 
 import gym
 try:

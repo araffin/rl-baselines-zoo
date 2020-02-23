@@ -46,6 +46,7 @@ Describe the characteristic of your environment:
  * GPU models and configuration
  * Python version
  * Tensorflow version
+ * Gym version
  * Pybullet version
  * Versions of any other relevant libraries
 

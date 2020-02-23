@@ -28,6 +28,12 @@ For example, enjoy A2C on Breakout during 5000 timesteps:
 python enjoy.py --algo a2c --env BreakoutNoFrameskip-v4 --folder trained_agents/ -n 5000
 ```
 
+If you have trained an agent yourself, you need to do:
+```
+# exp-id 0 corresponds to the last experiment, otherwise, you can specify another ID
+python enjoy.py --algo algo_name --env env_id -f logs/ --exp-id 0
+```
+
 ## Train an Agent
 
 The hyperparameters for each environment are defined in `hyperparameters/algo_name.yml`.
@@ -40,11 +46,6 @@ python train.py --algo algo_name --env env_id
 For example (with tensorboard support):
 ```
 python train.py --algo ppo2 --env CartPole-v1 --tensorboard-log /tmp/stable-baselines/
-```
-
-Train for multiple environments (with one call) and with tensorboard logging:
-```
-python train.py --algo a2c --env MountainCar-v0 CartPole-v1 --tensorboard-log /tmp/stable-baselines/
 ```
 
 Continue training (here, load pretrained agent for Breakout and continue training for 5000 steps):
@@ -202,6 +203,35 @@ Also, you may need to specify a Gym environment wrapper in hyperparameters, as M
 MiniGrid-DoorKey-5x5-v0:
   env_wrapper: gym_minigrid.wrappers.FlatObsWrapper
 ```
+
+## Env Wrappers
+
+You can specify in the hyperparameter config one or more wrapper to use around the environment:
+
+for one wrapper:
+```
+env_wrapper: gym_minigrid.wrappers.FlatObsWrapper
+```
+
+for multiple, specify a list:
+
+```
+env_wrapper:
+    - utils.wrappers.DoneOnSuccessWrapper:
+        reward_offset: 1.0
+    - utils.wrappers.TimeFeatureWrapper
+```
+
+Note that you can easily specify parameters too.
+
+## Overwrite hyperparameters
+
+You can easily overwrite hyperparameters in the command line, using ``--hyperparams``:
+
+```
+python train.py --algo a2c --env MountainCarContinuous-v0 --hyperparams learning_rate:0.001 policy_kwargs:"dict(net_arch=[64, 64])"
+```
+
 
 ## Colab Notebook: Try it Online!
 

@@ -1,5 +1,6 @@
 import time
 import os
+import argparse
 import inspect
 import glob
 import yaml
@@ -85,26 +86,63 @@ def flatten_dict_observations(env):
 
 def get_wrapper_class(hyperparams):
     """
-    Get a Gym environment wrapper class specified as a hyper parameter
+    Get one or more Gym environment wrapper class specified as a hyper parameter
     "env_wrapper".
     e.g.
     env_wrapper: gym_minigrid.wrappers.FlatObsWrapper
+
+    for multiple, specify a list:
+
+    env_wrapper:
+        - utils.wrappers.DoneOnSuccessWrapper:
+            reward_offset: 1.0
+        - utils.wrappers.TimeFeatureWrapper
+
 
     :param hyperparams: (dict)
     :return: a subclass of gym.Wrapper (class object) you can use to
              create another Gym env giving an original env.
     """
 
-    def get_module_name(fullname):
+    def get_module_name(wrapper_name):
         return '.'.join(wrapper_name.split('.')[:-1])
 
-    def get_class_name(fullname):
+    def get_class_name(wrapper_name):
         return wrapper_name.split('.')[-1]
 
     if 'env_wrapper' in hyperparams.keys():
         wrapper_name = hyperparams.get('env_wrapper')
-        wrapper_module = importlib.import_module(get_module_name(wrapper_name))
-        return getattr(wrapper_module, get_class_name(wrapper_name))
+        if not isinstance(wrapper_name, list):
+            wrapper_names = [wrapper_name]
+        else:
+            wrapper_names = wrapper_name
+
+        wrapper_classes = []
+        wrapper_kwargs = []
+        # Handle multiple wrappers
+        for wrapper_name in wrapper_names:
+            # Handle keyword arguments
+            if isinstance(wrapper_name, dict):
+                assert len(wrapper_name) == 1
+                wrapper_dict = wrapper_name
+                wrapper_name = list(wrapper_dict.keys())[0]
+                kwargs = wrapper_dict[wrapper_name]
+            else:
+                kwargs = {}
+            wrapper_module = importlib.import_module(get_module_name(wrapper_name))
+            wrapper_class = getattr(wrapper_module, get_class_name(wrapper_name))
+            wrapper_classes.append(wrapper_class)
+            wrapper_kwargs.append(kwargs)
+
+        def wrap_env(env):
+            """
+            :param env: (gym.Env)
+            :return: (gym.Env)
+            """
+            for wrapper_class, kwargs in zip(wrapper_classes, wrapper_kwargs):
+                env = wrapper_class(env, **kwargs)
+            return env
+        return wrap_env
     else:
         return None
 
@@ -121,9 +159,8 @@ def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None):
     :param wrapper: (type) a subclass of gym.Wrapper to wrap the original
                     env with
     """
-    if log_dir is None and log_dir != '':
-        log_dir = "/tmp/gym/{}/".format(int(time.time()))
-    os.makedirs(log_dir, exist_ok=True)
+    if log_dir is not None:
+        os.makedirs(log_dir, exist_ok=True)
 
     def _init():
         set_global_seeds(seed + rank)
@@ -136,7 +173,8 @@ def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None):
             env = wrapper_class(env)
 
         env.seed(seed + rank)
-        env = Monitor(env, os.path.join(log_dir, str(rank)), allow_early_resets=True)
+        log_file = os.path.join(log_dir, str(rank)) if log_dir is not None else None
+        env = Monitor(env, log_file)
         return env
 
     return _init
@@ -225,7 +263,15 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
             print("Loading running average")
             print("with params: {}".format(hyperparams['normalize_kwargs']))
             env = VecNormalize(env, training=False, **hyperparams['normalize_kwargs'])
-            env.load_running_average(stats_path)
+
+            if os.path.exists(os.path.join(stats_path, 'vecnormalize.pkl')):
+                env = VecNormalize.load(os.path.join(stats_path, 'vecnormalize.pkl'), env)
+                # Deactivate training and reward normalization
+                env.training = False
+                env.norm_reward = False
+            else:
+                # Legacy:
+                env.load_running_average(stats_path)
 
         n_stack = hyperparams.get('frame_stack', 0)
         if n_stack > 0:
@@ -339,3 +385,24 @@ def find_saved_model(algo, log_path, env_id):
     if not found:
         raise ValueError("No model found for {} on {}, path: {}".format(algo, env_id, model_path))
     return model_path
+
+
+class StoreDict(argparse.Action):
+    """
+    Custom argparse action for storing dict.
+
+    In: args1:0.0 args2:"dict(a=1)"
+    Out: {'args1': 0.0, arg2: dict(a=1)}
+    """
+    def __init__(self, option_strings, dest, nargs=None, **kwargs):
+        self._nargs = nargs
+        super(StoreDict, self).__init__(option_strings, dest, nargs=nargs, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        arg_dict = {}
+        for arguments in values:
+            key = arguments.split(":")[0]
+            value = "".join(arguments.split(":")[1:])
+            # Evaluate the string as python code
+            arg_dict[key] = eval(value)
+        setattr(namespace, self.dest, arg_dict)
