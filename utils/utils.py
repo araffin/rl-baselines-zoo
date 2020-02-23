@@ -1,5 +1,6 @@
 import time
 import os
+import argparse
 import inspect
 import glob
 import yaml
@@ -384,3 +385,24 @@ def find_saved_model(algo, log_path, env_id):
     if not found:
         raise ValueError("No model found for {} on {}, path: {}".format(algo, env_id, model_path))
     return model_path
+
+
+class StoreDict(argparse.Action):
+    """
+    Custom argparse action for storing dict.
+
+    In: args1:0.0 args2:"dict(a=1)"
+    Out: {'args1': 0.0, arg2: dict(a=1)}
+    """
+    def __init__(self, option_strings, dest, nargs=None, **kwargs):
+        self._nargs = nargs
+        super(StoreDict, self).__init__(option_strings, dest, nargs=nargs, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        arg_dict = {}
+        for arguments in values:
+            key = arguments.split(":")[0]
+            value = "".join(arguments.split(":")[1:])
+            # Evaluate the string as python code
+            arg_dict[key] = eval(value)
+        setattr(namespace, self.dest, arg_dict)

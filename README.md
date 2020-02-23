@@ -224,6 +224,14 @@ env_wrapper:
 
 Note that you can easily specify parameters too.
 
+## Overwrite hyperparameters
+
+You can easily overwrite hyperparameters in the command line, using ``--hyperparams``:
+
+```
+python train.py --algo a2c --env MountainCarContinuous-v0 --hyperparams learning_rate:0.001 policy_kwargs:"dict(net_arch=[64, 64])"
+```
+
 
 ## Colab Notebook: Try it Online!
 

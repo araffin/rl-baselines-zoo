@@ -39,6 +39,7 @@ from stable_baselines.ppo2.ppo2 import constfn
 from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class, find_saved_model
 from utils.hyperparams_opt import hyperparam_optimization
 from utils.noise import LinearNormalActionNoise
+from utils.utils import StoreDict
 
 
 if __name__ == '__main__':
@@ -65,7 +66,10 @@ if __name__ == '__main__':
                         default='median', choices=['halving', 'median', 'none'])
     parser.add_argument('--verbose', help='Verbose mode (0: no output, 1: INFO)', default=1,
                         type=int)
-    parser.add_argument('--gym-packages', type=str, nargs='+', default=[], help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
+    parser.add_argument('--gym-packages', type=str, nargs='+', default=[],
+                        help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
+    parser.add_argument('-params', '--hyperparams', type=str, nargs='+', action=StoreDict,
+                        help='Overwrite hyperparameter (e.g. learning_rate:0.01 train_freq:10)')
     args = parser.parse_args()
 
     # Going through custom gym packages to let them register in the global registory
@@ -119,6 +123,10 @@ if __name__ == '__main__':
             hyperparams = hyperparams_dict['atari']
         else:
             raise ValueError("Hyperparameters not found for {}-{}".format(args.algo, env_id))
+
+    if args.hyperparams is not None:
+        # Overwrite hyperparams if needed
+        hyperparams.update(args.hyperparams)
 
     # Sort hyperparams that will be saved
     saved_hyperparams = OrderedDict([(key, hyperparams[key]) for key in sorted(hyperparams.keys())])
@@ -175,9 +183,10 @@ if __name__ == '__main__':
             normalize = True
         del hyperparams['normalize']
 
-    if 'policy_kwargs' in hyperparams.keys():
+    # Convert to python object if needed
+    if 'policy_kwargs' in hyperparams.keys() and isinstance(hyperparams['policy_kwargs'], str):
         hyperparams['policy_kwargs'] = eval(hyperparams['policy_kwargs'])
-
+        
     # Delete keys so the dict can be pass to the model constructor
     if 'n_envs' in hyperparams.keys():
         del hyperparams['n_envs']
