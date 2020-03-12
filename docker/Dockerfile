@@ -17,6 +17,7 @@ ENV VENV /root/venv
 RUN \
     mkdir -p ${CODE_DIR}/rl_zoo && \
     . $VENV/bin/activate && \
+    pip uninstall -y stable-baselines && \
     pip install stable-baselines[mpi]==2.10.0 && \
     pip install box2d-py==2.3.5 && \
     pip install pybullet && \
