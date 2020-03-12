@@ -77,7 +77,7 @@ HalfCheetahBulletEnv-v0:
   gamma: 0.99
   learning_rate: 0.002
 
-BipedalWalkerHardcore-v2:
+BipedalWalkerHardcore-v3:
   normalize: true
   n_envs: 16
   n_timesteps: !!float 10e7

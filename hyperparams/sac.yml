@@ -34,7 +34,7 @@ BipedalWalker-v2:
   gradient_steps: 1
   learning_starts: 1000
 
-BipedalWalkerHardcore-v2:
+BipedalWalkerHardcore-v3:
   n_timesteps: !!float 5e7
   policy: 'CustomSACPolicy'
   learning_rate: lin_3e-4
