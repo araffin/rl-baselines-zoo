@@ -26,9 +26,13 @@ def test_enjoy(trained_model):
         '--env', env_id,
         '--no-render'
     ]
-    
+
     # Skip mujoco envs
     if 'Fetch' in trained_model:
+        return
+
+    # Skip old BipedalWalker version
+    if 'Walker-v2' in trained_model or 'WalkerHardcore-v2' in trained_model:
         return
 
     if '-MiniGrid-' in trained_model:
