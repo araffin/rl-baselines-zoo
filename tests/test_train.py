@@ -22,7 +22,7 @@ for algo in ALGOS:
         experiments['{}-{}'.format(algo, env_id)] = (algo, env_id)
 
 # Test for vecnormalize and frame-stack
-experiments['ppo2-BipedalWalkerHardcore-v2'] = ('ppo2', 'BipedalWalkerHardcore-v2')
+experiments['ppo2-BipedalWalkerHardcore-v3'] = ('ppo2', 'BipedalWalkerHardcore-v3')
 # Test for DDPG
 experiments['ddpg-MountainCarContinuous-v0'] = ('ddpg', 'MountainCarContinuous-v0')
 # Test for SAC

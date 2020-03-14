@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-DOCKER_CMD="docker run -it --rm --network host --ipc=host --mount src=$(pwd),target=/root/code/stable-baselines,type=bind"
-BASH_CMD="cd /root/code/stable-baselines/"
+DOCKER_CMD="docker run -it --rm --network host --ipc=host --mount src=$(pwd),target=/root/code/rl_zoo,type=bind"
+BASH_CMD="cd /root/code/rl_zoo/"
 
 if [[ $# -ne 1 ]]; then
   echo "usage: $0 <test glob>"

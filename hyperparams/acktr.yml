@@ -110,7 +110,7 @@ HalfCheetah-v2:
   policy_kwargs: "dict(net_arch=[256, 256])"
 
 # Tuned
-BipedalWalkerHardcore-v2:
+BipedalWalkerHardcore-v3:
   normalize: true
   n_envs: 8
   n_timesteps: !!float 10e7

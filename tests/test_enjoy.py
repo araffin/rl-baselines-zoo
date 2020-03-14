@@ -26,9 +26,13 @@ def test_enjoy(trained_model):
         '--env', env_id,
         '--no-render'
     ]
-    
+
     # Skip mujoco envs
     if 'Fetch' in trained_model:
+        return
+
+    # Skip old BipedalWalker version
+    if 'Walker-v2' in trained_model or 'WalkerHardcore-v2' in trained_model:
         return
 
     if '-MiniGrid-' in trained_model:
@@ -53,12 +57,12 @@ def test_record_video():
     args = [
         '-n', '100',
         '--algo', 'ppo2',
-        '--env', 'BipedalWalkerHardcore-v2',
+        '--env', 'BipedalWalkerHardcore-v3',
         '-o', 'logs/tests/videos/'
     ]
 
     return_code = subprocess.call(['python', '-m', 'utils.record_video'] + args)
     _assert_eq(return_code, 0)
-    video_path = 'logs/tests/videos/ppo2-BipedalWalkerHardcore-v2-step-0-to-step-100.mp4'
+    video_path = 'logs/tests/videos/ppo2-BipedalWalkerHardcore-v3-step-0-to-step-100.mp4'
     # File is not empty
     assert os.stat(video_path).st_size != 0, "Recorded video is empty"

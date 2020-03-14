@@ -26,9 +26,9 @@ from stable_baselines.common.vec_env import VecNormalize, VecFrameStack, VecEnv
 from utils import ALGOS, create_test_env, get_latest_run_id, get_saved_hyperparams, find_saved_model
 
 # Fix for breaking change in v2.6.0
-if pkg_resources.get_distribution("stable_baselines").version >= "2.6.0":
-    sys.modules['stable_baselines.ddpg.memory'] = stable_baselines.deepq.replay_buffer
-    stable_baselines.deepq.replay_buffer.Memory = stable_baselines.deepq.replay_buffer.ReplayBuffer
+sys.modules['stable_baselines.ddpg.memory'] = stable_baselines.common.buffers
+stable_baselines.common.buffers.Memory = stable_baselines.common.buffers.ReplayBuffer
+
 
 def main():
     parser = argparse.ArgumentParser()

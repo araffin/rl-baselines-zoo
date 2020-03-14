@@ -64,7 +64,7 @@ BipedalWalker-v2:
   policy_kwargs: "dict(layers=[400, 300])"
 
 # To be tuned
-BipedalWalkerHardcore-v2:
+BipedalWalkerHardcore-v3:
   n_timesteps: !!float 5e7
   policy: 'MlpPolicy'
   gamma: 0.99
