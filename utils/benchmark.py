@@ -55,6 +55,10 @@ for idx, trained_model in enumerate(trained_models.keys()):
         print("Skipping mujoco env: {}".format(env_id))
         continue
 
+    # Skip old BipedalWalker version
+    if 'Walker-v2' in trained_model or 'WalkerHardcore-v2' in trained_model:
+        continue
+
     reward_log = '{}/{}/'.format(args.benchmark_dir, trained_model)
     arguments = [
         '-n', str(n_timesteps),
