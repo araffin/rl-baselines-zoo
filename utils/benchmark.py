@@ -56,7 +56,7 @@ for idx, trained_model in enumerate(trained_models.keys()):
         continue
 
     # Skip old BipedalWalker version
-    if 'Walker-v2' in trained_model or 'WalkerHardcore-v2' in trained_model:
+    if 'Walker-v2' in env_id or 'WalkerHardcore-v2' in env_id:
         continue
 
     reward_log = '{}/{}/'.format(args.benchmark_dir, trained_model)
