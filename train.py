@@ -1,5 +1,6 @@
 import os
 import time
+import uuid
 import difflib
 import argparse
 import importlib
@@ -15,15 +16,7 @@ import gym
 import numpy as np
 import yaml
 # Optional dependencies
-try:
-    import pybullet_envs
-except ImportError:
-    pybullet_envs = None
-try:
-    import highway_env
-except ImportError:
-    highway_env = None
-
+import utils.import_envs  # pytype: disable=import-error
 try:
     import mpi4py
     from mpi4py import MPI
@@ -35,9 +28,11 @@ from stable_baselines.common.cmd_util import make_atari_env
 from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
 from stable_baselines.common.noise import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.common.schedules import constfn
+from stable_baselines.common.callbacks import CheckpointCallback, EvalCallback
 
 from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class, find_saved_model
 from utils.hyperparams_opt import hyperparam_optimization
+from utils.callbacks import SaveVecNormalizeCallback
 from utils.noise import LinearNormalActionNoise
 from utils.utils import StoreDict
 
@@ -54,6 +49,12 @@ if __name__ == '__main__':
                         type=int)
     parser.add_argument('--log-interval', help='Override log interval (default: -1, no change)', default=-1,
                         type=int)
+    parser.add_argument('--eval-freq', help='Evaluate the agent every n steps (if negative, no evaluation)',
+                        default=10000, type=int)
+    parser.add_argument('--eval-episodes', help='Number of episodes to use for evaluation',
+                        default=5, type=int)
+    parser.add_argument('--save-freq', help='Save the model every n steps (if negative, no checkpoint)',
+                        default=-1, type=int)
     parser.add_argument('-f', '--log-folder', help='Log folder', type=str, default='logs')
     parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
     parser.add_argument('--n-trials', help='Number of trials for optimizing hyperparameters', type=int, default=10)
@@ -70,6 +71,8 @@ if __name__ == '__main__':
                         help='Additional external Gym environemnt package modules to import (e.g. gym_minigrid)')
     parser.add_argument('-params', '--hyperparams', type=str, nargs='+', action=StoreDict,
                         help='Overwrite hyperparameter (e.g. learning_rate:0.01 train_freq:10)')
+    parser.add_argument('-uuid', '--uuid', action='store_true', default=False,
+                        help='Ensure that the run has a unique ID')
     args = parser.parse_args()
 
     # Going through custom gym packages to let them register in the global registory
@@ -86,6 +89,12 @@ if __name__ == '__main__':
         except IndexError:
             closest_match = "'no close match found...'"
         raise ValueError('{} not found in gym registry, you maybe meant {}?'.format(env_id, closest_match))
+
+    # Unique id to ensure there is no race condition for the folder creation
+    uuid_str = f'_{uuid.uuid4()}' if args.uuid else ''
+    if args.seed < 0:
+        # Seed but with a random one
+        args.seed = np.random.randint(2**32 - 1)
 
     set_global_seeds(args.seed)
 
@@ -199,9 +208,16 @@ if __name__ == '__main__':
         del hyperparams['env_wrapper']
 
     log_path = "{}/{}/".format(args.log_folder, args.algo)
-    save_path = os.path.join(log_path, "{}_{}".format(env_id, get_latest_run_id(log_path, env_id) + 1))
+    save_path = os.path.join(log_path, "{}_{}{}".format(env_id, get_latest_run_id(log_path, env_id) + 1, uuid_str))
     params_path = "{}/{}".format(save_path, env_id)
     os.makedirs(params_path, exist_ok=True)
+
+    callbacks = []
+    if args.save_freq > 0:
+        # Account for the number of parallel environments
+        args.save_freq = max(args.save_freq // n_envs, 1)
+        callbacks.append(CheckpointCallback(save_freq=args.save_freq,
+                                            save_path=save_path, name_prefix='rl_model', verbose=1))
 
     def create_env(n_envs, eval_env=False):
         """
@@ -254,6 +270,35 @@ if __name__ == '__main__':
 
 
     env = create_env(n_envs)
+    # Create test env if needed, do not normalize reward
+    eval_env = None
+    if args.eval_freq > 0:
+        # Account for the number of parallel environments
+        args.eval_freq = max(args.eval_freq // n_envs, 1)
+
+        # Do not normalize the rewards of the eval env
+        old_kwargs = None
+        if normalize:
+            if len(normalize_kwargs) > 0:
+                old_kwargs = normalize_kwargs.copy()
+                normalize_kwargs['norm_reward'] = False
+            else:
+                normalize_kwargs = {'norm_reward': False}
+
+        if args.verbose > 0:
+            print("Creating test environment")
+
+        save_vec_normalize = SaveVecNormalizeCallback(save_freq=1, save_path=params_path)
+        eval_callback = EvalCallback(create_env(1, eval_env=True), callback_on_new_best=save_vec_normalize,
+                                     best_model_save_path=save_path, n_eval_episodes=args.eval_episodes,
+                                     log_path=save_path, eval_freq=args.eval_freq)
+        callbacks.append(eval_callback)
+
+        # Restore original kwargs
+        if old_kwargs is not None:
+            normalize_kwargs = old_kwargs.copy()
+
+
     # Stop env processes to free memory
     if args.optimize_hyperparameters and n_envs > 1:
         env.close()
@@ -348,6 +393,9 @@ if __name__ == '__main__':
     if args.log_interval > -1:
         kwargs = {'log_interval': args.log_interval}
 
+    if len(callbacks) > 0:
+        kwargs['callback'] = callbacks
+
     # Save hyperparams
     with open(os.path.join(params_path, 'config.yml'), 'w') as f:
         yaml.dump(saved_hyperparams, f)
@@ -366,12 +414,8 @@ if __name__ == '__main__':
 
         model.save("{}/{}".format(save_path, env_id))
 
-        if normalize:
-            # TODO: use unwrap_vec_normalize()
-            # Unwrap
-            if isinstance(env, VecFrameStack):
-                env = env.venv
-            # Important: save the running average, for testing the agent we need that normalization
-            env.save(os.path.join(params_path, 'vecnormalize.pkl'))
-            # Deprecated saving:
-            # env.save_running_average(params_path)
+    if normalize:
+        # Important: save the running average, for testing the agent we need that normalization
+        model.get_vec_normalize_env().save(os.path.join(params_path, 'vecnormalize.pkl'))
+        # Deprecated saving:
+        # env.save_running_average(params_path)

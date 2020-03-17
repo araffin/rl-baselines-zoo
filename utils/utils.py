@@ -372,11 +372,12 @@ def get_saved_hyperparams(stats_path, norm_reward=False, test_mode=False):
     return hyperparams, stats_path
 
 
-def find_saved_model(algo, log_path, env_id):
+def find_saved_model(algo, log_path, env_id, load_best=False):
     """
     :param algo: (str)
     :param log_path: (str) Path to the directory with the saved model
     :param env_id: (str)
+    :param load_best: (bool)
     :return: (str) Path to the saved model
     """
     model_path, found = None, False
@@ -385,6 +386,10 @@ def find_saved_model(algo, log_path, env_id):
         found = os.path.isfile(model_path)
         if found:
             break
+
+    if load_best:
+        model_path = os.path.join(log_path, "best_model.zip")
+        found = os.path.isfile(model_path)
 
     if not found:
         raise ValueError("No model found for {} on {}, path: {}".format(algo, env_id, model_path))

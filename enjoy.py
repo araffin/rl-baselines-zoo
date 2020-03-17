@@ -10,15 +10,8 @@ warnings.filterwarnings("ignore", category=FutureWarning, module='tensorflow')
 warnings.filterwarnings("ignore", category=UserWarning, module='gym')
 
 import gym
-try:
-    import pybullet_envs
-except ImportError:
-    pybullet_envs = None
+import utils.import_envs  # pytype: disable=import-error
 import numpy as np
-try:
-    import highway_env
-except ImportError:
-    highway_env = None
 import stable_baselines
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.vec_env import VecNormalize, VecFrameStack, VecEnv
@@ -50,6 +43,8 @@ def main():
                         help='Use deterministic actions')
     parser.add_argument('--stochastic', action='store_true', default=False,
                         help='Use stochastic actions (for DDPG/DQN/SAC)')
+    parser.add_argument('--load-best', action='store_true', default=False,
+                        help='Load best model instead of last model if available')
     parser.add_argument('--norm-reward', action='store_true', default=False,
                         help='Normalize reward if applicable (trained with VecNormalize)')
     parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
@@ -78,7 +73,7 @@ def main():
 
     assert os.path.isdir(log_path), "The {} folder was not found".format(log_path)
 
-    model_path = find_saved_model(algo, log_path, env_id)
+    model_path = find_saved_model(algo, log_path, env_id, load_best=args.load_best)
 
     if algo in ['dqn', 'ddpg', 'sac', 'td3']:
         args.n_envs = 1
@@ -108,12 +103,13 @@ def main():
     deterministic = args.deterministic or algo in ['dqn', 'ddpg', 'sac', 'her', 'td3'] and not args.stochastic
 
     episode_reward = 0.0
-    episode_rewards = []
+    episode_rewards, episode_lengths = [], []
     ep_len = 0
     # For HER, monitor success rate
     successes = []
+    state = None
     for _ in range(args.n_timesteps):
-        action, _ = model.predict(obs, deterministic=deterministic)
+        action, state = model.predict(obs, state=state, deterministic=deterministic)
         # Random Agent
         # action = [env.action_space.sample()]
         # Clip Action to avoid out of bound errors
@@ -140,7 +136,9 @@ def main():
                 # is a normalized reward when `--norm_reward` flag is passed
                 print("Episode Reward: {:.2f}".format(episode_reward))
                 print("Episode Length", ep_len)
+                state = None
                 episode_rewards.append(episode_reward)
+                episode_lengths.append(ep_len)
                 episode_reward = 0.0
                 ep_len = 0
 
@@ -159,7 +157,10 @@ def main():
         print("Success rate: {:.2f}%".format(100 * np.mean(successes)))
 
     if args.verbose > 0 and len(episode_rewards) > 0:
-        print("Mean reward: {:.2f}".format(np.mean(episode_rewards)))
+        print("Mean reward: {:.2f} +/- {:.2f}".format(np.mean(episode_rewards), np.std(episode_rewards)))
+
+    if args.verbose > 0 and len(episode_lengths) > 0:
+        print("Mean episode length: {:.2f} +/- {:.2f}".format(np.mean(episode_lengths), np.std(episode_lengths)))
 
     # Workaround for https://github.com/openai/gym/issues/893
     if not args.no_render:
