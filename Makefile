@@ -4,7 +4,7 @@ pytest:
 
 # Type check
 type:
-	pytype
+	pytype .
 
 docker: docker-cpu docker-gpu
 

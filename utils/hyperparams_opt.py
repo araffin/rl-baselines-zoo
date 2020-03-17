@@ -38,10 +38,10 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
 
     n_startup_trials = 10
     # test during 5 episodes
-    n_test_episodes = 5
+    n_eval_episodes = 5
     # evaluate every 20th of the maximum budget per iteration
     n_evaluations = 20
-    evaluate_interval = int(n_timesteps / n_evaluations)
+    eval_freq = int(n_timesteps / n_evaluations)
 
     # n_warmup_steps: Disable pruner until the trial reaches the given number of step.
     if sampler_method == 'random':

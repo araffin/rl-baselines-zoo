@@ -91,7 +91,7 @@ if __name__ == '__main__':
         raise ValueError('{} not found in gym registry, you maybe meant {}?'.format(env_id, closest_match))
 
     # Unique id to ensure there is no race condition for the folder creation
-    uuid_str = f'_{uuid.uuid4()}' if args.uuid else ''
+    uuid_str = '_{}'.format(uuid.uuid4()) if args.uuid else ''
     if args.seed < 0:
         # Seed but with a random one
         args.seed = np.random.randint(2**32 - 1)
