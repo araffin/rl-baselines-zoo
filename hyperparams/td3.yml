@@ -49,7 +49,7 @@ HalfCheetahBulletEnv-v0:
   gradient_steps: 1000
   policy_kwargs: "dict(layers=[400, 300])"
 
-BipedalWalker-v2:
+BipedalWalker-v3:
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
   gamma: 0.99
