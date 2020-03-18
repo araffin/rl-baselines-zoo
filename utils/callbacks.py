@@ -63,5 +63,5 @@ class SaveVecNormalizeCallback(BaseCallback):
             if self.model.get_vec_normalize_env() is not None:
                 self.model.get_vec_normalize_env().save(path)
                 if self.verbose > 1:
-                    print(f"Saving VecNormalize to {path}")
+                    print("Saving VecNormalize to {}".format(path))
         return True
