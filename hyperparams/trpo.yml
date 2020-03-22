@@ -145,7 +145,7 @@ HopperBulletEnv-v0:
   vf_stepsize: !!float 1e-3
 
 # Tuned
-BipedalWalker-v2:
+BipedalWalker-v3:
   env_wrapper: utils.wrappers.TimeFeatureWrapper
   n_timesteps: !!float 5e6
   policy: 'MlpPolicy'

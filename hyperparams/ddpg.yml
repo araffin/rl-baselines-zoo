@@ -20,7 +20,7 @@ Pendulum-v0:
   memory_limit: 50000
 
 # Tuned
-BipedalWalker-v2:
+BipedalWalker-v3:
   n_timesteps: !!float 1e6
   policy: 'MlpPolicy'
   noise_type: 'adaptive-param'

@@ -23,7 +23,7 @@ LunarLanderContinuous-v2:
   batch_size: 256
   learning_starts: 1000
 
-BipedalWalker-v2:
+BipedalWalker-v3:
   n_timesteps: !!float 1e6
   policy: 'CustomSACPolicy'
   learning_rate: lin_3e-4

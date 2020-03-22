@@ -123,7 +123,7 @@ BipedalWalkerHardcore-v3:
   vf_coef: 0.51
 
 # Tuned
-BipedalWalker-v2:
+BipedalWalker-v3:
   normalize: true
   n_envs: 8
   n_timesteps: !!float 5e6
