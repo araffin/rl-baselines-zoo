@@ -110,6 +110,14 @@ env_wrapper:
 
 Note that you can easily specify parameters too.
 
+## Env keyword arguments
+
+You can specify keyword arguments to pass to the env constructor in the command line, using `--env-kwargs`:
+
+```
+python enjoy.py --algo ppo2 --env MountainCar-v0 --env-kwargs goal_velocity:10
+```
+
 ## Overwrite hyperparameters
 
 You can easily overwrite hyperparameters in the command line, using ``--hyperparams``:

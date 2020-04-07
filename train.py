@@ -73,6 +73,8 @@ if __name__ == '__main__':
                         help='Overwrite hyperparameter (e.g. learning_rate:0.01 train_freq:10)')
     parser.add_argument('-uuid', '--uuid', action='store_true', default=False,
                         help='Ensure that the run has a unique ID')
+    parser.add_argument('--env-kwargs', type=str, nargs='+', action=StoreDict,
+                        help='Optional keyword argument to pass to the env constructor')
     args = parser.parse_args()
 
     # Going through custom gym packages to let them register in the global registory
@@ -219,6 +221,8 @@ if __name__ == '__main__':
         callbacks.append(CheckpointCallback(save_freq=args.save_freq,
                                             save_path=save_path, name_prefix='rl_model', verbose=1))
 
+    env_kwargs = {} if args.env_kwargs is None else args.env_kwargs
+
     def create_env(n_envs, eval_env=False):
         """
         Create the environment and wrap it if necessary
@@ -228,6 +232,7 @@ if __name__ == '__main__':
         :return: (gym.Env)
         """
         global hyperparams
+        global env_kwargs
 
         # Do not log eval env (issue with writing the same file)
         log_dir = None if eval_env else save_path
@@ -241,18 +246,18 @@ if __name__ == '__main__':
         elif algo_ in ['dqn', 'ddpg']:
             if hyperparams.get('normalize', False):
                 print("WARNING: normalization not supported yet for DDPG/DQN")
-            env = gym.make(env_id)
+            env = gym.make(env_id, **env_kwargs)
             env.seed(args.seed)
             if env_wrapper is not None:
                 env = env_wrapper(env)
         else:
             if n_envs == 1:
-                env = DummyVecEnv([make_env(env_id, 0, args.seed, wrapper_class=env_wrapper, log_dir=log_dir)])
+                env = DummyVecEnv([make_env(env_id, 0, args.seed, wrapper_class=env_wrapper, log_dir=log_dir, env_kwargs=env_kwargs)])
             else:
                 # env = SubprocVecEnv([make_env(env_id, i, args.seed) for i in range(n_envs)])
                 # On most env, SubprocVecEnv does not help and is quite memory hungry
                 env = DummyVecEnv([make_env(env_id, i, args.seed, log_dir=log_dir,
-                                            wrapper_class=env_wrapper) for i in range(n_envs)])
+                                            wrapper_class=env_wrapper, env_kwargs=env_kwargs) for i in range(n_envs)])
             if normalize:
                 if args.verbose > 0:
                     if len(normalize_kwargs) > 0:
