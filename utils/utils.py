@@ -149,7 +149,7 @@ def get_wrapper_class(hyperparams):
         return None
 
 
-def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None, env_kwargs={}):
+def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None, env_kwargs=None):
     """
     Helper function to multiprocess training
     and log the progress.
@@ -160,10 +160,13 @@ def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None, env_kwarg
     :param log_dir: (str)
     :param wrapper: (type) a subclass of gym.Wrapper to wrap the original
                     env with
-    :param env_kwargs=(dict) Optional keyword argument to pass to the env constructor
+    :param env_kwargs: (Dict[str, Any]) Optional keyword argument to pass to the env constructor
     """
     if log_dir is not None:
         os.makedirs(log_dir, exist_ok=True)
+
+    if env_kwargs is None:
+        env_kwargs = {}
 
     def _init():
         set_global_seeds(seed + rank)
@@ -185,7 +188,7 @@ def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None, env_kwarg
 
 def create_test_env(env_id, n_envs=1, is_atari=False,
                     stats_path=None, seed=0,
-                    log_dir='', should_render=True, hyperparams=None, env_kwargs={}):
+                    log_dir='', should_render=True, hyperparams=None, env_kwargs=None):
     """
     Create environment for testing a trained agent
 
@@ -199,7 +202,7 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
     :param env_wrapper: (type) A subclass of gym.Wrapper to wrap the original
                         env with
     :param hyperparams: (dict) Additional hyperparams (ex: n_stack)
-    :param env_kwargs=(dict) Optional keyword argument to pass to the env constructor
+    :param env_kwargs: (Dict[str, Any]) Optional keyword argument to pass to the env constructor
     :return: (gym.Env)
     """
     # HACK to save logs
@@ -211,6 +214,9 @@ def create_test_env(env_id, n_envs=1, is_atari=False,
 
     if hyperparams is None:
         hyperparams = {}
+
+    if env_kwargs is None:
+        env_kwargs = {}
 
     # Create the environment and wrap it if necessary
     env_wrapper = get_wrapper_class(hyperparams)
