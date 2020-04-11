@@ -389,7 +389,7 @@ class StoreDict(argparse.Action):
         arg_dict = {}
         for arguments in values:
             key = arguments.split(":")[0]
-            value = "".join(arguments.split(":")[1:])
+            value = ":".join(arguments.split(":")[1:])
             # Evaluate the string as python code
             arg_dict[key] = eval(value)
         setattr(namespace, self.dest, arg_dict)
