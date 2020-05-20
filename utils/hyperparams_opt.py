@@ -5,11 +5,21 @@ import optuna
 from optuna.pruners import SuccessiveHalvingPruner, MedianPruner
 from optuna.samplers import RandomSampler, TPESampler
 from optuna.integration.skopt import SkoptSampler
-from stable_baselines import SAC, DDPG, TD3
-from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
+from stable_baselines import SAC, TD3
 from stable_baselines.common.vec_env import VecNormalize, VecEnv
 from stable_baselines.her import HERGoalEnvWrapper
 from stable_baselines.common.base_class import _UnvecWrapper
+
+# Load mpi4py-dependent algorithms only if mpi is installed. (c.f. stable-baselines v2.10.0)
+try:
+    import mpi4py
+except ImportError:
+    mpi4py = None
+
+if mpi4py is not None:
+    from stable_baselines import DDPG
+    from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
+del mpi4py
 
 from .callbacks import TrialEvalCallback
 
