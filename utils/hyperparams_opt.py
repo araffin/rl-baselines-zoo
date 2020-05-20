@@ -6,6 +6,7 @@ from optuna.pruners import SuccessiveHalvingPruner, MedianPruner
 from optuna.samplers import RandomSampler, TPESampler
 from optuna.integration.skopt import SkoptSampler
 from stable_baselines import SAC, TD3
+from stable_baselines.common.noise import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.common.vec_env import VecNormalize, VecEnv
 from stable_baselines.her import HERGoalEnvWrapper
 from stable_baselines.common.base_class import _UnvecWrapper
@@ -18,7 +19,8 @@ except ImportError:
 
 if mpi4py is not None:
     from stable_baselines import DDPG
-    from stable_baselines.common.noise import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
+else:
+    DDPG = None
 del mpi4py
 
 from .callbacks import TrialEvalCallback
