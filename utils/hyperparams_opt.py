@@ -18,7 +18,7 @@ except ImportError:
 
 if mpi4py is not None:
     from stable_baselines import DDPG
-    from stable_baselines.ddpg import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
+    from stable_baselines.common.noise import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 del mpi4py
 
 from .callbacks import TrialEvalCallback
