@@ -172,6 +172,9 @@ def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None, env_kwarg
         set_global_seeds(seed + rank)
         env = gym.make(env_id, **env_kwargs)
 
+        log_file = os.path.join(log_dir, str(rank)) if log_dir is not None else None
+        env = Monitor(env, log_file)
+
         # Dict observation space is currently not supported.
         # https://github.com/hill-a/stable-baselines/issues/321
         # We allow a Gym env wrapper (a subclass of gym.Wrapper)
@@ -179,8 +182,6 @@ def make_env(env_id, rank=0, seed=0, log_dir=None, wrapper_class=None, env_kwarg
             env = wrapper_class(env)
 
         env.seed(seed + rank)
-        log_file = os.path.join(log_dir, str(rank)) if log_dir is not None else None
-        env = Monitor(env, log_file)
         return env
 
     return _init
