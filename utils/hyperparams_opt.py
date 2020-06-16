@@ -8,7 +8,6 @@ from optuna.integration.skopt import SkoptSampler
 from stable_baselines import SAC, TD3
 from stable_baselines.common.noise import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.common.vec_env import VecNormalize, VecEnv
-from stable_baselines.her import HERGoalEnvWrapper
 from stable_baselines.common.base_class import _UnvecWrapper
 
 # Load mpi4py-dependent algorithms only if mpi is installed. (c.f. stable-baselines v2.10.0)
