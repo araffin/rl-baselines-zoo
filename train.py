@@ -29,6 +29,7 @@ from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNor
 from stable_baselines.common.noise import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.common.schedules import constfn
 from stable_baselines.common.callbacks import CheckpointCallback, EvalCallback
+from stable_baselines.her import HERGoalEnvWrapper
 
 from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class, find_saved_model
 from utils.hyperparams_opt import hyperparam_optimization
@@ -271,6 +272,8 @@ if __name__ == '__main__':
             env = VecFrameStack(env, n_stack)
             print("Stacking {} frames".format(n_stack))
             del hyperparams['frame_stack']
+        if args.algo == 'her' and eval_env:
+            env = HERGoalEnvWrapper(env)
         return env
 
 
