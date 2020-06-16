@@ -112,7 +112,6 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
             # Wrap the env if need to flatten the dict obs
             if isinstance(eval_env, VecEnv):
                 eval_env = _UnvecWrapper(eval_env)
-            eval_env = HERGoalEnvWrapper(eval_env)
 
         try:
             model.learn(n_timesteps, callback=eval_callback)
