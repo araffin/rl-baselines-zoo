@@ -25,12 +25,14 @@ except ImportError:
 
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.cmd_util import make_atari_env
-from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv
+from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv, VecEnv
 from stable_baselines.common.noise import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.common.schedules import constfn
 from stable_baselines.common.callbacks import CheckpointCallback, EvalCallback
+from stable_baselines.her import HERGoalEnvWrapper
+from stable_baselines.common.base_class import _UnvecWrapper
 
-from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class, find_saved_model
+from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class
 from utils.hyperparams_opt import hyperparam_optimization
 from utils.callbacks import SaveVecNormalizeCallback
 from utils.noise import LinearNormalActionNoise
@@ -271,6 +273,11 @@ if __name__ == '__main__':
             env = VecFrameStack(env, n_stack)
             print("Stacking {} frames".format(n_stack))
             del hyperparams['frame_stack']
+        if args.algo == 'her':
+            # Wrap the env if need to flatten the dict obs
+            if isinstance(env, VecEnv):
+                env = _UnvecWrapper(env)
+            env = HERGoalEnvWrapper(env)
         return env
 
 
@@ -364,14 +371,12 @@ if __name__ == '__main__':
         if args.verbose > 0:
             print("Optimizing hyperparameters")
 
-
         def create_model(*_args, **kwargs):
             """
             Helper to create a model with different hyperparameters
             """
             return ALGOS[args.algo](env=create_env(n_envs), tensorboard_log=tensorboard_log,
                                     verbose=0, **kwargs)
-
 
         data_frame = hyperparam_optimization(args.algo, create_model, create_env, n_trials=args.n_trials,
                                              n_timesteps=n_timesteps, hyperparams=hyperparams,
@@ -411,7 +416,6 @@ if __name__ == '__main__':
         model.learn(n_timesteps, **kwargs)
     except KeyboardInterrupt:
         pass
-
 
     # Only save worker of rank 0 when using mpi
     if rank == 0:

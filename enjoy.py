@@ -1,7 +1,6 @@
 import os
 import sys
 import argparse
-import pkg_resources
 import importlib
 import warnings
 
