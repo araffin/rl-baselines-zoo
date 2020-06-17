@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 import numpy as np
 import optuna
 from optuna.pruners import SuccessiveHalvingPruner, MedianPruner
@@ -8,7 +6,6 @@ from optuna.integration.skopt import SkoptSampler
 from stable_baselines import SAC, TD3
 from stable_baselines.common.noise import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.common.vec_env import VecNormalize, VecEnv
-from stable_baselines.common.base_class import _UnvecWrapper
 
 # Load mpi4py-dependent algorithms only if mpi is installed. (c.f. stable-baselines v2.10.0)
 try:
@@ -106,11 +103,6 @@ def hyperparam_optimization(algo, model_fn, env_fn, n_trials=10, n_timesteps=500
         # TODO: use non-deterministic eval for Atari?
         eval_callback = TrialEvalCallback(eval_env, trial, n_eval_episodes=n_eval_episodes,
                                           eval_freq=eval_freq_, deterministic=True)
-
-        if algo == 'her':
-            # Wrap the env if need to flatten the dict obs
-            if isinstance(eval_env, VecEnv):
-                eval_env = _UnvecWrapper(eval_env)
 
         try:
             model.learn(n_timesteps, callback=eval_callback)
