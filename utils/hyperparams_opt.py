@@ -159,7 +159,7 @@ def sample_ppo2_params(trial):
     ent_coef = trial.suggest_loguniform('ent_coef', 0.00000001, 0.1)
     cliprange = trial.suggest_categorical('cliprange', [0.1, 0.2, 0.3, 0.4])
     noptepochs = trial.suggest_categorical('noptepochs', [1, 5, 10, 20, 30, 50])
-    lam = trial.suggest_categorical('lamdba', [0.8, 0.9, 0.92, 0.95, 0.98, 0.99, 1.0])
+    lam = trial.suggest_categorical('lambda', [0.8, 0.9, 0.92, 0.95, 0.98, 0.99, 1.0])
 
     if n_steps < batch_size:
         nminibatches = 1
@@ -314,7 +314,7 @@ def sample_trpo_params(trial):
     timesteps_per_batch = trial.suggest_categorical('timesteps_per_batch', [16, 32, 64, 128, 256, 512, 1024, 2048, 4096])
     max_kl = trial.suggest_loguniform('max_kl', 0.000001, 1)
     ent_coef = trial.suggest_loguniform('ent_coef', 0.00000001, 0.1)
-    lam = trial.suggest_categorical('lamdba', [0.8, 0.9, 0.92, 0.95, 0.98, 0.99, 1.0])
+    lam = trial.suggest_categorical('lambda', [0.8, 0.9, 0.92, 0.95, 0.98, 0.99, 1.0])
     # cg_damping = trial.suggest_loguniform('cg_damping', 1e-5, 1)
     cg_damping = 0.1
     cg_iters = trial.suggest_categorical('cg_iters', [10, 15, 20, 30])
