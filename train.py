@@ -225,19 +225,20 @@ if __name__ == '__main__':
 
     env_kwargs = {} if args.env_kwargs is None else args.env_kwargs
 
-    def create_env(n_envs, eval_env=False):
+    def create_env(n_envs, eval_env=False, no_log=False):
         """
         Create the environment and wrap it if necessary
         :param n_envs: (int)
         :param eval_env: (bool) Whether is it an environment used for evaluation or not
+        :param no_log: (bool) Do not log training when doing hyperparameter optim
+            (issue with writing the same file)
         :return: (Union[gym.Env, VecEnv])
-        :return: (gym.Env)
         """
         global hyperparams
         global env_kwargs
 
         # Do not log eval env (issue with writing the same file)
-        log_dir = None if eval_env else save_path
+        log_dir = None if eval_env or no_log else save_path
 
         if is_atari:
             if args.verbose > 0:
@@ -261,18 +262,27 @@ if __name__ == '__main__':
                 env = DummyVecEnv([make_env(env_id, i, args.seed, log_dir=log_dir,
                                             wrapper_class=env_wrapper, env_kwargs=env_kwargs) for i in range(n_envs)])
             if normalize:
+                # Copy to avoid changing default values by reference
+                local_normalize_kwargs = normalize_kwargs.copy()
+                # Do not normalize reward for env used for evaluation
+                if eval_env:
+                    if len(local_normalize_kwargs) > 0:
+                        local_normalize_kwargs['norm_reward'] = False
+                    else:
+                        local_normalize_kwargs = {'norm_reward': False}
+
                 if args.verbose > 0:
-                    if len(normalize_kwargs) > 0:
-                        print("Normalization activated: {}".format(normalize_kwargs))
+                    if len(local_normalize_kwargs) > 0:
+                        print("Normalization activated: {}".format(local_normalize_kwargs))
                     else:
                         print("Normalizing input and reward")
-                env = VecNormalize(env, **normalize_kwargs)
+                env = VecNormalize(env, **local_normalize_kwargs)
+
         # Optional Frame-stacking
         if hyperparams.get('frame_stack', False):
             n_stack = hyperparams['frame_stack']
             env = VecFrameStack(env, n_stack)
             print("Stacking {} frames".format(n_stack))
-            del hyperparams['frame_stack']
         if args.algo == 'her':
             # Wrap the env if need to flatten the dict obs
             if isinstance(env, VecEnv):
@@ -284,18 +294,9 @@ if __name__ == '__main__':
     env = create_env(n_envs)
     # Create test env if needed, do not normalize reward
     eval_env = None
-    if args.eval_freq > 0:
+    if args.eval_freq > 0 and not args.optimize_hyperparameters:
         # Account for the number of parallel environments
         args.eval_freq = max(args.eval_freq // n_envs, 1)
-
-        # Do not normalize the rewards of the eval env
-        old_kwargs = None
-        if normalize:
-            if len(normalize_kwargs) > 0:
-                old_kwargs = normalize_kwargs.copy()
-                normalize_kwargs['norm_reward'] = False
-            else:
-                normalize_kwargs = {'norm_reward': False}
 
         if args.verbose > 0:
             print("Creating test environment")
@@ -306,10 +307,10 @@ if __name__ == '__main__':
                                      log_path=save_path, eval_freq=args.eval_freq)
         callbacks.append(eval_callback)
 
-        # Restore original kwargs
-        if old_kwargs is not None:
-            normalize_kwargs = old_kwargs.copy()
-
+    # TODO: check for hyperparameters optimization
+    # TODO: check What happens with the eval env when using frame stack
+    if 'frame_stack' in hyperparams:
+        del hyperparams['frame_stack']
 
     # Stop env processes to free memory
     if args.optimize_hyperparameters and n_envs > 1:
@@ -375,7 +376,7 @@ if __name__ == '__main__':
             """
             Helper to create a model with different hyperparameters
             """
-            return ALGOS[args.algo](env=create_env(n_envs), tensorboard_log=tensorboard_log,
+            return ALGOS[args.algo](env=create_env(n_envs, no_log=True), tensorboard_log=tensorboard_log,
                                     verbose=0, **kwargs)
 
         data_frame = hyperparam_optimization(args.algo, create_model, create_env, n_trials=args.n_trials,
