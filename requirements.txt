@@ -1,0 +1,9 @@
+stable-baselines[mpi,tests,docs]>=2.10.0
+box2d-py==2.3.5
+pybullet
+gym-minigrid
+scikit-optimize
+optuna
+pytablewriter
+seaborn
+pyyaml>=5.1

@@ -416,6 +416,9 @@ if __name__ == '__main__':
         model.learn(n_timesteps, **kwargs)
     except KeyboardInterrupt:
         pass
+    finally:
+        # Release resources
+        env.close()
 
     # Only save worker of rank 0 when using mpi
     if rank == 0:
