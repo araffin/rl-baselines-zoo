@@ -58,7 +58,7 @@ if __name__ == '__main__':
     parser.add_argument('--save-freq', help='Save the model every n steps (if negative, no checkpoint)',
                         default=-1, type=int)
     parser.add_argument('-f', '--log-folder', help='Log folder', type=str, default='logs')
-    parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
+    parser.add_argument('--seed', help='Random generator seed', type=int, default=-1)
     parser.add_argument('--n-trials', help='Number of trials for optimizing hyperparameters', type=int, default=10)
     parser.add_argument('-optimize', '--optimize-hyperparameters', action='store_true', default=False,
                         help='Run hyperparameters search')
