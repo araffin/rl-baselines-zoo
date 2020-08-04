@@ -66,6 +66,7 @@ BipedalWalker-v3:
   ent_coef: 0.0
 
 HalfCheetahBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   normalize: true
   n_envs: 4
   n_timesteps: !!float 2e6
@@ -87,6 +88,7 @@ BipedalWalkerHardcore-v3:
   lr_schedule: 'linear'
 
 Walker2DBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   normalize: true
   n_envs: 4
   n_timesteps: !!float 2e6
@@ -99,6 +101,7 @@ Walker2DBulletEnv-v0:
   learning_rate: 0.002
 
 AntBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   normalize: true
   n_envs: 4
   n_timesteps: !!float 2e6
@@ -111,6 +114,7 @@ AntBulletEnv-v0:
   learning_rate: 0.002
 
 HopperBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   normalize: true
   n_envs: 4
   n_timesteps: !!float 2e6

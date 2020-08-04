@@ -180,8 +180,9 @@ HalfCheetahBulletEnv-v0:
   gamma: 0.99
   noptepochs: 10
   ent_coef: 0.0
-  learning_rate: !!float 3e-4
+  learning_rate: !!float 2.5e-4
   cliprange: 0.2
+  cliprange_vf: -1
 
 HalfCheetah-v2:
   normalize: true
@@ -199,32 +200,36 @@ HalfCheetah-v2:
   cliprange_vf: -1
 
 AntBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   normalize: true
-  n_envs: 8
+  n_envs: 1
   n_timesteps: !!float 2e6
-  policy: 'CustomMlpPolicy'
-  n_steps: 256
+  policy: 'MlpPolicy'
+  n_steps: 2048
   nminibatches: 32
   lam: 0.95
   gamma: 0.99
   noptepochs: 10
   ent_coef: 0.0
-  learning_rate: 2.5e-4
+  learning_rate: !!float 2.5e-4
   cliprange: 0.2
+  cliprange_vf: -1
 
 HopperBulletEnv-v0:
+  env_wrapper: utils.wrappers.TimeFeatureWrapper
   normalize: true
-  n_envs: 8
+  n_envs: 1
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
   n_steps: 2048
-  nminibatches: 128
+  nminibatches: 32
   lam: 0.95
   gamma: 0.99
   noptepochs: 10
   ent_coef: 0.0
-  learning_rate: 2.5e-4
+  learning_rate: !!float 2.5e-4
   cliprange: 0.2
+  cliprange_vf: -1
 
 ReacherBulletEnv-v0:
   normalize: true

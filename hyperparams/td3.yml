@@ -36,10 +36,10 @@ HalfCheetah-v2:
 
 HalfCheetahBulletEnv-v0:
   env_wrapper: utils.wrappers.TimeFeatureWrapper
-  n_timesteps: !!float 2e6
+  n_timesteps: !!float 1e6
   policy: 'MlpPolicy'
-  gamma: 0.99
-  buffer_size: 1000000
+  gamma: 0.98
+  buffer_size: 200000
   noise_type: 'normal'
   noise_std: 0.1
   learning_starts: 10000
@@ -80,12 +80,12 @@ BipedalWalkerHardcore-v3:
 
 AntBulletEnv-v0:
   env_wrapper: utils.wrappers.TimeFeatureWrapper
-  n_timesteps: !!float 2e6
+  n_timesteps: !!float 1e6
   policy: 'MlpPolicy'
-  gamma: 0.99
-  buffer_size: 1000000
+  gamma: 0.98
+  buffer_size: 200000
   noise_type: 'normal'
-  noise_std: 0.2
+  noise_std: 0.1
   learning_starts: 10000
   batch_size: 100
   learning_rate: !!float 1e-3
@@ -95,12 +95,12 @@ AntBulletEnv-v0:
 
 HopperBulletEnv-v0:
   env_wrapper: utils.wrappers.TimeFeatureWrapper
-  n_timesteps: !!float 2e6
+  n_timesteps: !!float 1e6
   policy: 'MlpPolicy'
-  gamma: 0.99
-  buffer_size: 1000000
+  gamma: 0.98
+  buffer_size: 200000
   noise_type: 'normal'
-  noise_std: 0.2
+  noise_std: 0.1
   learning_starts: 10000
   batch_size: 100
   learning_rate: !!float 1e-3
@@ -110,13 +110,12 @@ HopperBulletEnv-v0:
 
 Walker2DBulletEnv-v0:
   env_wrapper: utils.wrappers.TimeFeatureWrapper
-  n_timesteps: !!float 2e6
+  n_timesteps: !!float 1e6
   policy: 'MlpPolicy'
-  gamma: 0.99
-  buffer_size: 1000000
+  gamma: 0.98
+  buffer_size: 200000
   noise_type: 'normal'
   noise_std: 0.1
-  noise_std_final: 0.05
   learning_starts: 10000
   batch_size: 100
   learning_rate: !!float 1e-3
