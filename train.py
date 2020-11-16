@@ -24,13 +24,14 @@ except ImportError:
     mpi4py = None
 
 from stable_baselines.common import set_global_seeds
-from stable_baselines.common.cmd_util import make_atari_env
-from stable_baselines.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv, VecEnv
 from stable_baselines.common.noise import AdaptiveParamNoiseSpec, NormalActionNoise, OrnsteinUhlenbeckActionNoise
 from stable_baselines.common.schedules import constfn
 from stable_baselines.common.callbacks import CheckpointCallback, EvalCallback
 from stable_baselines.her import HERGoalEnvWrapper
 from stable_baselines.common.base_class import _UnvecWrapper
+from stable_baselines3.common.vec_env import VecFrameStack, SubprocVecEnv, VecNormalize, DummyVecEnv, VecEnv
+from stable_baselines3.common.callbacks import EvalCallback
+from stable_baselines3.common.env_util import make_atari_env
 
 from utils import make_env, ALGOS, linear_schedule, get_latest_run_id, get_wrapper_class
 from utils.hyperparams_opt import hyperparam_optimization
@@ -243,7 +244,7 @@ if __name__ == '__main__':
         if is_atari:
             if args.verbose > 0:
                 print("Using Atari wrapper")
-            env = make_atari_env(env_id, num_env=n_envs, seed=args.seed)
+            env = make_atari_env(env_id, n_envs=n_envs, seed=args.seed)
             # Frame-stacking with 4 frames
             env = VecFrameStack(env, n_stack=4)
         elif algo_ in ['dqn', 'ddpg']:
@@ -302,9 +303,10 @@ if __name__ == '__main__':
             print("Creating test environment")
 
         save_vec_normalize = SaveVecNormalizeCallback(save_freq=1, save_path=params_path)
-        eval_callback = EvalCallback(create_env(1, eval_env=True), callback_on_new_best=save_vec_normalize,
+        eval_callback = EvalCallback(create_env(1, eval_env=True),
+                                     callback_on_new_best=save_vec_normalize,
                                      best_model_save_path=save_path, n_eval_episodes=args.eval_episodes,
-                                     log_path=save_path, eval_freq=args.eval_freq)
+                                     log_path=save_path, eval_freq=args.eval_freq, deterministic=not is_atari)
         callbacks.append(eval_callback)
 
     # TODO: check for hyperparameters optimization
@@ -399,6 +401,8 @@ if __name__ == '__main__':
     else:
         # Train an agent from scratch
         model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=args.verbose, **hyperparams)
+        # Hack to use SB3 vec env
+        model.env = model.env.envs[0]
 
     kwargs = {}
     if args.log_interval > -1:
