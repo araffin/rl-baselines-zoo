@@ -244,7 +244,7 @@ if __name__ == '__main__':
         if is_atari:
             if args.verbose > 0:
                 print("Using Atari wrapper")
-            env = make_atari_env(env_id, n_envs=n_envs, seed=args.seed)
+            env = make_atari_env(env_id, n_envs=n_envs, seed=args.seed, monitor_dir=save_path)
             # Frame-stacking with 4 frames
             env = VecFrameStack(env, n_stack=4)
         elif algo_ in ['dqn', 'ddpg']:
@@ -400,9 +400,11 @@ if __name__ == '__main__':
         exit()
     else:
         # Train an agent from scratch
-        model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=args.verbose, **hyperparams)
+        model = ALGOS[args.algo](env=env, tensorboard_log=tensorboard_log, verbose=args.verbose, _init_setup_model=False, **hyperparams)
         # Hack to use SB3 vec env
         model.env = model.env.envs[0]
+        model.n_envs = model.env.num_envs
+        model.setup_model()
 
     kwargs = {}
     if args.log_interval > -1:
