@@ -1,3 +1,5 @@
+**WARNING: This repository is no longer maintained, please use the [RL-Baselines3 Zoo](https://github.com/DLR-RM/rl-baselines3-zoo) for an up-to-date version, powered by [Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3)**
+
 [![Build Status](https://travis-ci.com/araffin/rl-baselines-zoo.svg?branch=master)](https://travis-ci.com/araffin/rl-baselines-zoo)
 
 # RL Baselines Zoo: a Collection of Pre-Trained Reinforcement Learning Agents
