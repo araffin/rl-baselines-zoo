@@ -315,7 +315,7 @@ python -m pytest -v tests/
 
 To cite this repository in publications:
 
-```
+```bibtex
 @misc{rl-zoo,
   author = {Raffin, Antonin},
   title = {RL Baselines Zoo},
